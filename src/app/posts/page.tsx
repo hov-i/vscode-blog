@@ -21,7 +21,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
                 </div>
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-2xl font-bold text-[var(--text-primary)]">
-                        {q ? `검색 결과 "${q}"` : "All Posts"}
+                        {q ? `"${q}" 검색 결과 `: "All Posts"}
                     </h1>
                     <Link href="/posts/new">
                         <button className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--accent)] hover:text-white text-[var(--text-primary)] transition-colors flex items-center border border-[var(--border-color)]">
