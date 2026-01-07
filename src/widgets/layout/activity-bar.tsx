@@ -29,7 +29,7 @@ export const ActivityBar = () => {
   return (
     <aside
       id="activity-bar"
-      className="w-12 flex flex-col items-center bg-[var(--bg-tertiary)] border-r border-[var(--border-color)] shrink-0"
+      className="w-12 lg:flex hidden flex-col items-center bg-[var(--bg-tertiary)] border-r border-[var(--border-color)] shrink-0"
     >
       <div className="w-full h-12 flex items-center justify-center border-b border-[var(--border-color)]">
         <Icon name="logo" className="text-lg text-[var(--accent)]" />

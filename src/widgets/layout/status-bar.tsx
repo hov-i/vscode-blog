@@ -23,7 +23,7 @@ export const StatusBar = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="hidden sm:flex items-center gap-3">
         <span className="cursor-pointer hover:bg-white/20 px-1 rounded">Ln 1, Col 1</span>
         <span className="cursor-pointer hover:bg-white/20 px-1 rounded">UTF-8</span>
         <span className="cursor-pointer hover:bg-white/20 px-1 rounded">JSX</span>

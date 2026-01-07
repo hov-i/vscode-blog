@@ -6,6 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/shared/lib/utils";
 import { UserProfile } from "./user-profile";
+import { useTheme } from "next-themes";
+import { useEffect, useState as useReactState } from "react";
 
 interface SidebarProps {
   postCount?: number;
@@ -15,7 +17,17 @@ interface SidebarProps {
 export const Sidebar = ({ postCount, projectCount }: SidebarProps) => {
   const pathname = usePathname();
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useReactState("");
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useReactState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   const isActive = (path: string) => {
     if (path === "/" && (pathname === "/" || pathname === "/about")) return true;
@@ -66,6 +78,20 @@ export const Sidebar = ({ postCount, projectCount }: SidebarProps) => {
       id="sidebar"
       className="w-64 flex flex-col bg-[var(--bg-secondary)] border-r border-[var(--border-color)] shrink-0"
     >
+      {/* Mobile-only Top Bar */}
+      <div className="lg:hidden flex items-center justify-between px-4 h-12 border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]">
+        <div className="flex items-center gap-2">
+           <Icon name="logo" className="text-[var(--accent)]" />
+           <span className="text-xs font-bold text-[var(--text-primary)]">VSCODE BLOG</span>
+        </div>
+        <button
+          onClick={toggleTheme}
+          className="p-2 hover:bg-white/10 rounded text-[var(--text-secondary)]"
+        >
+          {mounted && theme === "light" ? <Icon name="sun" /> : <Icon name="moon" />}
+        </button>
+      </div>
+
       <div className="h-12 px-4 flex items-center justify-between border-b border-[var(--border-color)] shrink-0">
         <span className="text-xs font-semibold tracking-wider text-[var(--text-secondary)]">
           EXPLORER

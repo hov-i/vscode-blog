@@ -38,7 +38,7 @@ export const HomePage = ({ stats, recentPosts, featuredProjects }: any) => {
                 <div className="text-xs mb-3 text-[var(--text-secondary)] tracking-wider">
                     // QUICK STATS
                 </div>
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div>
                         <div className="text-2xl font-bold mb-1 text-[var(--accent)]">{stats?.postCount || 0}</div>
                         <div className="text-xs text-[var(--text-secondary)]">Total Posts</div>
@@ -104,7 +104,7 @@ export const HomePage = ({ stats, recentPosts, featuredProjects }: any) => {
                         </button>
                     </Link>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {featuredProjects?.map((project: any) => (
                         <ProjectItem
                             key={project.id}
