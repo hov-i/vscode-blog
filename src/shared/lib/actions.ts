@@ -4,6 +4,31 @@ import { prisma } from '@/shared/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/shared/lib/supabase/server'
+import { User } from '@prisma/client'
+
+const ADMIN_EMAIL = 'dbsghdql55555@gmail.com'
+
+async function ensureAdmin(): Promise<User> {
+  const supabase = await createClient()
+  const { data: { user: authUser } } = await supabase.auth.getUser()
+  
+  if (!authUser || authUser.email !== ADMIN_EMAIL) {
+    throw new Error('Unauthorized: Admin access required')
+  }
+
+  const fullName = authUser.user_metadata?.full_name || authUser.email!.split('@')[0]
+  
+  return prisma.user.upsert({
+    where: { email: authUser.email! },
+    update: {
+      name: fullName,
+    },
+    create: {
+      email: authUser.email!,
+      name: fullName,
+    }
+  })
+}
 
 async function getCurrentPrismaUser() {
   const supabase = await createClient()
@@ -52,11 +77,7 @@ export async function createPost(formData: FormData) {
   }
 
   // Create post using current authenticated user
-  const user = await getCurrentPrismaUser()
-
-  if (!user) {
-    throw new Error('Authentication required to create a post')
-  }
+  const user = await ensureAdmin()
 
   await prisma.post.create({
     data: {
@@ -77,6 +98,8 @@ export async function createPost(formData: FormData) {
 }
 
 export async function createProject(formData: FormData) {
+  await ensureAdmin()
+
   const title = formData.get('title') as string
   const description = formData.get('description') as string
   const repository = formData.get('repository') as string
@@ -126,6 +149,8 @@ export async function createProject(formData: FormData) {
 }
 
 export async function deletePost(id: string) {
+  await ensureAdmin()
+
   await prisma.post.delete({
     where: { id: Number(id) },
   })
@@ -136,6 +161,8 @@ export async function deletePost(id: string) {
 }
 
 export async function deleteProject(id: string) {
+  await ensureAdmin()
+
   await prisma.project.delete({
     where: { id: Number(id) },
   })

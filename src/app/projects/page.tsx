@@ -4,9 +4,13 @@ import { Icon } from "@/shared/ui/icon";
 import Link from "next/link";
 
 import { getProjects } from "@/shared/lib/services/project.service";
+import { createClient } from "@/shared/lib/supabase/server";
 
 export default async function ProjectsPage() {
     const projects = await getProjects();
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    const isAdmin = user?.email === 'dbsghdql55555@gmail.com';
 
     return (
         <div className="max-w-4xl">
@@ -21,12 +25,14 @@ export default async function ProjectsPage() {
                     <h1 className="text-2xl font-bold text-[var(--text-primary)]">
                         Projects
                     </h1>
-                    <Link href="/projects/new">
-                        <button className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--accent)] hover:text-white text-[var(--text-primary)] transition-colors flex items-center border border-[var(--border-color)]">
-                            <Icon name="folder" className="w-3 h-3 mr-2" />
-                            New Project
-                        </button>
-                    </Link>
+                    {isAdmin && (
+                        <Link href="/projects/new">
+                            <button className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--accent)] hover:text-white text-[var(--text-primary)] transition-colors flex items-center border border-[var(--border-color)]">
+                                <Icon name="folder" className="w-3 h-3 mr-2" />
+                                New Project
+                            </button>
+                        </Link>
+                    )}
                 </div>
                 <p className="text-sm mb-6 text-[var(--text-secondary)]">
                     진행했던 프로젝트들을 모아서 볼 수 있는 페이지 입니다.

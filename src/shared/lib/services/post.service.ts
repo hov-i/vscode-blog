@@ -1,5 +1,6 @@
 import { prisma } from '@/shared/lib/prisma';
 import { Post, Tag } from '@prisma/client';
+import { unstable_cache } from 'next/cache';
 
 export type PostWithTags = Post & {
   tags: Tag[];
@@ -37,9 +38,13 @@ export const getRecentPosts = async (limit: number = 5) => {
   });
 };
 
-export const getPostCount = async () => {
-  return prisma.post.count();
-};
+export const getPostCount = unstable_cache(
+  async () => {
+    return prisma.post.count();
+  },
+  ['post-count'],
+  { tags: ['posts'] }
+);
 
 export const getPostById = async (id: number) => {
   const post = await prisma.post.findUnique({
@@ -75,11 +80,16 @@ export const incrementPostView = async (id: number) => {
         }
     });
 };
-export const getTotalViews = async () => {
-  const result = await prisma.post.aggregate({
-    _sum: {
-      views: true,
-    },
-  });
-  return result._sum.views || 0;
-};
+
+export const getTotalViews = unstable_cache(
+  async () => {
+    const result = await prisma.post.aggregate({
+      _sum: {
+        views: true,
+      },
+    });
+    return result._sum.views || 0;
+  },
+  ['total-views'],
+  { tags: ['posts', 'views'] }
+);

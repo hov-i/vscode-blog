@@ -36,7 +36,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
                         </span>
                         <span className="text-xs text-[var(--text-secondary)]">posts/{post.id}.md</span>
                     </div>
-                    {user && (
+                    {user?.email === 'dbsghdql55555@gmail.com' && (
                          <form action={deleteAction}>
                             <button 
                                 type="submit"

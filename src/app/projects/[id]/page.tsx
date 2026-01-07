@@ -45,7 +45,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                         <span className="mx-2">/</span>
                         <span className="text-[var(--text-primary)]">{project.title}</span>
                     </div>
-                    {user && (
+                    {user?.email === 'dbsghdql55555@gmail.com' && (
                          <form action={deleteAction}>
                             <button 
                                 type="submit"

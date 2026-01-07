@@ -1,14 +1,18 @@
 
-
 import { Icon } from "@/shared/ui/icon";
 import { FormattedDate } from "@/shared/ui/formatted-date";
 import Link from "next/link";
 
 import { getPosts } from "@/shared/lib/services/post.service";
+import { createClient } from "@/shared/lib/supabase/server";
 
 export default async function PostsPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
     const { q } = await searchParams;
     const posts = await getPosts(q);
+
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    const isAdmin = user?.email === 'dbsghdql55555@gmail.com';
 
     return (
         <div className="max-w-4xl">
@@ -21,14 +25,16 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
                 </div>
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-2xl font-bold text-[var(--text-primary)]">
-                        {q ? `"${q}" 검색 결과 `: "All Posts"}
+                        {q ? `Search Results for "${q}"` : "All Posts"}
                     </h1>
-                    <Link href="/posts/new">
-                        <button className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--accent)] hover:text-white text-[var(--text-primary)] transition-colors flex items-center border border-[var(--border-color)]">
-                            <Icon name="fileCode" className="w-3 h-3 mr-2" />
-                            New Post
-                        </button>
-                    </Link>
+                    {isAdmin && (
+                        <Link href="/posts/new">
+                            <button className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--accent)] hover:text-white text-[var(--text-primary)] transition-colors flex items-center border border-[var(--border-color)]">
+                                <Icon name="fileCode" className="w-3 h-3 mr-2" />
+                                New Post
+                            </button>
+                        </Link>
+                    )}
                 </div>
             </div>
 
