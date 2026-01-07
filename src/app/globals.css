@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --color-border: var(--border-color);
+  --color-input: var(--border-color);
+  --color-ring: var(--accent);
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+
+  --color-primary: var(--accent);
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: var(--bg-secondary);
+  --color-secondary-foreground: var(--text-primary);
+
+  --color-muted: var(--bg-tertiary);
+  --color-muted-foreground: var(--text-secondary);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: #ffffff;
+}
+
+@layer base {
+  :root, .light, [data-theme="light"] {
+    /* Light Theme (Default) */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f3f4f6;
+    --bg-tertiary: #e5e7eb;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: #d1d5db;
+    --accent: #3b82f6;
+    
+    /* VSCode specific overrides for light mode */
+    --vscode-status-bar-bg: #007acc;
+    --vscode-status-bar-fg: #ffffff;
+    --vscode-list-active-bg: #007acc;
+    --vscode-list-active-fg: #ffffff;
+    --vscode-list-hover-bg: #e8e8e8;
+  }
+
+  .dark, [data-theme="dark"] {
+    /* Dark Theme */
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #252526;
+    --bg-tertiary: #2d2d30;
+    --text-primary: #cccccc;
+    --text-secondary: #858585;
+    --border-color: #3e3e42;
+    --accent: #007acc;
+    
+    /* VSCode specific overrides for dark mode */
+    --vscode-list-active-bg: #37373d;
+    --vscode-list-active-fg: #ffffff;
+    --vscode-list-hover-bg: #2a2d2e;
+  }
+
+  body {
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)];
+    font-family: 'JetBrains Mono', monospace; 
+  }
+}
+
+/* Custom Scrollbar hiding as per wireframe */
+::-webkit-scrollbar {
+  display: none;
+}
