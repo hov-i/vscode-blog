@@ -1,24 +1,29 @@
 import { prisma } from '@/shared/lib/prisma';
+import { unstable_cache } from 'next/cache';
 
-export const getTags = async () => {
-  const tags = await prisma.tag.findMany({
-    include: {
-      _count: {
-        select: { posts: true, projects: true },
+export const getTags = unstable_cache(
+  async () => {
+    const tags = await prisma.tag.findMany({
+      include: {
+        _count: {
+          select: { posts: true, projects: true },
+        },
       },
-    },
-    orderBy: {
-        name: 'asc'
-    }
-  });
+      orderBy: {
+          name: 'asc'
+      }
+    });
 
-  return tags
-    .map(tag => ({
-      ...tag,
-      count: tag._count.posts + tag._count.projects
-    }))
-    .filter(tag => tag.count > 0);
-};
+    return tags
+      .map(tag => ({
+        ...tag,
+        count: tag._count.posts + tag._count.projects
+      }))
+      .filter(tag => tag.count > 0);
+  },
+  ['tags-list'],
+  { tags: ['tags', 'posts', 'projects'], revalidate: 60 }
+);
 
 export const getTagByName = async (name: string) => {
   return prisma.tag.findUnique({

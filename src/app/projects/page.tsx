@@ -47,7 +47,7 @@ export default async function ProjectsPage() {
                         title={project.title}
                         description={project.description}
                         tags={project.tags?.map((t: any) => t.name) || []}
-                        stars={project.stars?.length || 0}
+                        stars={project._count?.stars || 0}
                     />
                 ))}
             </div>

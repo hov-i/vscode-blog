@@ -230,3 +230,32 @@ export async function addComment(postId: number, content: string) {
     revalidatePath(`/posts/${postId}`)
     revalidatePath('/posts')
 }
+
+export async function createGuestbook(message: string) {
+    const user = await getCurrentPrismaUser()
+    if (!user) throw new Error('Authentication required')
+
+    if (!message.trim()) {
+        throw new Error('Message is required')
+    }
+
+    await prisma.guestbook.create({
+        data: {
+            message: message.trim(),
+            userId: user.id
+        }
+    })
+
+    revalidatePath('/guestbook')
+}
+
+export async function deleteGuestbook(id: number) {
+    await ensureAdmin()
+
+    await prisma.guestbook.delete({
+        where: { id }
+    })
+
+    revalidatePath('/guestbook')
+}
+

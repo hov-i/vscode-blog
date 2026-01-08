@@ -13,14 +13,15 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  posts     Post[]
-  stars     ProjectStar[]
-  comments  Comment[]
+  id         Int         @id @default(autoincrement())
+  email      String      @unique
+  name       String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  posts      Post[]
+  stars      ProjectStar[]
+  comments   Comment[]
+  guestbooks Guestbook[]
 }
 
 model Post {
@@ -37,6 +38,10 @@ model Post {
   views       Int      @default(0)
   commentsCount Int    @default(0)
   comments    Comment[]
+
+  @@index([authorId, published, createdAt(sort: Desc)])
+  @@index([title])
+  @@index([description])
 }
 
 model Project {
@@ -49,6 +54,8 @@ model Project {
   updatedAt   DateTime @updatedAt
   tags        Tag[]    @relation("ProjectTags")
   stars       ProjectStar[]
+
+  @@index([createdAt(sort: Desc)])
 }
 
 model ProjectStar {
@@ -60,6 +67,7 @@ model ProjectStar {
   createdAt DateTime @default(now())
 
   @@unique([userId, projectId])
+  @@index([projectId])
 }
 
 model Comment {
@@ -71,6 +79,9 @@ model Comment {
   user      User     @relation(fields: [userId], references: [id])
   postId    Int
   post      Post     @relation(fields: [postId], references: [id])
+
+  @@index([postId])
+  @@index([userId])
 }
 
 model Tag {
@@ -78,4 +89,14 @@ model Tag {
   name     String    @unique
   posts    Post[]    @relation("PostTags")
   projects Project[] @relation("ProjectTags")
+}
+
+model Guestbook {
+  id        Int      @id @default(autoincrement())
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt(sort: Desc)])
 }

@@ -9,6 +9,7 @@ import {
   Search,
   Settings,
   User,
+  Users,
   Tags,
   Moon,
   Sun,
@@ -35,7 +36,8 @@ import {
   LogOut,
   Book,
   Loader2,
-  Download
+  Download,
+  Send
 } from "lucide-react";
 
 export const Icons = {
@@ -48,6 +50,7 @@ export const Icons = {
   search: Search,
   tags: Tags,
   user: User,
+  users: Users,
   settings: Settings,
   moon: Moon,
   sun: Sun,
@@ -75,7 +78,9 @@ export const Icons = {
   logOut: LogOut,
   velog: Book,
   loading: Loader2,
-  download: Download
+  loader: Loader2,
+  download: Download,
+  send: Send
 };
 
 export type IconKey = keyof typeof Icons;

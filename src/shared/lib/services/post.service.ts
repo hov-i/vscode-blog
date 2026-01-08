@@ -6,37 +6,45 @@ export type PostWithTags = Post & {
   tags: Tag[];
 };
 
-export const getPosts = async (query?: string) => {
-  return prisma.post.findMany({
-    where: query ? {
-      OR: [
-        { title: { contains: query, mode: 'insensitive' } },
-        { description: { contains: query, mode: 'insensitive' } },
-        { content: { contains: query, mode: 'insensitive' } },
-      ],
-    } : {},
-    include: {
-      tags: true,
-      author: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-};
+export const getPosts = unstable_cache(
+  async (query?: string) => {
+    return prisma.post.findMany({
+      where: query ? {
+        OR: [
+          { title: { contains: query, mode: 'insensitive' } },
+          { description: { contains: query, mode: 'insensitive' } },
+          // content 검색 제거: Text 타입이라 너무 느림
+        ],
+      } : {},
+      include: {
+        tags: true,
+        author: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  },
+  ['posts-list'],
+  { tags: ['posts'], revalidate: 60 }
+);
 
-export const getRecentPosts = async (limit: number = 5) => {
-  return prisma.post.findMany({
-    take: limit,
-    include: {
-      tags: true,
-      author: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-};
+export const getRecentPosts = unstable_cache(
+  async (limit: number = 5) => {
+    return prisma.post.findMany({
+      take: limit,
+      include: {
+        tags: true,
+        author: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  },
+  ['recent-posts'],
+  { tags: ['posts'], revalidate: 60 }
+);
 
 export const getPostCount = unstable_cache(
   async () => {

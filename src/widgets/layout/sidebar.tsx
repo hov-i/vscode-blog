@@ -161,6 +161,9 @@ export const Sidebar = ({ postCount, projectCount }: SidebarProps) => {
           {/* TAGS SECTION */}
           <NavItem href="/tags" icon="tags" label="TAGS" />
 
+          {/* GUESTBOOK SECTION */}
+          <NavItem href="/guestbook" icon="messageSquare" label="GUESTBOOK" />
+
         </div>
       </div>
 

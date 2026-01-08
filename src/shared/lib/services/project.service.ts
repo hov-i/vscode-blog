@@ -6,30 +6,42 @@ export type ProjectWithTags = Project & {
   tags: Tag[];
 };
 
-export const getProjects = async () => {
-  return prisma.project.findMany({
-    include: {
-      tags: true,
-      stars: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-};
+export const getProjects = unstable_cache(
+  async () => {
+    return prisma.project.findMany({
+      include: {
+        tags: true,
+        _count: {
+          select: { stars: true }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  },
+  ['projects-list'],
+  { tags: ['projects'], revalidate: 60 }
+);
 
-export const getRecentProjects = async (limit: number = 2) => {
-  return prisma.project.findMany({
-    take: limit,
-    include: {
-      tags: true,
-      stars: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-};
+export const getRecentProjects = unstable_cache(
+  async (limit: number = 2) => {
+    return prisma.project.findMany({
+      take: limit,
+      include: {
+        tags: true,
+        _count: {
+          select: { stars: true }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  },
+  ['recent-projects'],
+  { tags: ['projects'], revalidate: 60 }
+);
 
 export const getProjectCount = unstable_cache(
   async () => {
