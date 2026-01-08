@@ -24,7 +24,7 @@ export const AuthButton = () => {
 
   const handleLogin = async () => {
     await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: 'github',
       options: {
         redirectTo: `${location.origin}/auth/callback`,
       },
@@ -57,7 +57,7 @@ export const AuthButton = () => {
     <button 
         onClick={handleLogin}
         className="w-12 h-12 flex items-center justify-center cursor-pointer opacity-70 hover:opacity-100 transition-opacity"
-        title="Sign in with Google"
+        title="Sign in with Github"
     >
         <Icon name="user" className="w-6 h-6 text-[var(--vscode-fg)]" />
     </button>

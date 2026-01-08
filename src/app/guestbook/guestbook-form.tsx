@@ -38,7 +38,7 @@ export const GuestbookForm = ({ user }: GuestbookFormProps) => {
                             방명록을 작성하려면 로그인이 필요합니다
                         </h3>
                         <p className="text-xs text-[var(--text-secondary)]">
-                            Google 계정으로 간편하게 로그인하세요.
+                            Github 계정으로 간편하게 로그인하세요.
                         </p>
                     </div>
                     <AuthButton />
