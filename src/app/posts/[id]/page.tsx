@@ -1,6 +1,7 @@
 import { Icon } from "@/shared/ui/icon";
+import { MarkdownRenderer } from "@/shared/ui/markdown-renderer";
 import Link from "next/link";
-import { getPostById } from "@/shared/lib/services/post.service";
+import { getPostByIdWithViewIncrement } from "@/shared/lib/services/post.service";
 import { FormattedDate } from "@/shared/ui/formatted-date";
 import { notFound } from "next/navigation";
 import { deletePost } from "@/shared/lib/actions";
@@ -15,7 +16,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
         notFound();
     }
     
-    const post = await getPostById(id) as any;
+    const post = await getPostByIdWithViewIncrement(id) as any;
 
     if (!post) {
         notFound();
@@ -78,8 +79,8 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
                 )}
             </div>
 
-            <article className="prose prose-invert max-w-none text-[var(--text-primary)] whitespace-pre-wrap mb-12">
-                {post.content}
+            <article className="mb-12">
+                <MarkdownRenderer content={post.content} />
             </article>
 
             <CommentSection postId={post.id} comments={post.comments || []} user={user} />

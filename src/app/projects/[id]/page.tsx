@@ -1,4 +1,5 @@
 import { Icon } from "@/shared/ui/icon";
+import { MarkdownRenderer } from "@/shared/ui/markdown-renderer";
 import Link from "next/link";
 import { getProjectById } from "@/shared/lib/services/project.service";
 import { FormattedDate } from "@/shared/ui/formatted-date";
@@ -98,15 +99,23 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                          </div>
                     </div>
                     
-                    <div className="p-6 prose prose-invert max-w-none">
+                    <div className="p-6">
                         <h2 className="flex items-center text-lg font-bold mb-4 border-b border-[var(--border-color)] pb-2 text-[var(--text-primary)]">
                             <Icon name="fileCode" className="w-5 h-5 mr-2" />
                             README.md
                         </h2>
                         
-                        <p className="text-sm text-[var(--text-primary)] mb-4 whitespace-pre-wrap">
-                            {project.description}
-                        </p>
+                        {project.description && (
+                            <p className="text-sm text-[var(--text-primary)] mb-6 pb-6 border-b border-[var(--border-color)]">
+                                {project.description}
+                            </p>
+                        )}
+
+                        {project.content && (
+                            <div className="mb-6">
+                                <MarkdownRenderer content={project.content} />
+                            </div>
+                        )}
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                             {project.repository && (

@@ -102,6 +102,7 @@ export async function createProject(formData: FormData) {
 
   const title = formData.get('title') as string
   const description = formData.get('description') as string
+  const content = formData.get('content') as string
   const repository = formData.get('repository') as string
   const demoUrl = formData.get('demoUrl') as string
   const tagsString = formData.get('tags') as string
@@ -135,6 +136,7 @@ export async function createProject(formData: FormData) {
     data: {
       title,
       description: description || '',
+      content: content || '',
       repository: repository || '',
       demoUrl: demoUrl || '',
       tags: {

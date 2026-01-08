@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "@/shared/ui/icon";
+import { MarkdownEditor } from "@/shared/ui/markdown-editor";
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { createProject } from "@/shared/lib/actions";
@@ -8,6 +9,7 @@ import { createProject } from "@/shared/lib/actions";
 export default function NewProjectForm() {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
+    const [content, setContent] = useState("");
     const [tags, setTags] = useState("");
     const [repository, setRepository] = useState("");
     const [demoUrl, setDemoUrl] = useState("");
@@ -18,6 +20,7 @@ export default function NewProjectForm() {
         const formData = new FormData();
         formData.append('title', name);
         formData.append('description', description);
+        formData.append('content', content);
         formData.append('tags', tags);
         formData.append('repository', repository);
         formData.append('demoUrl', demoUrl);
@@ -32,9 +35,9 @@ export default function NewProjectForm() {
              <div className="mb-6 flex items-center justify-between border-b border-[var(--border-color)] pb-4">
                 <div className="flex items-center">
                     <span className="text-xs px-2 py-1 rounded mr-2 bg-[var(--accent)] text-white font-medium">
-                        JSON
+                        MD
                     </span>
-                    <span className="text-xs text-[var(--text-secondary)]">project.json</span>
+                    <span className="text-xs text-[var(--text-secondary)]">project.md</span>
                     <span className="ml-2 w-2 h-2 rounded-full bg-orange-400"></span>
                 </div>
                  <div className="flex gap-2">
@@ -58,87 +61,72 @@ export default function NewProjectForm() {
                 </div>
             </div>
 
-            <div className="space-y-6 font-mono text-sm max-w-2xl">
-                <div className="flex items-start">
-                    <span className="text-[var(--text-secondary)] mr-4 w-8 text-right">01</span>
-                    <div className="flex-1">
-                         <span className="text-[var(--accent)]">"name"</span>: 
-                         <input 
-                            type="text" 
-                            placeholder="project-name" 
-                            className="bg-transparent border-b border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)] ml-2 w-64"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />,
-                    </div>
+            <div className="flex-1 flex flex-col gap-4 font-mono text-sm overflow-auto">
+                <div>
+                     <label className="block text-xs text-[var(--text-secondary)] mb-1">Project Name</label>
+                     <input 
+                        type="text" 
+                        placeholder="Enter project name..." 
+                        className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded p-2 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
                 </div>
-
-                 <div className="flex items-start">
-                    <span className="text-[var(--text-secondary)] mr-4 w-8 text-right">02</span>
-                    <div className="flex-1">
-                         <span className="text-[var(--accent)]">"description"</span>: 
+                
+                <div className="grid grid-cols-2 gap-4">
+                     <div>
+                         <label className="block text-xs text-[var(--text-secondary)] mb-1">Tags (comma separated)</label>
                          <input 
                             type="text" 
-                            placeholder="Project description goes here..." 
-                            className="bg-transparent border-b border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)] ml-2 w-full max-w-md"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                        />,
-                    </div>
-                </div>
-
-                <div className="flex items-start">
-                    <span className="text-[var(--text-secondary)] mr-4 w-8 text-right">03</span>
-                     <div className="flex-1">
-                         <span className="text-[var(--accent)]">"tags"</span>: [
-                         <input 
-                            type="text" 
-                            placeholder='"React", "Next.js"' 
-                            className="bg-transparent border-b border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)] ml-2 w-64"
+                            placeholder="React, Next.js, ..." 
+                            className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded p-2 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
                             value={tags}
                             onChange={(e) => setTags(e.target.value)}
                         />
-                         ],
+                    </div>
+                     <div>
+                         <label className="block text-xs text-[var(--text-secondary)] mb-1">Description</label>
+                         <input 
+                            type="text" 
+                            placeholder="Short summary..." 
+                            className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded p-2 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
                     </div>
                 </div>
 
-                <div className="flex items-start">
-                    <span className="text-[var(--text-secondary)] mr-4 w-8 text-right">04</span>
-                     <div className="flex-1">
-                         <span className="text-[var(--accent)]">"repository"</span>: 
+                <div className="grid grid-cols-2 gap-4">
+                     <div>
+                         <label className="block text-xs text-[var(--text-secondary)] mb-1">Repository URL</label>
                          <input 
                             type="text" 
                             placeholder="https://github.com/..." 
-                            className="bg-transparent border-b border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)] ml-2 w-full max-w-md"
+                            className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded p-2 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
                             value={repository}
                             onChange={(e) => setRepository(e.target.value)}
-                        />,
+                        />
                     </div>
-                </div>
-
-                <div className="flex items-start">
-                    <span className="text-[var(--text-secondary)] mr-4 w-8 text-right">05</span>
-                     <div className="flex-1">
-                         <span className="text-[var(--accent)]">"demoUrl"</span>: 
+                     <div>
+                         <label className="block text-xs text-[var(--text-secondary)] mb-1">Demo URL</label>
                          <input 
                             type="text" 
                             placeholder="https://live-demo.com" 
-                            className="bg-transparent border-b border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)] ml-2 w-full max-w-md"
+                            className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded p-2 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
                             value={demoUrl}
                             onChange={(e) => setDemoUrl(e.target.value)}
-                        />,
+                        />
                     </div>
                 </div>
 
-                 <div className="flex items-start">
-                    <span className="text-[var(--text-secondary)] mr-4 w-8 text-right">06</span>
-                     <div className="flex-1">
-                         <span className="text-[var(--accent)]">"private"</span>: 
-                         <select className="bg-transparent border-b border-[var(--border-color)] text-[var(--text-secondary)] focus:outline-none focus:border-[var(--accent)] ml-2 cursor-pointer">
-                             <option>false</option>
-                             <option>true</option>
-                         </select>
-                    </div>
+                <div className="flex-1 flex flex-col min-h-[400px]">
+                    <label className="block text-xs text-[var(--text-secondary)] mb-1">Content (Markdown)</label>
+                    <MarkdownEditor
+                        value={content}
+                        onChange={setContent}
+                        placeholder="# Project Details..."
+                        className="flex-1"
+                    />
                 </div>
             </div>
         </div>

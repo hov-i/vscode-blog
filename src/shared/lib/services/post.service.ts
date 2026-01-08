@@ -16,9 +16,29 @@ export const getPosts = unstable_cache(
           // content 검색 제거: Text 타입이라 너무 느림
         ],
       } : {},
-      include: {
-        tags: true,
-        author: true,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        // content 제외 - 목록에서는 불필요
+        published: true,
+        createdAt: true,
+        updatedAt: true,
+        views: true,
+        commentsCount: true,
+        tags: {
+          select: {
+            id: true,
+            name: true,
+          }
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          }
+        }
       },
       orderBy: {
         createdAt: 'desc',
@@ -33,9 +53,29 @@ export const getRecentPosts = unstable_cache(
   async (limit: number = 5) => {
     return prisma.post.findMany({
       take: limit,
-      include: {
-        tags: true,
-        author: true,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        // content 제외
+        published: true,
+        createdAt: true,
+        updatedAt: true,
+        views: true,
+        commentsCount: true,
+        tags: {
+          select: {
+            id: true,
+            name: true,
+          }
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          }
+        }
       },
       orderBy: {
         createdAt: 'desc',
@@ -54,39 +94,49 @@ export const getPostCount = unstable_cache(
   { tags: ['posts'] }
 );
 
-export const getPostById = async (id: number) => {
-  const post = await prisma.post.findUnique({
-    where: { id },
-    include: {
-      tags: true,
-      author: true,
-      comments: {
-        include: {
+export const getPostById = unstable_cache(
+  async (id: number) => {
+    return prisma.post.findUnique({
+      where: { id },
+      include: {
+        tags: true,
+        author: true,
+        comments: {
+          include: {
             user: true
-        },
-        orderBy: {
+          },
+          orderBy: {
             createdAt: 'desc'
+          }
         }
-      }
-    },
-  });
+      },
+    });
+  },
+  ['post-detail'],
+  { tags: ['posts'], revalidate: 60 }
+);
 
+// 조회수 증가는 별도로 처리 (캐시 무효화 방지)
+export const getPostByIdWithViewIncrement = async (id: number) => {
+  const post = await getPostById(id);
+  
   if (post) {
-      await incrementPostView(id);
+    // 조회수 증가는 비동기로 처리 (응답 속도에 영향 없음)
+    incrementPostView(id).catch(console.error);
   }
-
+  
   return post;
 };
 
 export const incrementPostView = async (id: number) => {
-    return prisma.post.update({
-        where: { id },
-        data: {
-            views: {
-                increment: 1
-            }
-        }
-    });
+  return prisma.post.update({
+    where: { id },
+    data: {
+      views: {
+        increment: 1
+      }
+    }
+  });
 };
 
 export const getTotalViews = unstable_cache(

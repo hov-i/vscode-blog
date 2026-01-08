@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "@/shared/ui/icon";
+import { MarkdownEditor } from "@/shared/ui/markdown-editor";
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { createPost } from "@/shared/lib/actions";
@@ -93,12 +94,12 @@ export default function NewPostForm() {
 
                 <div className="flex-1 flex flex-col">
                     <label className="block text-xs text-[var(--text-secondary)] mb-1">Content (Markdown)</label>
-                    <textarea 
-                        className="flex-1 w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded p-4 text-[var(--text-primary)] resize-none focus:outline-none focus:border-[var(--accent)] font-mono leading-relaxed"
-                        placeholder="# Start writing..."
+                    <MarkdownEditor
                         value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                    ></textarea>
+                        onChange={setContent}
+                        placeholder="# Start writing..."
+                        className="flex-1"
+                    />
                 </div>
             </div>
         </div>

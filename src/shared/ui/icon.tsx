@@ -37,7 +37,9 @@ import {
   Book,
   Loader2,
   Download,
-  Send
+  Send,
+  Edit,
+  Image
 } from "lucide-react";
 
 export const Icons = {
@@ -80,7 +82,9 @@ export const Icons = {
   loading: Loader2,
   loader: Loader2,
   download: Download,
-  send: Send
+  send: Send,
+  edit: Edit,
+  image: Image
 };
 
 export type IconKey = keyof typeof Icons;
