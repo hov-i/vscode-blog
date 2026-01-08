@@ -10,8 +10,8 @@ import { getProjectCount } from "@/shared/lib/services/project.service";
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "VSCode Portfolio",
-  description: "A developer portfolio inspired by Visual Studio Code",
+  title: "hov_i.log",
+  description: "VSCode 기반 디자인 개발 블로그 입니다.",
 };
 
 export default async function RootLayout({
