@@ -40,7 +40,7 @@ export default async function GuestbookPage() {
             </div>
 
             {/* 방명록 목록 */}
-            <div className="space-y-3">
+            <div className="space-y-3 animate-slide-up stagger-3">
                 {guestbooks.length === 0 ? (
                     <div className="p-8 rounded bg-[var(--bg-secondary)] text-center">
                         <Icon name="messageSquare" className="w-12 h-12 mx-auto mb-3 text-[var(--text-secondary)]" />

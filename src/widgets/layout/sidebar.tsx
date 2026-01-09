@@ -42,8 +42,9 @@ export const Sidebar = ({ postCount, projectCount }: SidebarProps) => {
         <Link href={href}>
           <div
             className={cn(
-              "flex items-center px-3 py-1.5 cursor-pointer hover:bg-[var(--vscode-list-hover-bg)] text-[var(--text-primary)] transition-colors",
-              active && "bg-[var(--vscode-list-active-bg)] text-[var(--vscode-list-active-fg)]"
+              "flex items-center px-3 py-1.5 cursor-pointer text-[var(--text-primary)] transition-all duration-200",
+              "hover:bg-[var(--vscode-list-hover-bg)] hover:translate-x-1",
+              active && "bg-[var(--vscode-list-active-bg)] text-[var(--vscode-list-active-fg)] border-l-2 border-[var(--accent)]"
             )}
           >
             {chevron && (
@@ -102,7 +103,7 @@ export const Sidebar = ({ postCount, projectCount }: SidebarProps) => {
       </div>
 
       <div className="px-3 py-3 border-b border-[var(--border-color)] shrink-0">
-        <div className="flex items-center px-2 py-1.5 rounded bg-[var(--bg-tertiary)]">
+        <div className="flex items-center px-2 py-1.5 rounded bg-[var(--bg-tertiary)] border border-transparent focus-within:border-[var(--accent)] focus-within:ring-1 focus-within:ring-[var(--accent)] transition-all duration-200">
           <Icon name="search" className="w-3 h-3 mr-2 text-[var(--text-secondary)]" />
           <input
             type="text"

@@ -62,7 +62,7 @@ export const VSCodeLayout = ({ children, postCount, projectCount }: { children: 
             </div>
 
             {/* Content Children */}
-            <div className="flex-1 p-4 sm:p-6 overflow-y-auto bg-[var(--bg-primary)] h-full">
+            <div key={pathname} className="flex-1 p-4 sm:p-6 overflow-y-auto bg-[var(--bg-primary)] h-full animate-fade-in">
                 {children}
             </div>
           </div>

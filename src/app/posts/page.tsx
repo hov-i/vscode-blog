@@ -16,7 +16,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 
     return (
         <div className="max-w-4xl">
-             <div className="mb-8">
+             <div className="mb-8 animate-slide-up stagger-1">
                 <div className="flex items-center mb-4">
                     <span className="text-xs px-2 py-1 rounded mr-2 bg-[var(--accent)] text-white font-medium">
                         JSON
@@ -38,7 +38,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
                 </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 animate-slide-up stagger-2">
                 {posts.map((post: any) => (
                     <PostItem
                         key={post.id}
@@ -59,9 +59,9 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 
 const PostItem = ({ id, title, tag, description, time, views, comments, bgClass }: any) => (
     <Link href={`/posts/${id}`}>
-        <div className={`p-4 rounded cursor-pointer hover:opacity-90 transition-opacity ${bgClass}`}>
+        <div className={`p-4 rounded cursor-pointer transition-all duration-300 hover:bg-[var(--bg-tertiary)] hover:-translate-y-1 hover:shadow-xl ${bgClass}`}>
             <div className="flex items-start justify-between mb-2">
-                <h3 className="text-sm font-semibold text-[var(--text-primary)]">{title}</h3>
+                <h3 className="text-sm font-semibold text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]">{title}</h3>
                 <span className="text-xs px-2 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
                     {tag}
                 </span>
@@ -70,7 +70,7 @@ const PostItem = ({ id, title, tag, description, time, views, comments, bgClass 
             <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)]">
                 <span className="flex items-center"><Icon name="calendar" className="w-3 h-3 mr-1" />{time}</span>
                 <span className="flex items-center"><Icon name="eye" className="w-3 h-3 mr-1" />{views} views</span>
-                <span className="flex items-center"><Icon name="messageSquare" className="w-3 h-3 mr-1" />{comments} comments</span>
+                <span className="flex items-center"><Icon name="messageSquare" className="w-3 h-3 mr-1" />{comments || 0} comments</span>
             </div>
         </div>
     </Link>

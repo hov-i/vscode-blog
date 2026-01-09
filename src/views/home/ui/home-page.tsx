@@ -3,13 +3,14 @@
 import { Icon } from "@/shared/ui/icon";
 import { FormattedDate } from "@/shared/ui/formatted-date";
 import Link from "next/link";
+import { cn } from "@/shared/lib/utils";
 
 // type definition not needed inline if we destructure, but good for clarity
 export const HomePage = ({ stats, recentPosts, featuredProjects }: any) => {
     return (
         <div className="max-w-4xl">
-            {/* ... (keeping previous code same until Featured Projects) */}
-            <div className="mb-8">
+            {/* Header Section */}
+            <div className="mb-8 animate-slide-up" style={{ animationDelay: '0.05s' }}>
                 <div className="flex items-center mb-4">
                     <span className="text-xs px-2 py-1 rounded mr-2 bg-[var(--accent)] text-white font-medium">
                         MARKDOWN
@@ -34,7 +35,7 @@ export const HomePage = ({ stats, recentPosts, featuredProjects }: any) => {
                 </div>
             </div>
 
-            <div className="mb-8 p-4 rounded bg-[var(--bg-secondary)] border-l-[3px] border-[var(--accent)]">
+            <div className="mb-8 p-4 rounded bg-[var(--bg-secondary)] border-l-[3px] border-[var(--accent)] animate-slide-up" style={{ animationDelay: '0.1s' }}>
                 <div className="text-xs mb-3 text-[var(--text-secondary)] tracking-wider">
                     // QUICK STATS
                 </div>
@@ -62,7 +63,7 @@ export const HomePage = ({ stats, recentPosts, featuredProjects }: any) => {
                 </div>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-6 animate-slide-up" style={{ animationDelay: '0.15s' }}>
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-semibold text-[var(--text-primary)] flex items-center">
                         <Icon name="posts" className="w-5 h-5 mr-2 text-[var(--accent)]" />
@@ -123,9 +124,13 @@ export const HomePage = ({ stats, recentPosts, featuredProjects }: any) => {
 
 const PostItem = ({ id, title, tag, description, time, views, comments, bgClass }: any) => (
     <Link href={id ? `/posts/${id}` : "#"}>
-        <div className={`p-4 rounded cursor-pointer hover:opacity-90 ${bgClass}`}>
+        <div className={cn(
+            "p-4 rounded cursor-pointer transition-all duration-300",
+            "hover:bg-[var(--bg-tertiary)] hover:-translate-y-1 hover:shadow-xl",
+            bgClass
+        )}>
             <div className="flex items-start justify-between mb-2">
-                <h3 className="text-sm font-semibold text-[var(--text-primary)]">{title}</h3>
+                <h3 className="text-sm font-semibold text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]">{title}</h3>
                 <span className="text-xs px-2 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
                     {tag}
                 </span>
@@ -142,9 +147,9 @@ const PostItem = ({ id, title, tag, description, time, views, comments, bgClass 
 
 const ProjectItem = ({ id, title, description, tags, stars }: any) => (
     <Link href={id ? `/projects/${id}` : "#"}>
-        <div className="p-4 rounded cursor-pointer hover:opacity-90 bg-[var(--bg-secondary)] h-full">
+        <div className="p-4 rounded cursor-pointer transition-all duration-300 hover:bg-[var(--bg-tertiary)] hover:-translate-y-1 hover:shadow-xl bg-[var(--bg-secondary)] h-full border border-transparent hover:border-[var(--accent)]">
             <div className="flex items-center justify-between mb-2">
-                <Icon name="folder" className="w-5 h-5 text-[var(--accent)]" />
+                <Icon name="folder" className="w-5 h-5 text-[var(--accent)] transition-transform group-hover:scale-110" />
                 <div className="flex items-center gap-2">
                      <span className="text-[10px] text-[var(--text-secondary)] flex items-center">
                         <Icon name="star" className="w-3 h-3 mr-1" /> {stars || 0}
@@ -152,11 +157,11 @@ const ProjectItem = ({ id, title, description, tags, stars }: any) => (
                     <Icon name="github" className="w-4 h-4 text-[var(--text-secondary)]" />
                 </div>
             </div>
-            <h3 className="text-sm font-semibold mb-1 text-[var(--text-primary)]">{title}</h3>
-            <p className="text-xs mb-3 text-[var(--text-secondary)]">{description}</p>
+            <h3 className="text-sm font-semibold mb-1 text-[var(--text-primary)] transition-colors">{title}</h3>
+            <p className="text-xs mb-3 text-[var(--text-secondary)] line-clamp-2">{description}</p>
             <div className="flex gap-2 flex-wrap">
                 {tags?.map((tag: string) => (
-                    <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
+                    <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--accent)] hover:text-white transition-colors">
                         {tag}
                     </span>
                 ))}

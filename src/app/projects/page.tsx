@@ -14,7 +14,7 @@ export default async function ProjectsPage() {
 
     return (
         <div className="max-w-4xl">
-            <div className="mb-8">
+            <div className="mb-8 animate-slide-up stagger-1">
                 <div className="flex items-center mb-4">
                     <span className="text-xs px-2 py-1 rounded mr-2 bg-[var(--accent)] text-white font-medium">
                         JSON
@@ -39,7 +39,7 @@ export default async function ProjectsPage() {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-slide-up stagger-2">
                 {projects.map((project: any) => (
                     <ProjectItem
                         key={project.id}
@@ -57,21 +57,21 @@ export default async function ProjectsPage() {
 
 const ProjectItem = ({ id, title, description, tags, stars }: any) => (
     <Link href={`/projects/${id}`}>
-        <div className="p-4 rounded cursor-pointer hover:opacity-90 bg-[var(--bg-secondary)] border border-transparent hover:border-[var(--accent)] transition-all h-full">
+        <div className="group p-4 rounded cursor-pointer transition-all duration-300 hover:bg-[var(--bg-tertiary)] hover:-translate-y-1 hover:shadow-xl bg-[var(--bg-secondary)] border border-transparent hover:border-[var(--accent)] h-full">
             <div className="flex items-center justify-between mb-2">
-                <Icon name="folder" className="w-5 h-5 text-[var(--accent)]" />
+                <Icon name="folder" className="w-5 h-5 text-[var(--accent)] transition-transform group-hover:scale-110" />
                 <div className="flex items-center gap-2">
                      <span className="text-[10px] text-[var(--text-secondary)] flex items-center">
                         <Icon name="star" className="w-3 h-3 mr-1" /> {stars}
                     </span>
-                    <Icon name="github" className="w-4 h-4 text-[var(--text-secondary)]" />
+                    <Icon name="github" className="w-4 h-4 text-[var(--text-secondary)] transition-colors group-hover:text-[var(--accent)]" />
                 </div>
             </div>
-            <h3 className="text-sm font-semibold mb-1 text-[var(--text-primary)]">{title}</h3>
+            <h3 className="text-sm font-semibold mb-1 text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]">{title}</h3>
             <p className="text-xs mb-3 text-[var(--text-secondary)] line-clamp-2">{description}</p>
             <div className="flex gap-2 flex-wrap">
                 {tags.map((tag: string) => (
-                    <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
+                    <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-secondary)] transition-colors hover:bg-[var(--accent)] hover:text-white">
                         {tag}
                     </span>
                 ))}
