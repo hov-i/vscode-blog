@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { DraftPost } from './page'
-import { publishDraft, deleteDraft } from './actions'
+import { publishDraft, deleteDraft, regenerateDraft } from './actions'
 
 export default function DraftsClient({ drafts }: { drafts: DraftPost[] }) {
   const [selected, setSelected] = useState<number | null>(null)
@@ -74,6 +74,7 @@ function DraftDetail({
   const [description, setDescription] = useState(draft.description ?? '')
   const [tags, setTags] = useState(draft.tags ?? '')
   const [content, setContent] = useState(draft.content)
+  const [isRegenerating, setIsRegenerating] = useState(false)
 
   const handlePublish = () => {
     startTransition(async () => {
@@ -94,6 +95,27 @@ function DraftDetail({
     })
   }
 
+  const handleRegenerate = async () => {
+    if (!draft.conversation_data) {
+      alert('재생성용 대화 데이터가 없어요! 새 파이프라인으로 생성된 초안만 재생성 가능해~')
+      return
+    }
+    setIsRegenerating(true)
+    try {
+      const result = await regenerateDraft(draft.id)
+      setTitle(result.title)
+      setDescription(result.description)
+      setTags(result.tags)
+      setContent(result.content)
+    } catch (e) {
+      alert(`재생성 실패: ${e instanceof Error ? e.message : '알 수 없는 오류'}`)
+    } finally {
+      setIsRegenerating(false)
+    }
+  }
+
+  const isDisabled = isPending || isRegenerating
+
   return (
     <div className="flex flex-col h-full font-mono text-sm">
       {/* 상단 액션 바 */}
@@ -102,14 +124,21 @@ function DraftDetail({
         <div className="flex gap-2">
           <button
             onClick={handleDelete}
-            disabled={isPending}
+            disabled={isDisabled}
             className="px-3 py-1.5 text-xs rounded border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] disabled:opacity-50"
           >
             삭제
           </button>
           <button
+            onClick={handleRegenerate}
+            disabled={isDisabled || !draft.conversation_data}
+            className="px-3 py-1.5 text-xs rounded border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] disabled:opacity-50"
+          >
+            {isRegenerating ? '재생성 중...' : '🔄 재생성'}
+          </button>
+          <button
             onClick={handlePublish}
-            disabled={isPending}
+            disabled={isDisabled}
             className="px-3 py-1.5 text-xs rounded bg-[var(--accent)] text-white hover:opacity-90 disabled:opacity-50"
           >
             {isPending ? '발행 중...' : '발제하기'}

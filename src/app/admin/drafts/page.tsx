@@ -13,6 +13,7 @@ export interface DraftPost {
   source_project: string | null
   status: string
   created_at: string
+  conversation_data: object | null
 }
 
 export default async function AdminDraftsPage() {
@@ -26,7 +27,7 @@ export default async function AdminDraftsPage() {
   const { data: drafts, error } = await supabase
     .from('draft_posts')
     .select('*')
-    .eq('status', 'draft')
+    .in('status', ['draft', 'pending'])
     .order('created_at', { ascending: false })
 
   if (error) {
