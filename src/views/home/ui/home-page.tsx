@@ -6,7 +6,15 @@ import Link from "next/link";
 import { cn } from "@/shared/lib/utils";
 
 // type definition not needed inline if we destructure, but good for clarity
-export const HomePage = ({ stats, recentPosts, featuredProjects }: any) => {
+export const HomePage = ({ stats, recentPosts, featuredProjects, githubInfo }: any) => {
+    const updatedLabel = githubInfo?.updatedAt
+        ? new Date(githubInfo.updatedAt).toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+          })
+        : "—";
+    const versionLabel = githubInfo?.version ?? "v0.0.0";
+
     return (
         <div className="max-w-4xl">
             {/* Header Section */}
@@ -24,14 +32,24 @@ export const HomePage = ({ stats, recentPosts, featuredProjects }: any) => {
                     Frontend Developer
                 </p>
                 <div className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
-                    <span className="flex items-center">
+                    <a
+                        href="https://github.com/hov-i/vscode-blog/commits"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center hover:text-[var(--accent)] transition-colors"
+                    >
                         <Icon name="calendar" className="w-4 h-4 mr-1" />
-                        Updated: Jan 2026
-                    </span>
-                    <span className="flex items-center">
+                        Updated: {updatedLabel}
+                    </a>
+                    <a
+                        href="https://github.com/hov-i/vscode-blog/releases"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center hover:text-[var(--accent)] transition-colors"
+                    >
                         <Icon name="gitBranch" className="w-4 h-4 mr-1" />
-                        v1.0.0
-                    </span>
+                        {versionLabel}
+                    </a>
                 </div>
             </div>
 

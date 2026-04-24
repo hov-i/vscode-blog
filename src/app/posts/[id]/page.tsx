@@ -1,7 +1,7 @@
 import { Icon } from "@/shared/ui/icon";
 import { MarkdownRenderer } from "@/shared/ui/markdown-renderer";
 import Link from "next/link";
-import { getPostByIdWithViewIncrement } from "@/shared/lib/services/post.service";
+import { getPostByIdWithViewIncrement, getPostTitleMap } from "@/shared/lib/services/post.service";
 import { FormattedDate } from "@/shared/ui/formatted-date";
 import { notFound } from "next/navigation";
 import { deletePost } from "@/shared/lib/actions";
@@ -16,7 +16,10 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
         notFound();
     }
     
-    const post = await getPostByIdWithViewIncrement(id) as any;
+    const [post, postLinks] = await Promise.all([
+        getPostByIdWithViewIncrement(id) as Promise<any>,
+        getPostTitleMap(),
+    ]);
 
     if (!post) {
         notFound();
@@ -38,15 +41,26 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
                         <span className="text-xs text-[var(--text-secondary)]">posts/{post.id}.md</span>
                     </div>
                     {user?.email === 'dbsghdql55555@gmail.com' && (
-                         <form action={deleteAction}>
-                            <button 
-                                type="submit"
-                                className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-red-500 hover:text-white text-red-500 transition-colors flex items-center border border-[var(--border-color)] cursor-pointer"
-                            >
-                                <Icon name="trash" className="w-3 h-3 mr-2" />
-                                Delete Post
-                            </button>
-                        </form>
+                        <div className="flex gap-2">
+                            <Link href={`/posts/${post.id}/edit`}>
+                                <button
+                                    type="button"
+                                    className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--accent)] hover:text-white text-[var(--accent)] transition-colors flex items-center border border-[var(--border-color)] cursor-pointer"
+                                >
+                                    <Icon name="edit" className="w-3 h-3 mr-2" />
+                                    Edit Post
+                                </button>
+                            </Link>
+                            <form action={deleteAction}>
+                                <button
+                                    type="submit"
+                                    className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-red-500 hover:text-white text-red-500 transition-colors flex items-center border border-[var(--border-color)] cursor-pointer"
+                                >
+                                    <Icon name="trash" className="w-3 h-3 mr-2" />
+                                    Delete Post
+                                </button>
+                            </form>
+                        </div>
                     )}
                 </div>
                 <h1 className="text-3xl font-bold mb-2 text-[var(--text-primary)]">
@@ -80,7 +94,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
             </div>
 
             <article className="mb-12">
-                <MarkdownRenderer content={post.content} />
+                <MarkdownRenderer content={post.content} postLinks={postLinks} />
             </article>
 
             <CommentSection postId={post.id} comments={post.comments || []} user={user} />

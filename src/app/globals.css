@@ -18,134 +18,287 @@
 
   --color-accent: var(--accent);
   --color-accent-foreground: #ffffff;
+
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  --font-mono: var(--font-mono, 'JetBrains Mono'), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
 }
 
 @layer base {
   :root, .light, [data-theme="light"] {
-    /* Light Theme (Default) */
+    /* VSCode Light+ */
     --bg-primary: #ffffff;
-    --bg-secondary: #f3f4f6;
-    --bg-tertiary: #e5e7eb;
-    --text-primary: #1f2937;
-    --text-secondary: #6b7280;
-    --border-color: #d1d5db;
-    --accent: #3b82f6;
-    --accent-rgb: 59, 130, 246;
-    
-    /* VSCode specific overrides for light mode */
-    --vscode-status-bar-bg: #007acc;
+    --bg-secondary: #f3f3f3;
+    --bg-tertiary: #ececec;
+    --text-primary: #3b3b3b;
+    --text-secondary: #616161;
+    --text-editor: #3b3b3b;
+    --border-color: #e5e5e5;
+    --accent: #005fb8;
+    --accent-rgb: 0, 95, 184;
+
+    /* Activity bar — Light+ keeps it dark */
+    --vscode-activity-bar-bg: #2c2c2c;
+    --vscode-activity-bar-fg: #ffffff;
+    --vscode-activity-bar-inactive-fg: rgba(255, 255, 255, 0.4);
+    --vscode-activity-bar-badge-bg: #005fb8;
+
+    /* Title / Tabs */
+    --vscode-title-bar-bg: #dddddd;
+    --vscode-title-bar-fg: #333333;
+    --vscode-tab-inactive-bg: #ececec;
+    --vscode-tab-inactive-fg: rgba(51, 51, 51, 0.7);
+    --vscode-tab-active-bg: #ffffff;
+    --vscode-tab-active-fg: #333333;
+    --vscode-tab-border: #f3f3f3;
+
+    /* Status bar */
+    --vscode-status-bar-bg: #005fb8;
     --vscode-status-bar-fg: #ffffff;
-    --vscode-list-active-bg: #007acc;
+    --vscode-status-bar-hover: rgba(255, 255, 255, 0.18);
+
+    /* List / tree */
+    --vscode-list-active-bg: #0060c0;
+    --vscode-list-inactive-bg: #e4e6f1;
     --vscode-list-active-fg: #ffffff;
-    --vscode-list-hover-bg: #e8e8e8;
+    --vscode-list-hover-bg: #f0f0f0;
+    --vscode-list-focus-outline: #0090f1;
+
+    /* Inputs / buttons / badges */
+    --vscode-input-bg: #ffffff;
+    --vscode-input-fg: #333333;
+    --vscode-input-border: #cecece;
+    --vscode-button-bg: #005fb8;
+    --vscode-button-fg: #ffffff;
+    --vscode-button-hover-bg: #026ec1;
+    --vscode-badge-bg: #cccccc;
+    --vscode-badge-fg: #333333;
+
+    /* Breadcrumb / widget */
+    --vscode-breadcrumb-bg: #ffffff;
+    --vscode-breadcrumb-fg: rgba(59, 59, 59, 0.7);
+    --vscode-widget-bg: #f3f3f3;
+    --vscode-widget-border: #c8c8c8;
+
+    /* Editor selection + decoration */
+    --vscode-selection-bg: #add6ff;
+    --vscode-focus-border: #0090f1;
+    --vscode-indent-guide: #d3d3d3;
+    --vscode-tree-indent-stroke: #a9a9a9;
+    --vscode-line-highlight: rgba(0, 0, 0, 0.04);
+
+    /* Hover + scrollbar */
+    --vscode-hover-bg: rgba(0, 0, 0, 0.05);
+    --vscode-scrollbar-thumb: rgba(100, 100, 100, 0.4);
+    --vscode-scrollbar-thumb-hover: rgba(100, 100, 100, 0.7);
   }
 
   .dark, [data-theme="dark"] {
-    /* Dark Theme */
-    --bg-primary: #1e1e1e;
-    --bg-secondary: #252526;
-    --bg-tertiary: #2d2d30;
-    --text-primary: #cccccc;
-    --text-secondary: #858585;
-    --border-color: #3e3e42;
-    --accent: #007acc;
-    --accent-rgb: 0, 122, 204;
-    
-    /* VSCode specific overrides for dark mode */
-    --vscode-list-active-bg: #37373d;
+    /* Night Owl by Sarah Drasner (authentic values) */
+    --bg-primary: #011627;                 /* editor.background — deep navy */
+    --bg-secondary: #01111d;               /* tab.inactiveBackground */
+    --bg-tertiary: #0b2942;                /* tab.activeBackground — lifted panel */
+    --text-primary: #d6deeb;               /* editor.foreground */
+    --text-secondary: #5f7e97;             /* tab.inactiveForeground */
+    --text-editor: #d6deeb;
+    --border-color: #1d3b53;               /* subtle navy-gray separators */
+    --accent: #82aaff;                     /* functions / focus — signature Night Owl blue */
+    --accent-rgb: 130, 170, 255;
+
+    /* Activity bar */
+    --vscode-activity-bar-bg: #011627;
+    --vscode-activity-bar-fg: #d6deeb;
+    --vscode-activity-bar-inactive-fg: #5f7e97;
+    --vscode-activity-bar-badge-bg: #82aaff;
+
+    /* Title / Tabs */
+    --vscode-title-bar-bg: #011627;
+    --vscode-title-bar-fg: #d6deeb;
+    --vscode-tab-inactive-bg: #01111d;
+    --vscode-tab-inactive-fg: #5f7e97;
+    --vscode-tab-active-bg: #0b2942;
+    --vscode-tab-active-fg: #d6deeb;
+    --vscode-tab-border: #1d3b53;
+
+    /* Status bar */
+    --vscode-status-bar-bg: #011627;
+    --vscode-status-bar-fg: #5f7e97;
+    --vscode-status-bar-hover: rgba(255, 255, 255, 0.06);
+
+    /* List / tree */
+    --vscode-list-active-bg: rgba(35, 77, 112, 0.55);    /* #234d708c */
+    --vscode-list-inactive-bg: rgba(14, 41, 63, 0.6);    /* #0e293f99 */
     --vscode-list-active-fg: #ffffff;
-    --vscode-list-hover-bg: #2a2d2e;
+    --vscode-list-hover-bg: rgba(41, 45, 62, 0.34);      /* #292d3e57 */
+    --vscode-list-focus-outline: #82aaff;
+
+    /* Inputs / buttons / badges */
+    --vscode-input-bg: #0b253a;
+    --vscode-input-fg: #ffffff;
+    --vscode-input-border: #1d3b53;
+    --vscode-button-bg: #7e57c2;                         /* Night Owl signature purple */
+    --vscode-button-fg: #ffffff;
+    --vscode-button-hover-bg: #9575cd;
+    --vscode-badge-bg: #5f7e97;
+    --vscode-badge-fg: #ffffff;
+
+    /* Breadcrumb / widget */
+    --vscode-breadcrumb-bg: #011627;
+    --vscode-breadcrumb-fg: #a1aab8;
+    --vscode-widget-bg: #011627;
+    --vscode-widget-border: #5f7e97;
+
+    /* Editor selection + decoration */
+    --vscode-selection-bg: #1d3b53;
+    --vscode-focus-border: #82aaff;
+    --vscode-indent-guide: #1d3b53;
+    --vscode-tree-indent-stroke: #3b4c5e;
+    --vscode-line-highlight: rgba(130, 170, 255, 0.06);
+
+    /* Hover + scrollbar */
+    --vscode-hover-bg: rgba(255, 255, 255, 0.04);
+    --vscode-scrollbar-thumb: rgba(8, 77, 129, 0.5);     /* #084d8180 */
+    --vscode-scrollbar-thumb-hover: rgba(8, 77, 129, 0.75); /* #084d81c0 */
+
+    /* Code block — same as editor bg (Night Owl signature look) */
+    --vscode-code-bg: #011627;
   }
 
   body {
     @apply bg-[var(--bg-primary)] text-[var(--text-primary)];
-    font-family: 'JetBrains Mono', monospace; 
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  pre,
+  code,
+  kbd,
+  samp {
+    font-family: var(--font-mono);
+  }
+
+  ::selection {
+    background: var(--vscode-selection-bg);
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--vscode-focus-border);
+    outline-offset: -1px;
   }
 }
 
-/* Custom Scrollbar hiding as per wireframe */
+/* Thin themed scrollbar — matches VSCode's editor scrollbar */
 ::-webkit-scrollbar {
-  display: none;
+  width: 14px;
+  height: 14px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbar-thumb);
+  border: 4px solid transparent;
+  background-clip: padding-box;
+  border-radius: 7px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
-/* Highlight.js VS2015 Dark Theme for Code Blocks */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-scrollbar-thumb) transparent;
+}
+
+/* Highlight.js — Night Owl palette by Sarah Drasner */
 .hljs {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: #1e1e1e;
-  color: #dcdcdc;
+  background: transparent;
+  color: #d6deeb;
 }
 
 .hljs-keyword,
 .hljs-literal,
-.hljs-symbol,
-.hljs-name {
-  color: #569cd6;
+.hljs-symbol {
+  color: #c792ea; /* purple */
+}
+
+.hljs-name,
+.hljs-tag {
+  color: #7fdbca; /* cyan */
 }
 
 .hljs-link {
-  color: #569cd6;
+  color: #82aaff;
   text-decoration: underline;
 }
 
 .hljs-built_in,
 .hljs-type {
-  color: #4ec9b0;
+  color: #ffcb8b; /* warm yellow */
 }
 
-.hljs-number,
-.hljs-class {
-  color: #b8d7a3;
+.hljs-number {
+  color: #f78c6c; /* orange */
+}
+
+.hljs-class,
+.hljs-title {
+  color: #82aaff; /* blue (functions/titles) */
 }
 
 .hljs-string,
 .hljs-meta-string {
-  color: #d69d85;
+  color: #ecc48d; /* beige/yellow */
 }
 
 .hljs-regexp,
 .hljs-template-tag {
-  color: #9a5334;
+  color: #5ca7e4;
 }
 
 .hljs-subst,
 .hljs-function,
-.hljs-title,
 .hljs-params,
 .hljs-formula {
-  color: #dcdcdc;
+  color: #82aaff;
 }
 
 .hljs-comment,
 .hljs-quote {
-  color: #57a64a;
+  color: #637777;
   font-style: italic;
 }
 
 .hljs-doctag {
-  color: #608b4e;
+  color: #7fdbca;
 }
 
 .hljs-meta,
-.hljs-meta-keyword,
-.hljs-tag {
-  color: #9b9b9b;
+.hljs-meta-keyword {
+  color: #c792ea;
 }
 
 .hljs-variable,
 .hljs-template-variable {
-  color: #bd63c5;
+  color: #addb67; /* lime */
 }
 
 .hljs-attr,
 .hljs-attribute,
 .hljs-builtin-name {
-  color: #9cdcfe;
+  color: #addb67; /* lime */
 }
 
 .hljs-section {
-  color: gold;
+  color: #82aaff;
 }
 
 .hljs-emphasis {
@@ -166,13 +319,15 @@
 }
 
 .hljs-addition {
-  background-color: #144212;
+  background-color: rgba(173, 219, 103, 0.15);
+  color: #addb67;
   display: inline-block;
   width: 100%;
 }
 
 .hljs-deletion {
-  background-color: #600;
+  background-color: rgba(255, 88, 116, 0.15);
+  color: #ff5874;
   display: inline-block;
   width: 100%;
 }
@@ -210,5 +365,99 @@
 
   .hover-glow {
     @apply transition-all duration-300 hover:shadow-[0_0_15px_rgba(var(--accent-rgb),0.3)];
+  }
+
+  @keyframes vi-float {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    25% { transform: translateY(-4px) rotate(1deg); }
+    50% { transform: translateY(-6px) rotate(-0.5deg); }
+    75% { transform: translateY(-2px) rotate(0.8deg); }
+  }
+
+  .animate-vi-float {
+    animation: vi-float 4s ease-in-out infinite;
+  }
+
+  @keyframes vi-wiggle {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    30% { transform: rotate(-4deg) scale(1.04); }
+    60% { transform: rotate(4deg) scale(1.04); }
+  }
+
+  .animate-vi-wiggle {
+    animation: vi-wiggle 0.6s ease-in-out;
+  }
+
+  @keyframes vi-bubble {
+    0% { opacity: 0; transform: translateY(6px) scale(0.85); }
+    15% { opacity: 1; transform: translateY(0) scale(1); }
+    85% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-4px) scale(0.95); }
+  }
+
+  .animate-vi-bubble {
+    animation: vi-bubble var(--vi-bubble-duration, 3800ms) ease-in-out both;
+  }
+
+  @keyframes vi-bubble-open {
+    0%   { opacity: 0; transform: translateY(8px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .animate-vi-bubble-open {
+    animation: vi-bubble-open 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes vi-cursor-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .vi-cursor {
+    display: inline-block;
+    width: 6px;
+    height: 1em;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+    background: currentColor;
+    animation: vi-cursor-blink 1s steps(1) infinite;
+  }
+
+  .vi-avatar-shadow {
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.25))
+            drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
+  }
+
+  @keyframes vi-flower-bloom {
+    0%   { opacity: 0; transform: scale(0.2) translateY(12px); }
+    12%  { opacity: 1; transform: scale(1)   translateY(0); }
+    88%  { opacity: 1; transform: scale(1)   translateY(0); }
+    100% { opacity: 0; transform: scale(0.5) translateY(-6px); }
+  }
+
+  .animate-vi-flower {
+    animation: vi-flower-bloom var(--vi-flower-duration, 10000ms) ease-in-out both;
+  }
+
+  @keyframes vi-flower-sway {
+    0%, 100% { transform: rotate(-5deg); }
+    50%      { transform: rotate(5deg); }
+  }
+
+  .vi-flower-sway {
+    display: inline-block;
+    transform-origin: bottom center;
+    animation: vi-flower-sway var(--vi-sway-duration, 2.2s) ease-in-out infinite;
+  }
+
+  @keyframes vi-blanket {
+    0%   { opacity: 0; transform: scale(0.55); }
+    12%  { opacity: 1; transform: scale(1); }
+    88%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.9); }
+  }
+
+  .animate-vi-blanket {
+    animation: vi-blanket var(--vi-flower-duration, 10000ms) ease-in-out both;
   }
 }

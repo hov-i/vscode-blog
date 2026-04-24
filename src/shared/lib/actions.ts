@@ -150,6 +150,117 @@ export async function createProject(formData: FormData) {
   redirect('/projects')
 }
 
+export async function updatePost(id: string, formData: FormData) {
+  await ensureAdmin()
+
+  const postId = Number(id)
+  if (isNaN(postId)) {
+    throw new Error('Invalid post id')
+  }
+
+  const title = formData.get('title') as string
+  const description = formData.get('description') as string
+  const content = formData.get('content') as string
+  const tagsString = formData.get('tags') as string
+
+  if (!title || !content) {
+    throw new Error('Title and Content are required')
+  }
+
+  const tagNames = tagsString
+    ? tagsString.split(',').map((t) => t.trim()).filter(Boolean)
+    : []
+
+  const tagsConnect = []
+  for (const name of tagNames) {
+    const tag = await prisma.tag.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    })
+    tagsConnect.push({ id: tag.id })
+  }
+
+  await prisma.post.update({
+    where: { id: postId },
+    data: {
+      title,
+      description: description || '',
+      content,
+      tags: {
+        set: [],
+        connect: tagsConnect,
+      },
+    },
+  })
+
+  revalidatePath('/posts')
+  revalidatePath(`/posts/${postId}`)
+  revalidatePath('/')
+  redirect(`/posts/${postId}`)
+}
+
+export async function updateProject(id: string, formData: FormData) {
+  await ensureAdmin()
+
+  const projectId = Number(id)
+  if (isNaN(projectId)) {
+    throw new Error('Invalid project id')
+  }
+
+  const title = formData.get('title') as string
+  const description = formData.get('description') as string
+  const content = formData.get('content') as string
+  const repository = formData.get('repository') as string
+  const demoUrl = formData.get('demoUrl') as string
+  const tagsString = formData.get('tags') as string
+
+  if (!title) {
+    throw new Error('Title is required')
+  }
+
+  let tagNames: string[] = []
+  try {
+    if (tagsString.trim().startsWith('[')) {
+      tagNames = JSON.parse(tagsString)
+    } else {
+      tagNames = tagsString.split(',').map((t) => t.trim()).filter(Boolean)
+    }
+  } catch (e) {
+    tagNames = tagsString.split(',').map((t) => t.trim()).filter(Boolean)
+  }
+
+  const tagsConnect = []
+  for (const name of tagNames) {
+    const tag = await prisma.tag.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    })
+    tagsConnect.push({ id: tag.id })
+  }
+
+  await prisma.project.update({
+    where: { id: projectId },
+    data: {
+      title,
+      description: description || '',
+      content: content || '',
+      repository: repository || '',
+      demoUrl: demoUrl || '',
+      tags: {
+        set: [],
+        connect: tagsConnect,
+      },
+    },
+  })
+
+  revalidatePath('/projects')
+  revalidatePath(`/projects/${projectId}`)
+  revalidatePath('/')
+  redirect(`/projects/${projectId}`)
+}
+
 export async function deletePost(id: string) {
   await ensureAdmin()
 

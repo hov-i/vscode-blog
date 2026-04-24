@@ -7,10 +7,14 @@ import { VSCodeLayout } from "@/widgets/layout/vscode-layout";
 import { getPostCount } from "@/shared/lib/services/post.service";
 import { getProjectCount } from "@/shared/lib/services/project.service";
 
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] });
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "hov_i.log",
+  title: "Blog · Hovi",
   description: "VSCode 기반 디자인 개발 블로그 입니다.",
 };
 
@@ -23,8 +27,16 @@ export default async function RootLayout({
   const projectCount = await getProjectCount();
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={jetbrainsMono.className} suppressHydrationWarning>
+    <html lang="ko" suppressHydrationWarning className={jetbrainsMono.variable}>
+      <head>
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
+      </head>
+      <body suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

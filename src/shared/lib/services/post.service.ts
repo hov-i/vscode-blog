@@ -139,6 +139,22 @@ export const incrementPostView = async (id: number) => {
   });
 };
 
+export const getPostTitleMap = unstable_cache(
+  async () => {
+    const posts = await prisma.post.findMany({
+      where: { published: true },
+      select: { id: true, title: true },
+    });
+    const map: Record<string, number> = {};
+    for (const p of posts) {
+      map[p.title] = p.id;
+    }
+    return map;
+  },
+  ['post-title-map'],
+  { tags: ['posts'], revalidate: 60 }
+);
+
 export const getTotalViews = unstable_cache(
   async () => {
     const result = await prisma.post.aggregate({

@@ -47,15 +47,26 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                         <span className="text-[var(--text-primary)]">{project.title}</span>
                     </div>
                     {user?.email === 'dbsghdql55555@gmail.com' && (
-                         <form action={deleteAction}>
-                            <button 
-                                type="submit"
-                                className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-red-500 hover:text-white text-red-500 transition-colors flex items-center border border-[var(--border-color)] cursor-pointer"
-                            >
-                                <Icon name="trash" className="w-3 h-3 mr-2" />
-                                Delete Project
-                            </button>
-                        </form>
+                        <div className="flex gap-2">
+                            <Link href={`/projects/${project.id}/edit`}>
+                                <button
+                                    type="button"
+                                    className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--accent)] hover:text-white text-[var(--accent)] transition-colors flex items-center border border-[var(--border-color)] cursor-pointer"
+                                >
+                                    <Icon name="edit" className="w-3 h-3 mr-2" />
+                                    Edit Project
+                                </button>
+                            </Link>
+                            <form action={deleteAction}>
+                                <button
+                                    type="submit"
+                                    className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-red-500 hover:text-white text-red-500 transition-colors flex items-center border border-[var(--border-color)] cursor-pointer"
+                                >
+                                    <Icon name="trash" className="w-3 h-3 mr-2" />
+                                    Delete Project
+                                </button>
+                            </form>
+                        </div>
                     )}
                 </div>
                 

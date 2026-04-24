@@ -29,50 +29,48 @@ export const ActivityBar = () => {
   return (
     <aside
       id="activity-bar"
-      className="w-12 lg:flex hidden flex-col items-center bg-[var(--bg-tertiary)] border-r border-[var(--border-color)] shrink-0"
+      className="w-12 lg:flex hidden flex-col items-center bg-[var(--vscode-activity-bar-bg)] border-r border-[var(--border-color)] shrink-0"
     >
-      <div className="w-full h-12 flex items-center justify-center border-b border-[var(--border-color)]">
-        <Icon name="logo" className="text-lg text-[var(--accent)]" />
+      <div className="w-full h-12 flex items-center justify-center">
+        <Icon name="logo" className="text-lg text-[var(--vscode-activity-bar-fg)]" />
       </div>
-      <button className="w-full h-12 flex items-center justify-center text-[var(--text-secondary)] hover:bg-white/10">
-        <Icon name="menu" />
-      </button>
-      
-      <Link href="/" className={cn("w-full h-12 flex items-center justify-center hover:bg-white/10 relative", isActive("/") ? "text-[var(--accent)]" : "text-[var(--text-secondary)]")}>
-        {isActive("/") && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--accent)]" />}
-        <Icon name="home" />
-      </Link>
-      
-      <Link href="/posts" className={cn("w-full h-12 flex items-center justify-center hover:bg-white/10 relative", isActive("/posts") ? "text-[var(--accent)]" : "text-[var(--text-secondary)]")}>
-        {isActive("/posts") && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--accent)]" />}
-        <Icon name="posts" />
+
+      <Link href="/" className={cn("w-full h-12 flex items-center justify-center hover:bg-[var(--vscode-hover-bg)] relative", isActive("/") ? "text-[var(--vscode-activity-bar-fg)]" : "text-[var(--vscode-activity-bar-inactive-fg)] hover:text-[var(--vscode-activity-bar-fg)]")}>
+        {isActive("/") && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--vscode-activity-bar-fg)]" />}
+        <Icon name="home" className="w-6 h-6" />
       </Link>
 
-      <Link href="/projects" className={cn("w-full h-12 flex items-center justify-center hover:bg-white/10 relative", isActive("/projects") ? "text-[var(--accent)]" : "text-[var(--text-secondary)]")}>
-        {isActive("/projects") && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--accent)]" />}
-        <Icon name="folder" />
+      <Link href="/posts" className={cn("w-full h-12 flex items-center justify-center hover:bg-[var(--vscode-hover-bg)] relative", isActive("/posts") ? "text-[var(--vscode-activity-bar-fg)]" : "text-[var(--vscode-activity-bar-inactive-fg)] hover:text-[var(--vscode-activity-bar-fg)]")}>
+        {isActive("/posts") && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--vscode-activity-bar-fg)]" />}
+        <Icon name="posts" className="w-6 h-6" />
       </Link>
 
-      <Link href="/tags" className={cn("w-full h-12 flex items-center justify-center hover:bg-white/10 relative", isActive("/tags") ? "text-[var(--accent)]" : "text-[var(--text-secondary)]")}>
-        {isActive("/tags") && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--accent)]" />}
-        <Icon name="tags" />
+      <Link href="/projects" className={cn("w-full h-12 flex items-center justify-center hover:bg-[var(--vscode-hover-bg)] relative", isActive("/projects") ? "text-[var(--vscode-activity-bar-fg)]" : "text-[var(--vscode-activity-bar-inactive-fg)] hover:text-[var(--vscode-activity-bar-fg)]")}>
+        {isActive("/projects") && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--vscode-activity-bar-fg)]" />}
+        <Icon name="folder" className="w-6 h-6" />
       </Link>
 
-      <Link href="/about" className={cn("w-full h-12 flex items-center justify-center hover:bg-white/10 relative", isActive("/about") ? "text-[var(--accent)]" : "text-[var(--text-secondary)]")}>
-         {isActive("/about") && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--accent)]" />}
-        <Icon name="user" />
+      <Link href="/tags" className={cn("w-full h-12 flex items-center justify-center hover:bg-[var(--vscode-hover-bg)] relative", isActive("/tags") ? "text-[var(--vscode-activity-bar-fg)]" : "text-[var(--vscode-activity-bar-inactive-fg)] hover:text-[var(--vscode-activity-bar-fg)]")}>
+        {isActive("/tags") && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--vscode-activity-bar-fg)]" />}
+        <Icon name="tags" className="w-6 h-6" />
       </Link>
 
-      <div className="mt-auto mb-4 w-full flex flex-col items-center">
+      <Link href="/about" className={cn("w-full h-12 flex items-center justify-center hover:bg-[var(--vscode-hover-bg)] relative", isActive("/about") ? "text-[var(--vscode-activity-bar-fg)]" : "text-[var(--vscode-activity-bar-inactive-fg)] hover:text-[var(--vscode-activity-bar-fg)]")}>
+         {isActive("/about") && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--vscode-activity-bar-fg)]" />}
+        <Icon name="user" className="w-6 h-6" />
+      </Link>
+
+      <div className="mt-auto mb-2 w-full flex flex-col items-center">
         <button
           onClick={toggleTheme}
           id="theme-toggle"
-          className="w-full h-12 flex items-center justify-center text-[var(--text-secondary)] hover:bg-white/10"
+          title="Toggle theme"
+          className="w-full h-12 flex items-center justify-center text-[var(--vscode-activity-bar-inactive-fg)] hover:text-[var(--vscode-activity-bar-fg)] hover:bg-[var(--vscode-hover-bg)]"
         >
-          {mounted && theme === "light" ? <Icon name="sun" /> : <Icon name="moon" />}
+          {mounted && theme === "light" ? <Icon name="sun" className="w-6 h-6" /> : <Icon name="moon" className="w-6 h-6" />}
         </button>
-        <button className="w-full h-12 flex items-center justify-center text-[var(--text-secondary)] hover:bg-white/10">
-          <Icon name="settings" />
+        <button className="w-full h-12 flex items-center justify-center text-[var(--vscode-activity-bar-inactive-fg)] hover:text-[var(--vscode-activity-bar-fg)] hover:bg-[var(--vscode-hover-bg)]">
+          <Icon name="settings" className="w-6 h-6" />
         </button>
       </div>
     </aside>

@@ -4,18 +4,46 @@ import { ActivityBar } from "@/widgets/layout/activity-bar";
 import { Sidebar } from "@/widgets/layout/sidebar";
 import { StatusBar } from "@/widgets/layout/status-bar";
 import { TabsBar } from "@/widgets/layout/tabs-bar";
-import { ReactNode, useState, useEffect } from "react";
+import { BreadcrumbBar } from "@/widgets/layout/breadcrumb-bar";
+import { ChatWidget } from "@/widgets/chat-widget/chat-widget";
+import { ReactNode, useState, useEffect, useRef } from "react";
 import { Icon } from "@/shared/ui/icon";
 import { cn } from "@/shared/lib/utils";
 import { usePathname } from "next/navigation";
 
+const LINE_HEIGHT_PX = 24;
+
 export const VSCodeLayout = ({ children, postCount, projectCount }: { children: ReactNode; postCount: number; projectCount: number }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [lineCount, setLineCount] = useState(30);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   // Close sidebar when navigating on mobile
   useEffect(() => {
     setSidebarOpen(false);
+  }, [pathname]);
+
+  // Dynamically size the line-number gutter based on content height
+  useEffect(() => {
+    const content = contentRef.current;
+    const scroller = scrollRef.current;
+    if (!content || !scroller) return;
+
+    const update = () => {
+      const contentHeight = content.getBoundingClientRect().height;
+      const viewportHeight = scroller.clientHeight;
+      const height = Math.max(contentHeight, viewportHeight);
+      const lines = Math.max(30, Math.ceil(height / LINE_HEIGHT_PX) + 2);
+      setLineCount(lines);
+    };
+
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(content);
+    ro.observe(scroller);
+    return () => ro.disconnect();
   }, [pathname]);
 
   return (
@@ -50,26 +78,36 @@ export const VSCodeLayout = ({ children, postCount, projectCount }: { children: 
         {/* Editor Area */}
         <main id="main-content" className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
           <TabsBar />
+          <BreadcrumbBar />
 
-          <div className="flex flex-1 overflow-hidden">
-            {/* Line Numbers Sidebar - Hidden on extreme small screens */}
-            <div className="hidden sm:block w-12 py-2 text-right px-2 text-xs bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-r border-[var(--border-color)] shrink-0 select-none">
-              {Array.from({ length: 30 }).map((_, i) => (
-                <div key={i} className="leading-6">
-                  {i + 1}
-                </div>
+          <div ref={scrollRef} className="flex flex-1 overflow-y-auto bg-[var(--bg-primary)]">
+            {/* Line Numbers Gutter - scrolls with content */}
+            <div
+              aria-hidden="true"
+              className="hidden sm:block w-12 py-2 text-right px-2 text-xs font-mono text-[var(--text-secondary)] shrink-0 select-none"
+              style={{ lineHeight: `${LINE_HEIGHT_PX}px` }}
+            >
+              {Array.from({ length: lineCount }).map((_, i) => (
+                <div key={i}>{i + 1}</div>
               ))}
             </div>
 
-            {/* Content Children */}
-            <div key={pathname} className="flex-1 p-4 sm:p-6 overflow-y-auto bg-[var(--bg-primary)] h-full animate-fade-in">
+            {/* Content column (natural height; outer flex stretches this to match gutter) */}
+            <div className="flex-1 min-w-0 flex flex-col text-[var(--text-editor)]">
+              <div
+                ref={contentRef}
+                key={pathname}
+                className="p-4 sm:p-6 animate-fade-in"
+              >
                 {children}
+              </div>
             </div>
           </div>
         </main>
       </div>
 
       <StatusBar />
+      <ChatWidget />
     </div>
   );
 };
