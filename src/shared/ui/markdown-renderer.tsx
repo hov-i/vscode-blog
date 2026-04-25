@@ -40,19 +40,19 @@ export function MarkdownRenderer({ content, className = "", postLinks }: Markdow
         components={{
           // 커스텀 컴포넌트 스타일링
           h1: ({ node, ...props }) => (
-            <h1 className="text-3xl font-bold mb-4 mt-6 text-[var(--text-editor)] border-b border-[var(--border-color)] pb-2" {...props} />
+            <h1 className="text-2xl sm:text-3xl font-bold mb-4 mt-6 text-[var(--text-editor)] border-b border-[var(--border-color)] pb-2 break-keep" {...props} />
           ),
           h2: ({ node, ...props }) => (
-            <h2 className="text-2xl font-bold mb-3 mt-5 text-[var(--text-editor)]" {...props} />
+            <h2 className="text-xl sm:text-2xl font-bold mb-3 mt-5 text-[var(--text-editor)] break-keep" {...props} />
           ),
           h3: ({ node, ...props }) => (
-            <h3 className="text-xl font-bold mb-2 mt-4 text-[var(--text-editor)]" {...props} />
+            <h3 className="text-lg sm:text-xl font-bold mb-2 mt-4 text-[var(--text-editor)] break-keep" {...props} />
           ),
           h4: ({ node, ...props }) => (
-            <h4 className="text-lg font-bold mb-2 mt-3 text-[var(--text-editor)]" {...props} />
+            <h4 className="text-base sm:text-lg font-bold mb-2 mt-3 text-[var(--text-editor)] break-keep" {...props} />
           ),
           p: ({ node, ...props }) => (
-            <p className="mb-4 text-[var(--text-editor)] leading-relaxed" {...props} />
+            <p className="mb-4 text-[var(--text-editor)] leading-relaxed break-words" {...props} />
           ),
           a: ({ node, title, href, children, ...props }) => {
             if (title === WIKILINK_TITLE && href) {
@@ -110,7 +110,7 @@ export function MarkdownRenderer({ content, className = "", postLinks }: Markdow
             );
           },
           pre: ({ node, ...props }) => (
-            <pre className="bg-[var(--vscode-code-bg)] border border-[var(--border-color)] rounded p-4 mb-4 overflow-x-auto" {...props} />
+            <pre className="bg-[var(--vscode-code-bg)] border border-[var(--border-color)] rounded p-3 sm:p-4 mb-4 overflow-x-auto text-xs sm:text-sm" {...props} />
           ),
           img: ({ node, ...props }) => (
             <img className="max-w-full h-auto rounded my-4" {...props} alt={props.alt || ""} />

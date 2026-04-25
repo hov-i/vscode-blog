@@ -26,9 +26,9 @@ export default function CommentSection({ postId, comments, user }: CommentSectio
     };
 
     return (
-        <div className="mt-12 pt-8 border-t border-[var(--border-color)]">
-            <h2 className="text-xl font-bold mb-6 text-[var(--text-primary)] flex items-center">
-                <Icon name="messageSquare" className="w-5 h-5 mr-2" />
+        <div className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-[var(--border-color)]">
+            <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-[var(--text-primary)] flex items-center">
+                <Icon name="messageSquare" className="w-5 h-5 mr-2 shrink-0" />
                 Comments ({comments.length})
             </h2>
 
@@ -67,12 +67,12 @@ export default function CommentSection({ postId, comments, user }: CommentSectio
                     <p className="text-sm text-[var(--text-secondary)] italic">No comments yet. Be the first to comment!</p>
                 ) : (
                     comments.map((comment) => (
-                        <div key={comment.id} className="flex gap-4">
+                        <div key={comment.id} className="flex gap-3 sm:gap-4">
                             <div className="w-8 h-8 rounded bg-[var(--bg-tertiary)] border border-[var(--border-color)] flex items-center justify-center flex-shrink-0">
                                 <Icon name="user" className="w-4 h-4 text-[var(--text-secondary)]" />
                             </div>
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
+                            <div className="flex-1 min-w-0">
+                                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-1">
                                     <span className="text-xs font-bold text-[var(--text-primary)]">
                                         {comment.user.name || comment.user.email.split('@')[0]}
                                     </span>
@@ -80,7 +80,7 @@ export default function CommentSection({ postId, comments, user }: CommentSectio
                                         <FormattedDate date={comment.createdAt} />
                                     </span>
                                 </div>
-                                <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                                <p className="text-sm text-[var(--text-secondary)] leading-relaxed break-words">
                                     {comment.content}
                                 </p>
                             </div>

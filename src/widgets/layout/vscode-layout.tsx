@@ -50,21 +50,28 @@ export const VSCodeLayout = ({ children, postCount, projectCount }: { children: 
     <div className="flex h-screen w-full flex-col overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
       {/* Main Flex Area */}
       <div className="flex flex-1 overflow-hidden relative">
-        {/* Mobile Toggle Button */}
-        <button 
-          onClick={() => setSidebarOpen(!isSidebarOpen)}
-          className="lg:hidden fixed bottom-10 right-6 z-50 w-12 h-12 rounded-full bg-[var(--accent)] text-white shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
-        >
-          <Icon name={isSidebarOpen ? "close" : "menu"} className="w-6 h-6" />
-        </button>
+        {/* Mobile Toggle Button — 열려 있을 땐 사이드바 자체 닫기 버튼 사용 */}
+        {!isSidebarOpen && (
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="lg:hidden fixed bottom-10 left-6 z-30 w-12 h-12 rounded-full bg-[var(--accent)] text-white shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+            aria-label="메뉴 열기"
+          >
+            <Icon name="menu" className="w-6 h-6" />
+          </button>
+        )}
 
         {/* Navigation Sidebar Area - Hidden on Mobile, shown via sidebar state if needed */}
         <div className={cn(
-          "fixed inset-y-0 left-0 z-40 lg:relative lg:flex transition-transform duration-300 transform outline-none",
+          "fixed inset-y-0 left-0 z-40 flex h-full lg:relative lg:inset-auto lg:flex transition-transform duration-300 transform outline-none",
           isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}>
           <ActivityBar />
-          <Sidebar postCount={postCount} projectCount={projectCount} />
+          <Sidebar
+            postCount={postCount}
+            projectCount={projectCount}
+            onClose={() => setSidebarOpen(false)}
+          />
         </div>
 
         {/* Overlay for Mobile Sidebar */}

@@ -11,6 +11,7 @@ import { useTheme } from "next-themes";
 interface SidebarProps {
   postCount?: number;
   projectCount?: number;
+  onClose?: () => void;
 }
 
 const ROW = "flex items-center h-[22px] text-[13px] cursor-pointer whitespace-nowrap";
@@ -94,7 +95,7 @@ const FolderRow = ({ href, label, depth, expanded, onToggle, active, count, icon
   </div>
 );
 
-export const Sidebar = ({ postCount, projectCount }: SidebarProps) => {
+export const Sidebar = ({ postCount, projectCount, onClose }: SidebarProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -120,20 +121,32 @@ export const Sidebar = ({ postCount, projectCount }: SidebarProps) => {
   return (
     <aside
       id="sidebar"
-      className="w-64 flex flex-col bg-[var(--bg-secondary)] border-r border-[var(--border-color)] shrink-0"
+      className="w-[calc(100vw-3rem)] max-w-xs lg:w-64 h-full flex flex-col bg-[var(--bg-secondary)] border-r border-[var(--border-color)] shrink-0"
     >
       {/* Mobile-only Top Bar */}
-      <div className="lg:hidden flex items-center justify-between px-4 h-12 border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]">
+      <div className="lg:hidden flex items-center justify-between px-4 h-12 border-b border-[var(--border-color)] bg-[var(--bg-tertiary)] shrink-0">
         <div className="flex items-center gap-2">
           <Icon name="logo" className="text-[var(--accent)]" />
           <span className="text-xs font-bold text-[var(--text-primary)]">VSCODE BLOG</span>
         </div>
-        <button
-          onClick={toggleTheme}
-          className="p-2 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]"
-        >
-          {mounted && theme === "light" ? <Icon name="sun" /> : <Icon name="moon" />}
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={toggleTheme}
+            className="p-2 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]"
+            aria-label="테마 전환"
+          >
+            {mounted && theme === "light" ? <Icon name="sun" /> : <Icon name="moon" />}
+          </button>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]"
+              aria-label="메뉴 닫기"
+            >
+              <Icon name="close" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* EXPLORER title bar */}

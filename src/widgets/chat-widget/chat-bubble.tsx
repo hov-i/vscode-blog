@@ -86,6 +86,9 @@ function renderWithLinks(text: string): React.ReactNode {
 const BUBBLE_W = 320;
 const BUBBLE_MAX_H = 420;
 const BUBBLE_GAP = 14;
+const MOBILE_BREAKPOINT = 640;
+const MOBILE_SIDE_PAD = 8;
+const MOBILE_BOTTOM_PAD = 8;
 
 const SUBTITLE: Record<ChatState, string> = {
   idle: "온라인",
@@ -118,6 +121,10 @@ export function ChatBubble({
   onClose,
 }: ChatBubbleProps) {
   const [draft, setDraft] = useState("");
+  const [viewport, setViewport] = useState({
+    w: typeof window !== "undefined" ? window.innerWidth : 1024,
+    h: typeof window !== "undefined" ? window.innerHeight : 768,
+  });
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -136,23 +143,48 @@ export function ChatBubble({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
+    const onResize = () => {
+      setViewport({ w: window.innerWidth, h: window.innerHeight });
+    };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", onResize);
+    };
   }, [onClose]);
 
   if (typeof window === "undefined") return null;
 
-  const characterCenterX = anchorX + buttonSize / 2;
-  const showBelow = anchorY < BUBBLE_MAX_H + 30;
-  const topPosition = showBelow
-    ? anchorY + buttonSize + BUBBLE_GAP
-    : Math.max(8, anchorY - BUBBLE_MAX_H - BUBBLE_GAP);
+  const isMobile = viewport.w < MOBILE_BREAKPOINT;
 
-  let leftPosition = characterCenterX - BUBBLE_W / 2;
-  leftPosition = Math.max(
-    8,
-    Math.min(leftPosition, window.innerWidth - BUBBLE_W - 8),
-  );
+  const bubbleWidth = isMobile
+    ? viewport.w - MOBILE_SIDE_PAD * 2
+    : BUBBLE_W;
+  const bubbleMaxH = isMobile
+    ? Math.min(viewport.h - 24, Math.round(viewport.h * 0.72))
+    : BUBBLE_MAX_H;
+
+  let leftPosition: number;
+  let topPosition: number;
+  let showBelow = false;
+
+  if (isMobile) {
+    leftPosition = MOBILE_SIDE_PAD;
+    topPosition = viewport.h - bubbleMaxH - MOBILE_BOTTOM_PAD;
+  } else {
+    const characterCenterX = anchorX + buttonSize / 2;
+    showBelow = anchorY < bubbleMaxH + 30;
+    topPosition = showBelow
+      ? anchorY + buttonSize + BUBBLE_GAP
+      : Math.max(8, anchorY - bubbleMaxH - BUBBLE_GAP);
+
+    leftPosition = characterCenterX - bubbleWidth / 2;
+    leftPosition = Math.max(
+      8,
+      Math.min(leftPosition, viewport.w - bubbleWidth - 8),
+    );
+  }
 
   const isBusy = state === "thinking" || state === "typing";
 
@@ -178,10 +210,15 @@ export function ChatBubble({
       style={{
         left: leftPosition,
         top: topPosition,
-        width: BUBBLE_W,
-        transition:
-          "left 0.45s cubic-bezier(0.22, 1, 0.36, 1), top 0.45s cubic-bezier(0.22, 1, 0.36, 1)",
-        transformOrigin: showBelow ? "top center" : "bottom center",
+        width: bubbleWidth,
+        transition: isMobile
+          ? "none"
+          : "left 0.45s cubic-bezier(0.22, 1, 0.36, 1), top 0.45s cubic-bezier(0.22, 1, 0.36, 1)",
+        transformOrigin: isMobile
+          ? "bottom center"
+          : showBelow
+            ? "top center"
+            : "bottom center",
       }}
     >
       <div
@@ -191,7 +228,7 @@ export function ChatBubble({
           "rounded-2xl overflow-hidden",
           "shadow-[0_16px_40px_-12px_rgba(0,0,0,0.6),0_6px_12px_-4px_rgba(0,0,0,0.35)]",
         )}
-        style={{ maxHeight: BUBBLE_MAX_H }}
+        style={{ maxHeight: bubbleMaxH }}
       >
         {/* Header — messenger-style */}
         <div className="flex items-center gap-2 px-3 py-2.5 bg-[var(--bg-tertiary)]">
@@ -245,7 +282,7 @@ export function ChatBubble({
         <div
           ref={scrollRef}
           className="flex-1 overflow-y-auto px-3 py-3 space-y-2 bg-[var(--bg-secondary)]"
-          style={{ maxHeight: BUBBLE_MAX_H - 110 }}
+          style={{ maxHeight: bubbleMaxH - 110 }}
         >
           {messages.map((m) =>
             m.role === "user" ? (

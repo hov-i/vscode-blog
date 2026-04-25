@@ -33,40 +33,40 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
     return (
         <div className="max-w-4xl">
              <div className="mb-6 pb-4 border-b border-[var(--border-color)]">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center">
-                        <span className="text-xs px-2 py-1 rounded mr-2 bg-[var(--accent)] text-white font-medium">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <div className="flex items-center min-w-0">
+                        <span className="text-xs px-2 py-1 rounded mr-2 bg-[var(--accent)] text-white font-medium shrink-0">
                             MD
                         </span>
-                        <span className="text-xs text-[var(--text-secondary)]">posts/{post.id}.md</span>
+                        <span className="text-xs text-[var(--text-secondary)] truncate">posts/{post.id}.md</span>
                     </div>
                     {user?.email === 'dbsghdql55555@gmail.com' && (
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 shrink-0">
                             <Link href={`/posts/${post.id}/edit`}>
                                 <button
                                     type="button"
-                                    className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--accent)] hover:text-white text-[var(--accent)] transition-colors flex items-center border border-[var(--border-color)] cursor-pointer"
+                                    className="text-xs px-2 sm:px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--accent)] hover:text-white text-[var(--accent)] transition-colors flex items-center border border-[var(--border-color)] cursor-pointer"
                                 >
-                                    <Icon name="edit" className="w-3 h-3 mr-2" />
-                                    Edit Post
+                                    <Icon name="edit" className="w-3 h-3 sm:mr-2" />
+                                    <span className="hidden sm:inline">Edit Post</span>
                                 </button>
                             </Link>
                             <form action={deleteAction}>
                                 <button
                                     type="submit"
-                                    className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-red-500 hover:text-white text-red-500 transition-colors flex items-center border border-[var(--border-color)] cursor-pointer"
+                                    className="text-xs px-2 sm:px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-red-500 hover:text-white text-red-500 transition-colors flex items-center border border-[var(--border-color)] cursor-pointer"
                                 >
-                                    <Icon name="trash" className="w-3 h-3 mr-2" />
-                                    Delete Post
+                                    <Icon name="trash" className="w-3 h-3 sm:mr-2" />
+                                    <span className="hidden sm:inline">Delete Post</span>
                                 </button>
                             </form>
                         </div>
                     )}
                 </div>
-                <h1 className="text-3xl font-bold mb-2 text-[var(--text-primary)]">
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-[var(--text-primary)] break-keep">
                     {post.title}
                 </h1>
-                <div className="flex items-center gap-4 text-xs text-[var(--text-secondary)]">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--text-secondary)]">
                     <span className="flex items-center">
                         <Icon name="user" className="w-3 h-3 mr-1" />
                         {post.author?.name || 'Anonymous'}
@@ -81,7 +81,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
                     </span>
                 </div>
                 {post.tags && post.tags.length > 0 && (
-                    <div className="flex gap-2 mt-4">
+                    <div className="flex flex-wrap gap-2 mt-4">
                         {post.tags.map((tag: any) => (
                             <Link key={tag.id} href={`/tags/${tag.name}`}>
                                 <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent)] transition-colors">

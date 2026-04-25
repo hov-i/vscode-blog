@@ -16,19 +16,19 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 
     return (
         <div className="max-w-4xl">
-             <div className="mb-8 animate-slide-up stagger-1">
-                <div className="flex items-center mb-4">
+             <div className="mb-6 sm:mb-8 animate-slide-up stagger-1">
+                <div className="flex items-center mb-3 sm:mb-4">
                     <span className="text-xs px-2 py-1 rounded mr-2 bg-[var(--accent)] text-white font-medium">
                         JSON
                     </span>
                     <span className="text-xs text-[var(--text-secondary)]">posts.json</span>
                 </div>
-                <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-2xl font-bold text-[var(--text-primary)]">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <h1 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)] min-w-0 break-keep">
                         {q ? `Search Results for "${q}"` : "All Posts"}
                     </h1>
                     {isAdmin && (
-                        <Link href="/posts/new">
+                        <Link href="/posts/new" className="shrink-0">
                             <button className="text-xs px-3 py-1.5 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--accent)] hover:text-white text-[var(--text-primary)] transition-colors flex items-center border border-[var(--border-color)]">
                                 <Icon name="fileCode" className="w-3 h-3 mr-2" />
                                 New Post
@@ -59,15 +59,15 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 
 const PostItem = ({ id, title, tag, description, time, views, comments, bgClass }: any) => (
     <Link href={`/posts/${id}`}>
-        <div className={`p-4 rounded cursor-pointer transition-all duration-300 hover:bg-[var(--bg-tertiary)] hover:-translate-y-1 hover:shadow-xl ${bgClass}`}>
-            <div className="flex items-start justify-between mb-2">
-                <h3 className="text-sm font-semibold text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]">{title}</h3>
-                <span className="text-xs px-2 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
+        <div className={`p-3 sm:p-4 rounded cursor-pointer transition-all duration-300 hover:bg-[var(--bg-tertiary)] hover:-translate-y-1 hover:shadow-xl ${bgClass}`}>
+            <div className="flex items-start justify-between gap-2 mb-2">
+                <h3 className="text-sm font-semibold text-[var(--text-primary)] transition-colors hover:text-[var(--accent)] min-w-0 break-keep">{title}</h3>
+                <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-secondary)] shrink-0 whitespace-nowrap">
                     {tag}
                 </span>
             </div>
-            <p className="text-xs mb-2 text-[var(--text-secondary)]">{description}</p>
-            <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)]">
+            <p className="text-xs mb-2 text-[var(--text-secondary)] line-clamp-2">{description}</p>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--text-secondary)]">
                 <span className="flex items-center"><Icon name="calendar" className="w-3 h-3 mr-1" />{time}</span>
                 <span className="flex items-center"><Icon name="eye" className="w-3 h-3 mr-1" />{views} views</span>
                 <span className="flex items-center"><Icon name="messageSquare" className="w-3 h-3 mr-1" />{comments || 0} comments</span>
