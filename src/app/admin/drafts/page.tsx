@@ -37,10 +37,20 @@ export default async function AdminDraftsPage() {
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
       <div className="mb-4 sm:mb-6 border-b border-[var(--border-color)] pb-3 sm:pb-4">
-        <h1 className="text-lg sm:text-xl font-bold text-[var(--text-primary)]">Draft Posts</h1>
-        <p className="text-xs text-[var(--text-secondary)] mt-1">
-          자동 생성된 초안 목록 — 발제할 글을 선택해줘
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold text-[var(--text-primary)]">Draft Posts</h1>
+            <p className="text-xs text-[var(--text-secondary)] mt-1">
+              자동 생성된 초안 목록 — 발제할 글을 선택해줘
+            </p>
+          </div>
+          <a
+            href="/admin/topics"
+            className="text-xs text-[var(--text-secondary)] hover:text-[var(--accent)] underline"
+          >
+            ← Topics
+          </a>
+        </div>
       </div>
       <DraftsClient drafts={drafts ?? []} />
     </div>

@@ -7,6 +7,7 @@ import { checkRateLimit } from "@/shared/lib/ai/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const MAX_HISTORY_TURNS = 20;
 const MAX_USER_CONTENT_LEN = 2000;
