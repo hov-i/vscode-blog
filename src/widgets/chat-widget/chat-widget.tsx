@@ -37,6 +37,9 @@ const EDGE_MARGIN = 12;
 const POS_KEY = "vi-widget-pos-v1";
 const DRAG_THRESHOLD_PX = 4;
 
+const DROP_ZONE_SIZE = 64;
+const DROP_ZONE_TOP = 16;
+
 const WANDER_MIN_MS = 11_000;
 const WANDER_MAX_MS = 20_000;
 
@@ -105,6 +108,18 @@ function clampToViewport(p: Pos): Pos {
     x: clamp(p.x, EDGE_MARGIN, window.innerWidth - BUTTON_SIZE - EDGE_MARGIN),
     y: clamp(p.y, EDGE_MARGIN, window.innerHeight - BUTTON_SIZE - EDGE_MARGIN),
   };
+}
+function isOverDropZone(p: Pos): boolean {
+  if (typeof window === "undefined") return false;
+  const cx = p.x + BUTTON_SIZE / 2;
+  const cy = p.y + BUTTON_SIZE / 2;
+  const left = (window.innerWidth - DROP_ZONE_SIZE) / 2;
+  return (
+    cx >= left &&
+    cx <= left + DROP_ZONE_SIZE &&
+    cy >= DROP_ZONE_TOP &&
+    cy <= DROP_ZONE_TOP + DROP_ZONE_SIZE
+  );
 }
 function defaultPos(): Pos {
   if (typeof window === "undefined") return { x: 0, y: 0 };
@@ -179,6 +194,8 @@ export function ChatWidget() {
   const [picnic, setPicnic] = useState<PicnicData | null>(null);
   const [wiggleKey, setWiggleKey] = useState(0);
   const [activeQuip, setActiveQuip] = useState<ActiveQuip | null>(null);
+  const [hidden, setHidden] = useState(false);
+  const [overDropZone, setOverDropZone] = useState(false);
 
   const {
     messages: chatMessages,
@@ -598,12 +615,12 @@ export function ChatWidget() {
         showQuip(pickEventQuip("drag"));
       }
       if (d.moved) {
-        setPos(
-          clampToViewport({
-            x: e.clientX - d.offsetX,
-            y: e.clientY - d.offsetY,
-          }),
-        );
+        const next = clampToViewport({
+          x: e.clientX - d.offsetX,
+          y: e.clientY - d.offsetY,
+        });
+        setPos(next);
+        setOverDropZone(isOverDropZone(next));
       }
     },
     [showQuip],
@@ -622,9 +639,14 @@ export function ChatWidget() {
         setOpen(true);
         showQuip(pickEventQuip("openChat"));
       } else if (d?.moved) {
-        savePos(posRef.current);
+        if (isOverDropZone(posRef.current)) {
+          setHidden(true);
+        } else {
+          savePos(posRef.current);
+        }
       }
       setIsDragging(false);
+      setOverDropZone(false);
     },
     [showQuip],
   );
@@ -634,6 +656,7 @@ export function ChatWidget() {
   // ────────────────────────────
   if (pathname?.startsWith("/admin")) return null;
   if (!mounted) return null;
+  if (hidden) return null;
 
   const transitionCss = isDragging
     ? "none"
@@ -647,6 +670,38 @@ export function ChatWidget() {
 
   return (
     <>
+      {isDragging && (
+        <div
+          aria-hidden
+          style={{
+            position: "fixed",
+            left: "50%",
+            top: DROP_ZONE_TOP,
+            width: DROP_ZONE_SIZE,
+            height: DROP_ZONE_SIZE,
+            transform: "translateX(-50%)",
+          }}
+          className={cn(
+            "z-50 flex items-center justify-center rounded-full",
+            "backdrop-blur-sm transition-all duration-200 pointer-events-none",
+            overDropZone
+              ? "scale-110 bg-red-500/40 text-red-50"
+              : "bg-black/30 text-white/70",
+          )}
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          >
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </div>
+      )}
       {butterfly && (
         <Butterfly butterfly={butterfly} onEnd={onButterflyEnd} />
       )}
