@@ -99,6 +99,7 @@ export default function NewPostForm() {
                         onChange={setContent}
                         placeholder="# Start writing..."
                         className="flex-1"
+                        enableAiRewrite
                     />
                 </div>
             </div>

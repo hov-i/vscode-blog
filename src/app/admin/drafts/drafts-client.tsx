@@ -205,6 +205,7 @@ function DraftDetail({
               value={content}
               onChange={setContent}
               placeholder="# 본문 작성..."
+              enableAiRewrite
             />
           </div>
         </div>

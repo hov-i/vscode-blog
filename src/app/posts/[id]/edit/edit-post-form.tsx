@@ -113,6 +113,7 @@ export default function EditPostForm({
                         onChange={setContent}
                         placeholder="# Start writing..."
                         className="flex-1"
+                        enableAiRewrite
                     />
                 </div>
             </div>
