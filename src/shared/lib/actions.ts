@@ -51,6 +51,9 @@ async function getCurrentPrismaUser() {
 }
 
 export async function createPost(formData: FormData) {
+  // Verify admin BEFORE touching the DB (tag upserts, etc.)
+  const user = await ensureAdmin()
+
   const title = formData.get('title') as string
   const description = formData.get('description') as string
   const content = formData.get('content') as string
@@ -75,9 +78,6 @@ export async function createPost(formData: FormData) {
     })
     tagsConnect.push({ id: tag.id })
   }
-
-  // Create post using current authenticated user
-  const user = await ensureAdmin()
 
   await prisma.post.create({
     data: {

@@ -3,6 +3,7 @@ import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/app/providers/theme-provider";
 import { VSCodeLayout } from "@/widgets/layout/vscode-layout";
+import { Analytics } from "@vercel/analytics/next";
 
 import { getPostCount } from "@/shared/lib/services/post.service";
 import { getProjectCount } from "@/shared/lib/services/project.service";
@@ -47,6 +48,7 @@ export default async function RootLayout({
             {children}
           </VSCodeLayout>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
