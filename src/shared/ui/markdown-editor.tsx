@@ -2,7 +2,7 @@
 
 import { useState, useRef, DragEvent, ChangeEvent } from "react";
 import { Icon } from "./icon";
-import { MarkdownRenderer } from "./markdown-renderer";
+import { MarkdownRendererClient } from "./markdown-renderer.client";
 import { uploadImage } from "@/shared/lib/actions/upload-image";
 import { rewriteSelection } from "@/shared/lib/actions/ai-rewrite";
 
@@ -249,7 +249,7 @@ export function MarkdownEditor({
         ) : (
           <div className="h-full overflow-auto bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded p-4">
             {value ? (
-              <MarkdownRenderer content={value} />
+              <MarkdownRendererClient content={value} />
             ) : (
               <div className="text-[var(--text-secondary)] text-sm">
                 Nothing to preview

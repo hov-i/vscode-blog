@@ -5,11 +5,17 @@ import { Sidebar } from "@/widgets/layout/sidebar";
 import { StatusBar } from "@/widgets/layout/status-bar";
 import { TabsBar } from "@/widgets/layout/tabs-bar";
 import { BreadcrumbBar } from "@/widgets/layout/breadcrumb-bar";
-import { ChatWidget } from "@/widgets/chat-widget/chat-widget";
 import { ReactNode, useState, useEffect, useRef } from "react";
 import { Icon } from "@/shared/ui/icon";
 import { cn } from "@/shared/lib/utils";
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
+
+// 챗 위젯은 초기 렌더에 필요 없으므로 지연 로딩 (framer-motion 등 무거운 의존성 포함)
+const ChatWidget = dynamic(
+  () => import("@/widgets/chat-widget/chat-widget").then((m) => m.ChatWidget),
+  { ssr: false }
+);
 
 const LINE_HEIGHT_PX = 24;
 

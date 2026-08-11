@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/shared/ui/icon";
-import { MarkdownRenderer } from "@/shared/ui/markdown-renderer";
+import { MarkdownRendererClient } from "@/shared/ui/markdown-renderer.client";
 import { cn } from "@/shared/lib/utils";
 import { ChatAvatar } from "./avatar";
 import { useChat } from "./use-chat";
@@ -115,7 +115,7 @@ export function ChatPanel({ onClose }: ChatPanelProps) {
                 m.content
               ) : m.content ? (
                 <div className="chat-markdown">
-                  <MarkdownRenderer content={m.content} />
+                  <MarkdownRendererClient content={m.content} />
                 </div>
               ) : (
                 <span className="text-[var(--text-secondary)]">...</span>

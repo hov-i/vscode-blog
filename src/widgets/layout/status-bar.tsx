@@ -1,5 +1,3 @@
-"use client";
-
 import { Icon } from "@/shared/ui/icon";
 
 export const StatusBar = () => {

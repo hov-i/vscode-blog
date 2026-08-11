@@ -1,33 +1,45 @@
 "use client";
 
-import { createClient } from "@/shared/lib/supabase/client";
+import { getClient } from "@/shared/lib/supabase/client";
 import { Icon } from "@/shared/ui/icon";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { User } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 
 export const UserProfile = () => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
-    const supabase = createClient();
 
     useEffect(() => {
-        // Check initial session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user ?? null);
-            setLoading(false);
+        let active = true;
+        let unsubscribe: (() => void) | undefined;
+
+        getClient().then((supabase) => {
+            if (!active) return;
+
+            // Check initial session
+            supabase.auth.getSession().then(({ data: { session } }) => {
+                if (!active) return;
+                setUser(session?.user ?? null);
+                setLoading(false);
+            });
+
+            // Listen for auth changes
+            const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+                setUser(session?.user ?? null);
+                setLoading(false);
+            });
+            unsubscribe = () => subscription.unsubscribe();
         });
 
-        // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-            setLoading(false);
-        });
-
-        return () => subscription.unsubscribe();
-    }, [supabase]);
+        return () => {
+            active = false;
+            unsubscribe?.();
+        };
+    }, []);
 
     const handleLogin = async () => {
+        const supabase = await getClient();
         await supabase.auth.signInWithOAuth({
             provider: 'github',
             options: {
@@ -39,6 +51,7 @@ export const UserProfile = () => {
     const handleLogout = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
+        const supabase = await getClient();
         await supabase.auth.signOut();
     };
 

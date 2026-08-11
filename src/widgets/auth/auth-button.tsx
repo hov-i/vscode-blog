@@ -1,28 +1,39 @@
 "use client";
 
-import { createClient } from "@/shared/lib/supabase/client";
+import { getClient } from "@/shared/lib/supabase/client";
 import { Icon } from "@/shared/ui/icon";
 import { useEffect, useState } from "react";
-import { User } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 
 export const AuthButton = () => {
   const [user, setUser] = useState<User | null>(null);
-  const supabase = createClient();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    let active = true;
+    let unsubscribe: (() => void) | undefined;
+
+    getClient().then((supabase) => {
+      if (!active) return;
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user ?? null);
+      });
+      unsubscribe = () => subscription.unsubscribe();
+
+      // Check initial session
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (active) setUser(session?.user ?? null);
+      });
     });
 
-    // Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase]);
+    return () => {
+      active = false;
+      unsubscribe?.();
+    };
+  }, []);
 
   const handleLogin = async () => {
+    const supabase = await getClient();
     await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
@@ -32,12 +43,13 @@ export const AuthButton = () => {
   };
 
   const handleLogout = async () => {
+    const supabase = await getClient();
     await supabase.auth.signOut();
   };
 
   if (user) {
     return (
-        <button 
+        <button
             onClick={handleLogout}
             className="w-12 h-12 flex items-center justify-center cursor-pointer opacity-70 hover:opacity-100 transition-opacity"
             title="Sign Out"
@@ -54,7 +66,7 @@ export const AuthButton = () => {
   }
 
   return (
-    <button 
+    <button
         onClick={handleLogin}
         className="w-12 h-12 flex items-center justify-center cursor-pointer opacity-70 hover:opacity-100 transition-opacity"
         title="Sign in with Github"

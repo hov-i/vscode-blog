@@ -1,5 +1,8 @@
-// 서버 컴포넌트 — react-markdown / rehype-highlight 번들이 브라우저로 내려가지 않음.
-// 클라이언트에서 실시간 프리뷰가 필요하면 markdown-renderer.client.tsx 를 사용할 것.
+"use client";
+
+// 클라이언트 전용 렌더러 — 에디터 실시간 프리뷰, 챗 스트리밍처럼
+// 브라우저에서 매 입력마다 다시 렌더해야 하는 곳에서만 사용할 것.
+// 정적인 본문(게시물/프로젝트 상세)은 서버 렌더러(markdown-renderer.tsx)를 쓴다.
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -10,7 +13,7 @@ import {
   type MarkdownRendererProps,
 } from "./markdown-shared";
 
-export function MarkdownRenderer({ content, className = "", postLinks }: MarkdownRendererProps) {
+export function MarkdownRendererClient({ content, className = "", postLinks }: MarkdownRendererProps) {
   const processed = postLinks ? preprocessWikiLinks(content, postLinks) : content;
 
   return (
