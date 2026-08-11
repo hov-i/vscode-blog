@@ -6,44 +6,73 @@ export type PostWithTags = Post & {
   tags: Tag[];
 };
 
-export const getPosts = unstable_cache(
-  async (query?: string) => {
-    return prisma.post.findMany({
-      where: query ? {
+export const POSTS_PER_PAGE = 10;
+
+const buildPostSearchWhere = (query?: string) =>
+  query
+    ? {
         OR: [
-          { title: { contains: query, mode: 'insensitive' } },
-          { description: { contains: query, mode: 'insensitive' } },
+          { title: { contains: query, mode: 'insensitive' as const } },
+          { description: { contains: query, mode: 'insensitive' as const } },
           // content 검색 제거: Text 타입이라 너무 느림
         ],
-      } : {},
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        // content 제외 - 목록에서는 불필요
-        published: true,
-        createdAt: true,
-        updatedAt: true,
-        views: true,
-        commentsCount: true,
-        tags: {
-          select: {
-            id: true,
-            name: true,
-          }
+      }
+    : {};
+
+const postListSelect = {
+  id: true,
+  title: true,
+  description: true,
+  // content 제외 - 목록에서는 불필요
+  published: true,
+  createdAt: true,
+  updatedAt: true,
+  views: true,
+  commentsCount: true,
+  tags: {
+    select: {
+      id: true,
+      name: true,
+    }
+  },
+  author: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    }
+  }
+} as const;
+
+export const getPosts = unstable_cache(
+  async (query?: string, page: number = 1, perPage: number = POSTS_PER_PAGE) => {
+    const currentPage = Math.max(1, Math.trunc(page) || 1);
+    const where = buildPostSearchWhere(query);
+
+    const [items, total] = await Promise.all([
+      prisma.post.findMany({
+        where,
+        select: postListSelect,
+        orderBy: {
+          createdAt: 'desc',
         },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          }
-        }
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+        skip: (currentPage - 1) * perPage,
+        take: perPage,
+      }),
+      prisma.post.count({ where }),
+    ]);
+
+    const totalPages = Math.max(1, Math.ceil(total / perPage));
+
+    return {
+      items,
+      total,
+      page: currentPage,
+      perPage,
+      totalPages,
+      hasPrev: currentPage > 1,
+      hasNext: currentPage < totalPages,
+    };
   },
   ['posts-list'],
   { tags: ['posts'], revalidate: 60 }

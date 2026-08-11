@@ -6,13 +6,26 @@ import Link from "next/link";
 import { getPosts } from "@/shared/lib/services/post.service";
 import { createClient } from "@/shared/lib/supabase/server";
 
-export default async function PostsPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-    const { q } = await searchParams;
-    const posts = await getPosts(q);
+export default async function PostsPage({ searchParams }: { searchParams: Promise<{ q?: string; page?: string }> }) {
+    const { q, page } = await searchParams;
+    const currentPage = Math.max(1, Number(page) || 1);
 
-    const supabase = await createClient();
+    const [postsResult, supabase] = await Promise.all([
+        getPosts(q, currentPage),
+        createClient(),
+    ]);
+    const { items: posts, totalPages, hasPrev, hasNext, total } = postsResult;
+
     const { data: { user } } = await supabase.auth.getUser();
     const isAdmin = user?.email === 'dbsghdql55555@gmail.com';
+
+    const buildHref = (targetPage: number) => {
+        const params = new URLSearchParams();
+        if (q) params.set('q', q);
+        if (targetPage > 1) params.set('page', String(targetPage));
+        const qs = params.toString();
+        return qs ? `/posts?${qs}` : '/posts';
+    };
 
     return (
         <div className="max-w-4xl">
@@ -53,6 +66,69 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
                     />
                 ))}
             </div>
+
+            {totalPages > 1 && (
+                <nav className="mt-8 flex items-center justify-center gap-2 animate-slide-up stagger-3">
+                    {hasPrev ? (
+                        <Link
+                            href={buildHref(currentPage - 1)}
+                            className="text-xs px-3 py-1.5 rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-white transition-colors"
+                        >
+                            Prev
+                        </Link>
+                    ) : (
+                        <span className="text-xs px-3 py-1.5 rounded border border-[var(--border-color)] text-[var(--text-secondary)] opacity-40 cursor-not-allowed">
+                            Prev
+                        </span>
+                    )}
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                        .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                        .reduce<number[]>((acc, p) => {
+                            if (acc.length && p - acc[acc.length - 1] > 1) acc.push(-1);
+                            acc.push(p);
+                            return acc;
+                        }, [])
+                        .map((p, i) =>
+                            p === -1 ? (
+                                <span key={`gap-${i}`} className="text-xs px-1 text-[var(--text-secondary)]">…</span>
+                            ) : p === currentPage ? (
+                                <span
+                                    key={p}
+                                    aria-current="page"
+                                    className="text-xs px-3 py-1.5 rounded bg-[var(--accent)] text-white font-medium"
+                                >
+                                    {p}
+                                </span>
+                            ) : (
+                                <Link
+                                    key={p}
+                                    href={buildHref(p)}
+                                    className="text-xs px-3 py-1.5 rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-white transition-colors"
+                                >
+                                    {p}
+                                </Link>
+                            )
+                        )}
+
+                    {hasNext ? (
+                        <Link
+                            href={buildHref(currentPage + 1)}
+                            className="text-xs px-3 py-1.5 rounded border border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-white transition-colors"
+                        >
+                            Next
+                        </Link>
+                    ) : (
+                        <span className="text-xs px-3 py-1.5 rounded border border-[var(--border-color)] text-[var(--text-secondary)] opacity-40 cursor-not-allowed">
+                            Next
+                        </span>
+                    )}
+                </nav>
+            )}
+
+            <p className="mt-4 text-center text-xs text-[var(--text-secondary)]">
+                {total} posts · page {currentPage} of {totalPages}
+            </p>
         </div>
     );
 }
