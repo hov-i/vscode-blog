@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<style>
+html,body{margin:0;padding:0;background:rgb(24,24,24);-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:rgb(96,205,255);text-decoration:none}
+a:hover{color:rgb(119,243,255)}
+::selection{background:rgba(96,205,255,.3)}
+</style>
+</helmet>
+
+<div style="width:100%;min-height:100%;background:rgb(24,24,24);font-family:'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;padding-bottom:60px">
+
+<!-- MASTHEAD -->
+<header style="padding:52px 64px 34px;max-width:1520px;margin:0 auto">
+  <span style="display:block;margin:0 0 26px;font:400 12px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255);letter-spacing:.16em;text-transform:uppercase">Fluent Editor · Design System · extracted from your .fig</span>
+  <h1 style="margin:0 0 20px;font:600 46px/1.08 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);letter-spacing:-.02em;max-width:900px;text-wrap:pretty">Mica panels on a 7px radius, one cyan accent, Segoe UI Variable for chrome and Consolas for code.</h1>
+  <p style="margin:0 0 40px;font:400 18px/1.6 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);max-width:720px;text-wrap:pretty">Every value on this page is read from the file, not inferred. Icons are the real vector geometry pulled out of the icon component sets.</p>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.085);border:1px solid rgba(255,255,255,.085);border-radius:7px;overflow:hidden">
+    <div style="background:rgba(40,40,40,.75);padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+      <span style="font:400 12px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255);letter-spacing:.1em;text-transform:uppercase">Surface</span>
+      <span style="font:400 14px/1.45 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">rgba(40,40,40,0.75) · radius 7 · 1px rgba(0,0,0,0.1622)</span>
+    </div>
+    <div style="background:rgba(40,40,40,.75);padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+      <span style="font:400 12px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255);letter-spacing:.1em;text-transform:uppercase">Accent</span>
+      <span style="font:400 14px/1.45 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">rgb(96,205,255) — 77 uses, the only accent in the file</span>
+    </div>
+    <div style="background:rgba(40,40,40,.75);padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+      <span style="font:400 12px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255);letter-spacing:.1em;text-transform:uppercase">Type</span>
+      <span style="font:400 14px/1.45 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">Segoe UI Variable 14px (252×) · Consolas 13px (223×)</span>
+    </div>
+    <div style="background:rgba(40,40,40,.75);padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+      <span style="font:400 12px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255);letter-spacing:.1em;text-transform:uppercase">Scope</span>
+      <span style="font:400 14px/1.45 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">52 component families · 100 icon variants extracted</span>
+    </div>
+  </div>
+</header>
+
+<!-- 01 COLOUR -->
+<section style="padding:34px 64px;border-top:1px solid rgba(255,255,255,.085);max-width:1520px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 16px;border-bottom:1px solid rgba(255,255,255,.085);margin:0 0 22px;flex-wrap:wrap">
+    <span style="font:400 13px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">01</span>
+    <h2 style="margin:0;font:600 28px/1.15 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);letter-spacing:-.01em">Colour</h2>
+    <p style="margin:0;font:400 14px/1.5 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);max-width:520px">Counts are usage counts from the file. Nothing here is rounded or re-mapped.</p>
+  </div>
+
+  <sc-for list="{{ colorGroups }}" as="g" hint-placeholder-count="5">
+    <h3 style="margin:0 0 14px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">{{ g.title }}</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin:0 0 22px">
+      <sc-for list="{{ g.items }}" as="c" hint-placeholder-count="6">
+        <div style="width:214px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:72px;background:{{ c.hex }};box-shadow:inset 0 0 0 1px rgba(255,255,255,.085)"></div>
+          <div style="padding:12px 13px 14px;display:flex;flex-direction:column;gap:5px">
+            <span style="font:600 14px/1.25 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">{{ c.name }}</span>
+            <span style="font:400 12px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255);word-break:break-all">{{ c.hex }}</span>
+            <span style="font:400 12px/1.4 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);margin-top:2px">{{ c.use }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </sc-for>
+</section>
+
+<!-- 02 TYPE -->
+<section style="padding:34px 64px;border-top:1px solid rgba(255,255,255,.085);max-width:1520px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 16px;border-bottom:1px solid rgba(255,255,255,.085);margin:0 0 22px;flex-wrap:wrap">
+    <span style="font:400 13px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">02</span>
+    <h2 style="margin:0;font:600 28px/1.15 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);letter-spacing:-.01em">Type</h2>
+    <p style="margin:0;font:400 14px/1.5 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);max-width:560px">Eleven faces in the file, collapsed to the nine that carry real weight. Consolas is code only.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,.085);border:1px solid rgba(255,255,255,.085);border-radius:7px;overflow:hidden">
+    <sc-for list="{{ typeScale }}" as="t" hint-placeholder-count="9">
+      <div style="display:grid;grid-template-columns:250px 132px 1fr;gap:22px;align-items:baseline;background:rgba(40,40,40,.75);padding:19px 22px">
+        <span style="font:600 14px/1.35 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">{{ t.face }}</span>
+        <span style="font:400 12px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">{{ t.spec }}</span>
+        <span style="color:rgb(249,249,249);font-family:{{ t.family }};font-size:{{ t.px }}px;font-weight:{{ t.weight }};line-height:1.35">{{ t.sample }}</span>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<!-- 03 METRICS -->
+<section style="padding:34px 64px;border-top:1px solid rgba(255,255,255,.085);max-width:1520px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 16px;border-bottom:1px solid rgba(255,255,255,.085);margin:0 0 22px;flex-wrap:wrap">
+    <span style="font:400 13px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">03</span>
+    <h2 style="margin:0;font:600 28px/1.15 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);letter-spacing:-.01em">Metrics</h2>
+    <p style="margin:0;font:400 14px/1.5 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);max-width:520px">Odd numbers are intentional — 7px radius, 50px rail, 1737px window.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:0.95fr 1fr 1.05fr;gap:28px;align-items:start">
+    <div>
+      <h3 style="margin:0 0 16px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">Radius</h3>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ radii }}" as="r" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:56px;height:56px;flex:none;background:rgba(40,40,40,.75);box-shadow:0 0 0 1px rgba(255,255,255,.13);border-radius:{{ r.px }}px"></div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <span style="font:400 13px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">{{ r.px }}px</span>
+              <span style="font:400 13px/1.4 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196)">{{ r.use }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin:0 0 16px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">Layout constants</h3>
+      <div style="display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,.085);border:1px solid rgba(255,255,255,.085);border-radius:7px;overflow:hidden">
+        <sc-for list="{{ metrics }}" as="m" hint-placeholder-count="10">
+          <div style="display:flex;justify-content:space-between;gap:14px;background:rgba(40,40,40,.75);padding:10px 14px">
+            <span style="font:400 13px/1.4 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(249,249,249)">{{ m.name }}</span>
+            <span style="font:400 13px/1.4 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255);white-space:nowrap">{{ m.val }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin:0 0 16px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">Shadow &amp; stroke</h3>
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <sc-for list="{{ elevations }}" as="e" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:18px">
+            <div style="width:88px;height:52px;flex:none;background:rgb(40,40,40);border-radius:7px;box-shadow:{{ e.shadow }}"></div>
+            <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+              <span style="font:400 12px/1.4 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255);word-break:break-all">{{ e.value }}</span>
+              <span style="font:400 13px/1.4 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196)">{{ e.use }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 ICONS -->
+<section style="padding:34px 64px;border-top:1px solid rgba(255,255,255,.085);max-width:1520px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 16px;border-bottom:1px solid rgba(255,255,255,.085);margin:0 0 22px;flex-wrap:wrap">
+    <span style="font:400 13px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">04</span>
+    <h2 style="margin:0;font:600 28px/1.15 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);letter-spacing:-.01em">Icons</h2>
+    <p style="margin:0;font:400 14px/1.5 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);max-width:560px">Real geometry from the file's icon sets — 100 variants extracted, the activity-rail set shown here. Regular is the rest state; Filled marks selection.</p>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px">
+    <div style="width:132px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:18px 10px 13px;display:flex;flex-direction:column;align-items:center;gap:13px">
+      <div style="height:24px;display:flex;align-items:center;color:rgb(196,196,196)"><svg width="16" height="20" viewBox="0 0 16 20" fill="currentColor"><path d="M 8 0 L 8 6 C 8 7.105 8.895 8 10 8 L 16 8 L 16 18 C 16 19.105 15.105 20 14 20 L 2 20 C 0.895 20 0 19.105 0 18 L 0 2 C 0 0.895 0.895 0 2 0 L 8 0 Z M 9.5 0.5 L 9.5 6 C 9.5 6.276 9.724 6.5 10 6.5 L 15.5 6.5 L 9.5 0.5 Z" fill-rule="nonzero" /></svg></div>
+      <span style="font:400 11px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196);text-align:center;word-break:break-all">Document 16×20</span>
+    </div>
+    <sc-for list="{{ railIcons }}" as="i" hint-placeholder-count="18">
+      <div style="width:132px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:18px 10px 13px;display:flex;flex-direction:column;align-items:center;gap:13px">
+        <div style="height:24px;display:flex;align-items:center;color:{{ i.color }}">
+          <x-import component-from-global-scope="FigIcon" from="./figma/fig-icon.js" name="{{ i.name }}" size="24" hint-size="24px,24px"></x-import>
+        </div>
+        <span style="font:400 11px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196);text-align:center;word-break:break-all">{{ i.label }}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <h3 style="margin:24px 0 14px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">File tree icons — copied verbatim from the tree view</h3>
+  <div style="display:flex;flex-wrap:wrap;gap:12px">
+    <div style="width:132px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:18px 10px 13px;display:flex;flex-direction:column;align-items:center;gap:13px">
+      <div style="height:24px;display:flex;align-items:center"><img src="./figma/assets/file-folder.svg" alt="" style="width:20px;height:auto;display:block" /></div>
+      <span style="font:400 11px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196);text-align:center;word-break:break-all">folder 16×14</span>
+    </div>
+    <div style="width:132px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:18px 10px 13px;display:flex;flex-direction:column;align-items:center;gap:13px">
+      <div style="height:24px;display:flex;align-items:center"><img src="./figma/assets/file-ts.svg" alt="" style="width:20px;height:auto;display:block" /></div>
+      <span style="font:400 11px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196);text-align:center;word-break:break-all">typescript-icon</span>
+    </div>
+    <div style="width:132px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:18px 10px 13px;display:flex;flex-direction:column;align-items:center;gap:13px">
+      <div style="height:24px;display:flex;align-items:center"><img src="./figma/assets/file-json.svg" alt="" style="width:20px;height:auto;display:block" /></div>
+      <span style="font:400 11px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196);text-align:center;word-break:break-all">file_type_json</span>
+    </div>
+    <div style="width:132px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:18px 10px 13px;display:flex;flex-direction:column;align-items:center;gap:13px">
+      <div style="height:24px;display:flex;align-items:center"><img src="./figma/assets/file-vue.svg" alt="" style="width:20px;height:auto;display:block" /></div>
+      <span style="font:400 11px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196);text-align:center;word-break:break-all">vuejs-original</span>
+    </div>
+    <div style="width:132px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:18px 10px 13px;display:flex;flex-direction:column;align-items:center;gap:13px">
+      <div style="height:24px;display:flex;align-items:center"><img src="./figma/assets/file-eslint.svg" alt="" style="width:20px;height:auto;display:block" /></div>
+      <span style="font:400 11px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196);text-align:center;word-break:break-all">ESLint 16×15</span>
+    </div>
+    <div style="width:132px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:18px 10px 13px;display:flex;flex-direction:column;align-items:center;gap:13px">
+      <div style="height:24px;display:flex;align-items:center"><img src="./figma/assets/file-git.svg" alt="" style="width:20px;height:auto;display:block" /></div>
+      <span style="font:400 11px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196);text-align:center;word-break:break-all">git 16×16</span>
+    </div>
+    <div style="width:132px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:18px 10px 13px;display:flex;flex-direction:column;align-items:center;gap:13px">
+      <div style="height:24px;display:flex;align-items:center"><img src="./figma/assets/file-doc.svg" alt="" style="width:20px;height:auto;display:block" /></div>
+      <span style="font:400 11px/1.35 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196);text-align:center;word-break:break-all">Document 16×20</span>
+    </div>
+  </div>
+</section>
+
+<!-- 05 CHROME PARTS -->
+<section style="padding:34px 64px;border-top:1px solid rgba(255,255,255,.085);max-width:1520px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 16px;border-bottom:1px solid rgba(255,255,255,.085);margin:0 0 22px;flex-wrap:wrap">
+    <span style="font:400 13px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">05</span>
+    <h2 style="margin:0;font:600 28px/1.15 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);letter-spacing:-.01em">Chrome parts</h2>
+    <p style="margin:0;font:400 14px/1.5 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);max-width:560px">Tab, side-nav item, controls and terminal row at their file dimensions.</p>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:26px;align-items:stretch">
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <div>
+        <h3 style="margin:0 0 14px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">Tab — 160 × 32, radius 7 / 8</h3>
+        <div style="display:flex;align-items:flex-end;background:rgb(32,32,32);border-radius:7px 7px 0 0;padding:8px 8px 0;box-shadow:0 0 0 1px rgba(0,0,0,.1622)">
+          <div style="width:160px;height:32px;border-radius:7px 7px 0 0;background:rgba(40,40,40,.75);box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);display:flex;align-items:center;gap:8px;padding:0 12px">
+            <img src="./figma/assets/file-doc.svg" alt="" style="width:14px;height:auto;flex:none;display:block" />
+            <span style="font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);white-space:nowrap">post.md</span>
+            <span style="margin-left:auto;font:400 12px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196)">✕</span>
+          </div>
+          <div style="width:160px;height:32px;display:flex;align-items:center;gap:8px;padding:0 12px">
+            <img src="./figma/assets/file-vue.svg" alt="" style="width:16px;height:16px;flex:none;display:block" />
+            <span style="font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);white-space:nowrap">index.vue</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 14px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">Side nav list item — 40px, base inset 5/3, selector 3 × 16</h3>
+        <div style="width:300px;background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:6px;display:flex;flex-direction:column;align-items:stretch">
+          <div style="position:relative;height:40px;border-radius:4px;flex:none">
+            <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;background:rgba(255,255,255,0.0605);border:1px solid rgba(255,255,255,0.0605);border-radius:3px"></div>
+            <span style="position:absolute;left:16px;top:calc(50% - 10px - 1px);height:20px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:#FFFFFF">Commonly Used</span>
+            <span style="position:absolute;right:16px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196)">Selected</span>
+            <div style="position:absolute;left:4px;top:calc(50% - 8px);width:3px;height:16px;background:#60CDFF;border-radius:999px"></div>
+          </div>
+          <div style="position:relative;height:40px;border-radius:4px;flex:none">
+            <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;background:rgba(255,255,255,0.0373);border-radius:3px"></div>
+            <span style="position:absolute;left:16px;top:calc(50% - 10px - 1px);height:20px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:#FFFFFF">Text Editor</span>
+            <span style="position:absolute;right:16px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196)">Hover</span>
+            <div style="position:absolute;left:4px;top:calc(50% - 5px);width:3px;height:10px;background:#60CDFF;opacity:0;border-radius:999px"></div>
+          </div>
+          <div style="position:relative;height:40px;border-radius:4px;flex:none">
+            <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+            <span style="position:absolute;left:16px;top:calc(50% - 10px - 1px);height:20px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:#FFFFFF">Workbench</span>
+            <span style="position:absolute;right:16px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196)">Rest</span>
+            <div style="position:absolute;left:4px;top:calc(50% - 5px);width:3px;height:10px;background:#60CDFF;opacity:0;border-radius:999px"></div>
+          </div>
+          <div style="position:relative;height:40px;border-radius:4px;flex:none">
+            <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+            <span style="position:absolute;left:16px;top:calc(50% - 10px - 1px);height:20px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgba(255,255,255,.36)">Extensions</span>
+            <span style="position:absolute;right:16px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196)">Disabled</span>
+            <div style="position:absolute;left:4px;top:calc(50% - 5px);width:3px;height:10px;background:#60CDFF;opacity:0;border-radius:999px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 14px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">Terminal command row — radius 4, rgb(49,51,55)</h3>
+        <div style="background:rgba(40,40,40,.75);border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.1622);padding:12px">
+          <div style="height:36px;border-radius:4px;background:rgb(49,51,55);display:flex;align-items:center;gap:6px;padding:8px">
+            <span style="font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);padding:0 8px">node</span>
+            <span style="font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);padding:0 8px">powershell</span>
+            <span style="margin-left:auto;font:400 12px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <div>
+        <h3 style="margin:0 0 14px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">Buttons — 32px, radius 4</h3>
+        <div style="display:grid;grid-template-columns:112px repeat(4,1fr);gap:12px;align-items:center">
+          <span></span>
+          <sc-for list="{{ stateLabels }}" as="l" hint-placeholder-count="4">
+            <span style="font:400 12px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196)">{{ l }}</span>
+          </sc-for>
+          <sc-for list="{{ buttonRows }}" as="row" hint-placeholder-count="3">
+            <span style="font:400 13px/1.3 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(249,249,249)">{{ row.name }}</span>
+            <sc-for list="{{ row.states }}" as="s" hint-placeholder-count="4">
+              <div style="height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;padding:0 12px;font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;white-space:nowrap;background:{{ s.bg }};color:{{ s.fg }};box-shadow:{{ s.bd }}">{{ row.label }}</div>
+            </sc-for>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 14px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">Checkbox, toggle, text box</h3>
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:20px;height:20px;border-radius:4px;background:rgb(96,205,255);display:flex;align-items:center;justify-content:center;font:600 12px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(0,0,0)">✓</div>
+              <span style="font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">Enabled</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:20px;height:20px;border-radius:4px;background:rgba(255,255,255,.0605);box-shadow:inset 0 0 0 1px rgba(255,255,255,.13)"></div>
+              <span style="font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">Disabled</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:11px">
+              <div style="width:40px;height:20px;border-radius:9999px;background:rgb(96,205,255);padding:3px;display:flex;justify-content:flex-end"><div style="width:14px;height:14px;border-radius:9999px;background:rgb(0,0,0)"></div></div>
+              <span style="font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">On</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:11px">
+              <div style="width:40px;height:20px;border-radius:9999px;background:rgba(255,255,255,.0605);box-shadow:inset 0 0 0 1px rgba(255,255,255,.13);padding:4px;display:flex;justify-content:flex-start"><div style="width:12px;height:12px;border-radius:9999px;background:rgb(196,196,196)"></div></div>
+              <span style="font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">Off</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap">
+            <div style="width:280px;height:32px;border-radius:4px;background:rgba(255,255,255,.0605);box-shadow:inset 0 0 0 1px rgba(255,255,255,.085),inset 0 -1px 0 0 rgba(255,255,255,.13);display:flex;align-items:center;gap:9px;padding:0 11px">
+              <div style="color:rgb(196,196,196);display:flex;align-items:center"><x-import component-from-global-scope="FigIcon" from="./figma/fig-icon.js" name="SearchSize16ThemeRegular" size="16" hint-size="16px,16px"></x-import></div>
+              <span style="font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196)">Search settings</span>
+            </div>
+            <div style="width:280px;height:32px;border-radius:4px;background:rgb(32,32,32);box-shadow:inset 0 0 0 1px rgba(255,255,255,.085),inset 0 -2px 0 0 rgb(96,205,255);display:flex;align-items:center;padding:0 11px">
+              <span style="font:400 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">markdown.preview</span><span style="width:1px;height:16px;background:rgb(96,205,255);margin-left:1px"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="margin:26px 0 0;font:400 12px/1.6 Consolas,'Cascadia Mono',Menlo,monospace;color:rgba(255,255,255,.45);max-width:760px">Control fills use the file's stroke tokens; the Button set carries 150 variants — say the word and I'll extract its exact per-state fills instead of the Fluent dark defaults used here.</p>
+</section>
+
+<!-- 06 APPLIED — MARKDOWN -->
+<section style="padding:34px 64px 0;border-top:1px solid rgba(255,255,255,.085);max-width:1520px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 16px;border-bottom:1px solid rgba(255,255,255,.085);margin:0 0 20px;flex-wrap:wrap">
+    <span style="font:400 13px/1 Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">06</span>
+    <h2 style="margin:0;font:600 28px/1.15 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);letter-spacing:-.01em">Applied — writing a blog post in Markdown</h2>
+    <p style="margin:0;font:400 14px/1.5 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);max-width:520px">Source pane in Consolas 13, live preview in Segoe UI Variable.</p>
+  </div>
+
+  <div style="overflow-x:auto">
+   <div style="width:1737px">
+    <div style="width:1737px;border-radius:9px;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,0.1622);background:rgb(32,32,32)">
+
+      <!-- Title Bar — 35px: icon · menu · command centre · layout · caption -->
+      <div style="position:relative;height:35px;display:flex;align-items:center;background:transparent;box-shadow:inset 0 -1px 0 0 rgba(0,0,0,0.1622)">
+
+        <div style="flex:none;display:flex;align-items:center;gap:2px;padding:0 6px 0 10px">
+          <img src="./figma/assets/app-icon.png" alt="" style="width:16px;height:16px;flex:none;display:block;margin-right:6px" />
+            <div style="height:24px;display:flex;align-items:center;padding:0 8px;border-radius:4px;background:rgba(255,255,255,0.0605);cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:13px;line-height:18px;color:#FFFFFF;white-space:nowrap">File</span></div>
+            <div style="height:24px;display:flex;align-items:center;padding:0 8px;border-radius:4px;cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:13px;line-height:18px;color:#FFFFFF;white-space:nowrap">Edit</span></div>
+            <div style="height:24px;display:flex;align-items:center;padding:0 8px;border-radius:4px;cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:13px;line-height:18px;color:#FFFFFF;white-space:nowrap">Selection</span></div>
+            <div style="height:24px;display:flex;align-items:center;padding:0 8px;border-radius:4px;cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:13px;line-height:18px;color:#FFFFFF;white-space:nowrap">View</span></div>
+            <div style="height:24px;display:flex;align-items:center;padding:0 8px;border-radius:4px;cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:13px;line-height:18px;color:#FFFFFF;white-space:nowrap">Go</span></div>
+            <div style="height:24px;display:flex;align-items:center;padding:0 8px;border-radius:4px;cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:13px;line-height:18px;color:#FFFFFF;white-space:nowrap">Run</span></div>
+            <div style="height:24px;display:flex;align-items:center;padding:0 8px;border-radius:4px;cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:13px;line-height:18px;color:#FFFFFF;white-space:nowrap">Terminal</span></div>
+            <div style="height:24px;display:flex;align-items:center;padding:0 8px;border-radius:4px;cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:13px;line-height:18px;color:#FFFFFF;white-space:nowrap">Help</span></div>
+        </div>
+
+        <div style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:8px">
+          <div style="display:flex;align-items:center;gap:2px;color:rgba(255,255,255,0.786)">
+            <div style="width:28px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:rgba(255,255,255,0.786);cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 7.6 2.4 L 4 6 L 7.6 9.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div style="width:28px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:rgba(255,255,255,0.36);cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 4.4 2.4 L 8 6 L 4.4 9.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+          <div style="width:640px;height:24px;border-radius:6px;background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.085);display:flex;align-items:center;padding:0 4px 0 10px;gap:6px;cursor:default" style-hover="background:rgba(255,255,255,0.0326)">
+            <span style="flex:1;min-width:0;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:12px;line-height:16px;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">vscode-blog</span>
+            <span style="flex:none;display:flex;align-items:center;gap:5px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-size:11px;line-height:16px;color:rgba(255,255,255,0.786)"><span style="width:5px;height:5px;border-radius:9999px;background:rgba(255,255,255,0.786);display:block"></span>1</span>
+            <div style="flex:none;display:flex;align-items:center;gap:0;color:rgba(255,255,255,0.786)">
+              <div style="width:22px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:4px" style-hover="background:rgba(255,255,255,0.0605)"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="display:block"><path d="M2.5 3.5h11a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H8.5l-3 2.5V10.5H2.5a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1"/></svg></div>
+              <div style="width:16px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:4px" style-hover="background:rgba(255,255,255,0.0605)"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 2.4 4.6 L 6 8.2 L 9.6 4.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+          </div>
+          <div style="flex:none;width:26px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:rgba(255,255,255,0.786);cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="display:block"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1"/><path d="M8 1.5A6.5 6.5 0 0 0 8 14.5Z" fill="currentColor"/></svg></div>
+        </div>
+
+        <div style="flex:none;display:flex;align-items:center;gap:2px;padding:0 8px">
+          <div style="width:28px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:rgba(255,255,255,0.786);cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:block"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1"/><rect x="1.5" y="2.5" width="4" height="11" fill="currentColor"/></svg></div>
+          <div style="width:28px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:rgba(255,255,255,0.786);cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:block"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1"/><rect x="1.5" y="2.5" width="13" height="3.5" fill="currentColor"/></svg></div>
+          <div style="width:28px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:rgba(255,255,255,0.786);cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:block"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1"/><rect x="1.5" y="10" width="13" height="3.5" fill="currentColor"/></svg></div>
+          <div style="width:28px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:rgba(255,255,255,0.786);cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:block"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1"/><rect x="10.5" y="2.5" width="4" height="11" fill="currentColor"/></svg></div>
+        </div>
+
+        <div style="flex:none;display:flex;align-items:stretch;align-self:stretch">
+          <div style="position:relative;width:46px;align-self:stretch;border-radius:0;display:flex;align-items:center;justify-content:center;color:#FFFFFF" style-hover="background:rgba(255,255,255,0.0605)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="display:block"><path d="M0 5h10" stroke="currentColor" stroke-width="1"/></svg></div>
+          <div style="position:relative;width:46px;align-self:stretch;border-radius:0;display:flex;align-items:center;justify-content:center;color:#FFFFFF" style-hover="background:rgba(255,255,255,0.0605)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="display:block"><rect x="0.5" y="0.5" width="9" height="9" stroke="currentColor" stroke-width="1"/></svg></div>
+          <div style="position:relative;width:46px;align-self:stretch;border-radius:0 7px 0 0;display:flex;align-items:center;justify-content:center;color:#FFFFFF" style-hover="background:#C42B1C"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="display:block"><path d="M0.4 0.4 L9.6 9.6 M9.6 0.4 L0.4 9.6" stroke="currentColor" stroke-width="1"/></svg></div>
+        </div>
+      </div>
+
+      <!-- rail (full height) + tab strip + content -->
+      <div style="display:flex;align-items:stretch;gap:8px">
+        <!-- nav rail 50 -->
+        <div style="width:50px;flex:none;align-self:stretch;margin:0 0 10px 10px;background:rgba(40,40,40,0.75);box-shadow:0 0 0 1px rgba(0,0,0,0.1622);border-radius:7px;padding:16px 12px;display:flex;flex-direction:column;justify-content:space-between;align-items:center">
+          <div style="display:flex;flex-direction:column;gap:32px;align-items:center">
+            <div style="height:24px;display:flex;align-items:center;color:rgb(96,205,255)"><svg width="16" height="20" viewBox="0 0 16 20" fill="currentColor"><path d="M 8 0 L 8 6 C 8 7.105 8.895 8 10 8 L 16 8 L 16 18 C 16 19.105 15.105 20 14 20 L 2 20 C 0.895 20 0 19.105 0 18 L 0 2 C 0 0.895 0.895 0 2 0 L 8 0 Z M 9.5 0.5 L 9.5 6 C 9.5 6.276 9.724 6.5 10 6.5 L 15.5 6.5 L 9.5 0.5 Z" fill-rule="nonzero" /></svg></div>
+            <div style="height:24px;display:flex;align-items:center;color:#A6A6A6"><x-import component-from-global-scope="FigIcon" from="./figma/fig-icon.js" name="ArrowSplitSize24ThemeRegular" size="24" hint-size="24px,24px"></x-import></div>
+            <div style="height:24px;display:flex;align-items:center;color:#A6A6A6"><x-import component-from-global-scope="FigIcon" from="./figma/fig-icon.js" name="BugSize24ThemeRegular" size="24" hint-size="24px,24px"></x-import></div>
+            <div style="height:24px;display:flex;align-items:center;color:#A6A6A6"><x-import component-from-global-scope="FigIcon" from="./figma/fig-icon.js" name="ChatSize24ThemeRegular" size="24" hint-size="24px,24px"></x-import></div>
+            <div style="height:24px;display:flex;align-items:center;color:#A6A6A6"><x-import component-from-global-scope="FigIcon" from="./figma/fig-icon.js" name="GlobeSize24ThemeRegular" size="24" hint-size="24px,24px"></x-import></div>
+            <div style="height:24px;display:flex;align-items:center;color:#A6A6A6"><x-import component-from-global-scope="FigIcon" from="./figma/fig-icon.js" name="DesktopSignalSize24ThemeRegular" size="24" hint-size="24px,24px"></x-import></div>
+            <div style="height:24px;display:flex;align-items:center;color:#A6A6A6"><x-import component-from-global-scope="FigIcon" from="./figma/fig-icon.js" name="AppsSize24ThemeRegular" size="24" hint-size="24px,24px"></x-import></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:32px;align-items:center">
+            <div style="height:24px;display:flex;align-items:center;color:rgba(255,255,255,0.7)"><x-import component-from-global-scope="FigIcon" from="./figma/fig-icon.js" name="PersonSize24ThemeRegular" size="24" hint-size="24px,24px"></x-import></div>
+            <div style="height:24px;display:flex;align-items:center;color:rgba(255,255,255,0.7)"><x-import component-from-global-scope="FigIcon" from="./figma/fig-icon.js" name="SettingsSize24ThemeRegular" size="24" hint-size="24px,24px"></x-import></div>
+          </div>
+        </div>
+
+        <!-- explorer -->
+        <div style="width:240px;flex:none;margin:0 0 10px;border-radius:7px;background:rgba(40,40,40,0.75);box-shadow:0 0 0 1px rgba(0,0,0,0.1622);padding:6px;display:flex;flex-direction:column;gap:8px;align-self:stretch">
+          <div style="height:26px;flex:none;display:flex;align-items:center;padding:0 4px 0 10px;gap:8px">
+            <span style="flex:1;min-width:0;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:11px;line-height:16px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.786);white-space:nowrap">Explorer</span>
+            <div style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:rgba(255,255,255,0.786);cursor:default" style-hover="background:rgba(255,255,255,0.0605)"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="display:block"><circle cx="4" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="12" cy="8" r="1.3"/></svg></div>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <div style="pointer-events:none;position:absolute;left:18px;top:calc(50% - 6px);width:12px;height:12px"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 2.4 4.4 L 6 8 L 9.6 4.4" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <img src="./figma/assets/file-folder.svg" alt="" style="pointer-events:none;position:absolute;left:48px;top:calc(50% - 7px);width:16px;height:14px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:72px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">content</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <div style="pointer-events:none;position:absolute;left:34px;top:calc(50% - 6px);width:12px;height:12px"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 2.4 4.4 L 6 8 L 9.6 4.4" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <img src="./figma/assets/file-folder.svg" alt="" style="pointer-events:none;position:absolute;left:64px;top:calc(50% - 7px);width:16px;height:14px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:88px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">posts</span>
+              <span style="pointer-events:none;position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">3</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px;background:rgba(255,255,255,0.0605)" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <img src="./figma/assets/file-doc-accent.svg" alt="" style="pointer-events:none;position:absolute;left:76px;top:calc(50% - 10px);width:16px;height:20px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:104px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">fluent-tokens.md</span>
+              <span style="pointer-events:none;position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">M</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <img src="./figma/assets/file-doc.svg" alt="" style="pointer-events:none;position:absolute;left:76px;top:calc(50% - 10px);width:16px;height:20px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:104px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">index.md</span>
+              <span style="pointer-events:none;position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">M</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <img src="./figma/assets/file-doc.svg" alt="" style="pointer-events:none;position:absolute;left:76px;top:calc(50% - 10px);width:16px;height:20px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:104px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">about.md</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <div style="pointer-events:none;position:absolute;left:34px;top:calc(50% - 6px);width:12px;height:12px"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 4.4 2.4 L 8 6 L 4.4 9.6" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <img src="./figma/assets/file-folder.svg" alt="" style="pointer-events:none;position:absolute;left:64px;top:calc(50% - 7px);width:16px;height:14px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:88px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">drafts</span>
+              <span style="pointer-events:none;position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196)">2</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <div style="pointer-events:none;position:absolute;left:18px;top:calc(50% - 6px);width:12px;height:12px"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 4.4 2.4 L 8 6 L 4.4 9.6" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <img src="./figma/assets/file-folder.svg" alt="" style="pointer-events:none;position:absolute;left:48px;top:calc(50% - 7px);width:16px;height:14px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:72px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">components</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <img src="./figma/assets/file-vue.svg" alt="" style="pointer-events:none;position:absolute;left:60px;top:calc(50% - 8px);width:16px;height:16px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:88px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">index.vue</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <img src="./figma/assets/file-ts.svg" alt="" style="pointer-events:none;position:absolute;left:44px;top:calc(50% - 8px);width:16px;height:16px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:72px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">nuxt.config.ts</span>
+              <span style="pointer-events:none;position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">M</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <img src="./figma/assets/file-json.svg" alt="" style="pointer-events:none;position:absolute;left:44px;top:calc(50% - 8px);width:16px;height:16px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:72px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">package.json</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <img src="./figma/assets/file-eslint.svg" alt="" style="pointer-events:none;position:absolute;left:44px;top:calc(50% - 7.5px);width:16px;height:15px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:72px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">.eslintrc.js</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <img src="./figma/assets/file-git.svg" alt="" style="pointer-events:none;position:absolute;left:44px;top:calc(50% - 8px);width:16px;height:16px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:72px;right:34px;top:calc(50% - 11px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">.gitignore</span>
+              <span style="pointer-events:none;position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(83,214,128)">U</span>
+            </div>
+          </div>
+          <div style="margin-top:auto;padding:6px 0 0;box-shadow:inset 0 1px 0 0 rgba(249,249,249,0.1)">
+            <div style="position:relative;height:44px;border-radius:4px">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <img src="./figma/assets/avatar.png" alt="" style="pointer-events:none;position:absolute;left:14px;top:calc(50% - 14px);width:28px;height:28px;border-radius:9999px;display:block" />
+              <span style="pointer-events:none;position:absolute;left:52px;right:34px;top:calc(50% - 18px);height:18px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:18px;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">hov_i</span>
+              <span style="pointer-events:none;position:absolute;left:52px;right:34px;top:calc(50% + 1px);height:16px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:12px;line-height:16px;color:rgba(255,255,255,0.786);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Connected via GitHub</span>
+              <div style="pointer-events:none;position:absolute;right:12px;top:calc(50% - 8px);width:16px;height:16px;color:rgba(255,255,255,0.786);display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 2.4 4.4 L 6 8 L 9.6 4.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+      <!-- Tab row — tabs 160 x 32, radius 8/7, card stroke rgba(0,0,0,0.1) -->
+      <div style="position:relative;height:40px;display:flex;align-items:flex-end;padding:0 10px 0 0">
+        <div style="flex:1;min-width:0;display:flex;flex-direction:row;align-items:flex-end;padding:0;overflow:hidden">
+          <div style="width:8px;flex:none"></div>
+          <div style="position:relative;z-index:2;width:160px;height:32px;flex:none;border-radius:7px 7px 0 0">
+            <div style="position:absolute;left:0;right:0;bottom:0;height:32px;background:rgba(40,40,40,0.75);border-radius:7px 7px 0 0;box-shadow:inset 1px 1px 0 0 rgba(0,0,0,0.1622),inset -1px 0 0 0 rgba(0,0,0,0.1622)"></div>
+            <div style="position:absolute;left:1px;right:1px;bottom:-1px;height:2px;background:rgba(40,40,40,0.75)"></div>
+            <img src="./figma/assets/file-doc-accent.svg" alt="" style="pointer-events:none;position:absolute;left:8px;top:8px;width:16px;height:16px;display:block" />
+            <span style="pointer-events:none;position:absolute;left:32px;right:32px;top:5px;height:20px;display:flex;align-items:center;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:600;font-size:14px;line-height:20px;font-feature-settings:'fina' on,'init' on;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">fluent-tokens.md</span>
+            <div style="position:absolute;right:0;top:0;width:40px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#FFFFFF">
+              <div style="position:absolute;left:5px;right:5px;top:5px;bottom:5px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0837)"></div>
+              <div style="pointer-events:none;width:16px;height:16px;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M2.6 2.6 L9.4 9.4 M9.4 2.6 L2.6 9.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+            </div>
+          </div>
+          <div style="position:relative;width:160px;height:32px;flex:none">
+            <div style="position:absolute;left:1px;right:1px;bottom:1px;height:30px;border-radius:7px 7px 0 0" style-hover="background:rgba(255,255,255,0.0605)"></div>
+            <div style="pointer-events:none;position:absolute;left:0;top:0;right:0;height:32px;display:flex;flex-direction:row;align-items:center;padding:0">
+              <div style="width:32px;height:32px;flex:none;display:flex;flex-direction:row;align-items:center;padding:0 8px">
+                <img src="./figma/assets/file-doc.svg" alt="" style="width:16px;height:16px;flex:none;display:block" />
+              </div>
+              <div style="flex:1;min-width:0;height:22px;display:flex;flex-direction:row;align-items:center;padding:0 0 2px">
+                <span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgba(255,255,255,0.786);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">index.md</span>
+              </div>
+              <div style="width:40px;height:32px;flex:none"></div>
+            </div>
+            <div style="pointer-events:none;position:absolute;right:0;top:8px;width:1px;height:16px;background:rgba(255,255,255,0.0837)"></div>
+            <div style="position:absolute;right:0;top:0;width:40px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.786)">
+              <div style="position:absolute;left:5px;right:5px;top:5px;bottom:5px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <div style="pointer-events:none;width:16px;height:16px;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M2.6 2.6 L9.4 9.4 M9.4 2.6 L2.6 9.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+            </div>
+          </div>
+          <div style="position:relative;width:160px;height:32px;flex:none">
+            <div style="position:absolute;left:1px;right:1px;bottom:1px;height:30px;border-radius:7px 7px 0 0" style-hover="background:rgba(255,255,255,0.0605)"></div>
+            <div style="pointer-events:none;position:absolute;left:0;top:0;right:0;height:32px;display:flex;flex-direction:row;align-items:center;padding:0">
+              <div style="width:32px;height:32px;flex:none;display:flex;flex-direction:row;align-items:center;padding:0 8px">
+                <img src="./figma/assets/file-ts.svg" alt="" style="width:16px;height:16px;flex:none;display:block" />
+              </div>
+              <div style="flex:1;min-width:0;height:22px;display:flex;flex-direction:row;align-items:center;padding:0 0 2px">
+                <span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgba(255,255,255,0.786);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">nuxt.config.ts</span>
+              </div>
+              <div style="width:40px;height:32px;flex:none"></div>
+            </div>
+            <div style="pointer-events:none;position:absolute;right:0;top:8px;width:1px;height:16px;background:rgba(255,255,255,0.0837)"></div>
+            <div style="position:absolute;right:0;top:0;width:40px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.786)">
+              <div style="position:absolute;left:5px;right:5px;top:5px;bottom:5px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <div style="pointer-events:none;width:16px;height:16px;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M2.6 2.6 L9.4 9.4 M9.4 2.6 L2.6 9.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+            </div>
+          </div>
+          <div style="position:relative;width:160px;height:32px;flex:none">
+            <div style="position:absolute;left:1px;right:1px;bottom:1px;height:30px;border-radius:7px 7px 0 0" style-hover="background:rgba(255,255,255,0.0605)"></div>
+            <div style="pointer-events:none;position:absolute;left:0;top:0;right:0;height:32px;display:flex;flex-direction:row;align-items:center;padding:0">
+              <div style="width:32px;height:32px;flex:none;display:flex;flex-direction:row;align-items:center;padding:0 8px">
+                <img src="./figma/assets/file-vue.svg" alt="" style="width:16px;height:16px;flex:none;display:block" />
+              </div>
+              <div style="flex:1;min-width:0;height:22px;display:flex;flex-direction:row;align-items:center;padding:0 0 2px">
+                <span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgba(255,255,255,0.786);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">index.vue</span>
+              </div>
+              <div style="width:40px;height:32px;flex:none"></div>
+            </div>
+            
+            <div style="position:absolute;right:0;top:0;width:40px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.786)">
+              <div style="position:absolute;left:5px;right:5px;top:5px;bottom:5px;border-radius:3px" style-hover="background:rgba(255,255,255,0.0605)"></div>
+              <div style="pointer-events:none;width:16px;height:16px;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M2.6 2.6 L9.4 9.4 M9.4 2.6 L2.6 9.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:none;display:flex;align-items:center;gap:2px;padding:0 0 4px 10px;color:rgba(255,255,255,0.786)">
+          <div style="width:28px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px" style-hover="background:rgba(255,255,255,0.0605)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:block"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1"/><rect x="10.5" y="2.5" width="4" height="11" fill="currentColor"/></svg></div>
+          <div style="width:28px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px" style-hover="background:rgba(255,255,255,0.0605)"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="display:block"><circle cx="4" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="12" cy="8" r="1.3"/></svg></div>
+        </div>
+      </div>
+
+      <!-- content -->
+      <div style="display:flex;gap:8px;padding:0 10px 10px 0">
+
+        <!-- editor + preview -->
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:8px;min-height:0;align-items:stretch">
+
+            <!-- preview -->
+            <div style="width:820px;flex:none;border-radius:7px;background:rgba(40,40,40,0.75);box-shadow:0 0 0 1px rgba(0,0,0,0.1622);overflow:hidden;display:flex;flex-direction:column">
+              <div style="height:34px;flex:none;display:flex;align-items:center;gap:10px;padding:0 14px">
+                <span style="font:600 12px/1 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);letter-spacing:.06em;text-transform:uppercase">Preview</span>
+                <span style="margin-left:auto;font:400 12px/1 Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;color:rgb(96,205,255)">locked to source</span>
+              </div>
+              <div style="padding:22px 24px 26px;display:flex;flex-direction:column;gap:16px">
+                <h1 style="margin:0;font:600 28px/36px 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255);letter-spacing:-.01em">Reading tokens out of a .fig</h1>
+                <p style="margin:0;font:400 14px/20px 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(249,249,249);text-wrap:pretty">A short note on building a <strong style="font-weight:600;color:rgb(255,255,255)">design system</strong> straight from the file instead of from memory of the brand.</p>
+                <h2 style="margin:6px 0 0;font:600 20px/26px 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(255,255,255)">Why tokens first</h2>
+                <ul style="margin:0;padding:0 0 0 20px;display:flex;flex-direction:column;gap:7px;font:400 14px/20px 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(249,249,249)">
+                  <li>Colour and type come from the file</li>
+                  <li>Odd values stay odd — 7px radius, 50px rail</li>
+                </ul>
+                <div style="padding:2px 0 2px 14px;box-shadow:inset 3px 0 0 0 rgb(96,205,255)">
+                  <p style="margin:0;font:400 14px/20px 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);font-style:italic">Read the file, not your memory of the brand.</p>
+                </div>
+                <div style="border-radius:4px;background:rgb(49,51,55);padding:12px 14px;display:flex;flex-direction:column;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px">
+                  <div style="white-space:pre"><span style="color:rgb(96,205,255)">const</span><span style="color:#E1E4E8"> accent = </span><span style="color:rgb(119,243,255)">"#60CDFF"</span><span style="color:#E1E4E8">;</span></div>
+                </div>
+                <p style="margin:0;font:400 14px/20px 'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;color:rgb(249,249,249)">See the <a href="#" style="color:rgb(96,205,255);text-decoration:underline;text-underline-offset:3px">full write-up</a> for the extraction steps.</p>
+              </div>
+            </div>
+
+            <!-- Code — padding 12, gap 16, radius 7 -->
+            <div style="flex:1;min-width:0;border-radius:7px;background:rgba(40,40,40,0.75);box-shadow:0 0 0 1px rgba(0,0,0,0.1622);padding:12px;display:flex;flex-direction:column;align-items:flex-start;gap:16px;overflow:hidden">
+              <div style="height:12px;flex:none;display:flex;flex-direction:row;align-items:center;padding:0;gap:6px">
+                <span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:12px;line-height:12px;color:#FFFFFF;white-space:nowrap">content</span>
+                <svg width="5" height="10" viewBox="0 0 5 10" fill="none" style="display:block;flex:none"><path d="M 0.8 0.8 L 4.2 5 L 0.8 9.2" stroke="rgba(249,249,249,0.5)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:12px;line-height:12px;color:#FFFFFF;white-space:nowrap">posts</span>
+                <svg width="5" height="10" viewBox="0 0 5 10" fill="none" style="display:block;flex:none"><path d="M 0.8 0.8 L 4.2 5 L 0.8 9.2" stroke="rgba(249,249,249,0.5)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span style="font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:12px;line-height:12px;color:#FFFFFF;white-space:nowrap">fluent-tokens.md</span>
+              </div>
+              <div style="flex:1;min-height:0;align-self:stretch;display:flex;flex-direction:row;align-items:flex-start;padding:0;gap:8px;position:relative">
+                <div style="width:15px;flex:none;display:flex;flex-direction:column;align-items:flex-start;padding:0;gap:10px">
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">01</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">02</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">03</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">04</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">05</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">06</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">07</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">08</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">09</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">10</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">11</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">12</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">13</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">14</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">15</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">16</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">17</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">18</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">19</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">20</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">21</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">22</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">23</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">24</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">25</span>
+                    <span style="width:15px;height:8px;flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgba(249,249,249,0.5)">26</span>
+                </div>
+                <div style="flex:1;min-width:0;position:relative;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:#E1E4E8">
+                  <div style="position:absolute;left:6px;top:18px;bottom:36px;width:1px;background:rgba(249,249,249,0.1)"></div>
+                  <div style="position:absolute;left:34px;top:108px;height:72px;width:1px;background:rgba(249,249,249,0.1)"></div>
+                  <div style="position:absolute;left:-23px;top:342px;height:18px;width:2px;background:#0F7B0F"></div>
+                  <div style="position:relative;display:flex;flex-direction:column">
+                    <div style="height:18px;white-space:pre"><span style="color:rgba(249,249,249,0.5)">---</span></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgb(83,214,128)">title</span><span style="color:#E1E4E8">: </span><span style="color:rgb(119,243,255)">"Reading tokens out of a .fig"</span></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgb(83,214,128)">date</span><span style="color:#E1E4E8">: </span><span style="color:rgb(119,243,255)">2026-08-28</span></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgb(83,214,128)">tags</span><span style="color:rgb(119,243,255)">: [design, fluent, figma]</span></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgba(249,249,249,0.5)">---</span></div>
+                    <div style="height:18px;white-space:pre"></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgb(96,205,255);font-weight:700"># Reading tokens out of a .fig</span></div>
+                    <div style="height:18px;white-space:pre"></div>
+                    <div style="height:18px;white-space:pre"><span style="color:#E1E4E8">A short note on building a </span><span style="color:#FFFFFF;font-weight:700">**design system**</span></div>
+                    <div style="height:18px;white-space:pre"><span style="color:#E1E4E8">straight from the file instead of from memory</span></div>
+                    <div style="height:18px;white-space:pre"><span style="color:#E1E4E8">of the brand.</span></div>
+                    <div style="height:18px;white-space:pre"></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgb(96,205,255);font-weight:700">## Why tokens first</span></div>
+                    <div style="height:18px;white-space:pre"></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgb(96,205,255)">- </span><span style="color:#E1E4E8">Colour and type come from the file</span></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgb(96,205,255)">- </span><span style="color:#E1E4E8">Odd values stay odd — 7px radius, 50px rail</span></div>
+                    <div style="height:18px;white-space:pre"></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgba(249,249,249,0.5);font-style:italic">&gt; Read the file, not your memory of the brand.</span></div>
+                    <div style="height:18px;white-space:pre"></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgba(249,249,249,0.5)">```ts</span></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgb(96,205,255)">const</span><span style="color:#E1E4E8"> accent = </span><span style="color:rgb(119,243,255)">"#60CDFF"</span><span style="color:#E1E4E8">;</span></div>
+                    <div style="height:18px;white-space:pre"><span style="color:rgba(249,249,249,0.5)">```</span></div>
+                    <div style="height:18px;white-space:pre"></div>
+                    <div style="height:18px;white-space:pre"><span style="color:#E1E4E8">See the </span><span style="color:rgb(11,152,249)">[full write-up]</span><span style="color:rgba(249,249,249,0.5)">(/posts/tokens)</span><span style="color:#E1E4E8"> for the</span></div>
+                    <div style="height:18px;white-space:pre"><span style="color:#E1E4E8">extraction steps.</span></div>
+                    <div style="height:18px;white-space:pre"></div>
+                  </div>
+                </div>
+                <div style="width:14px;flex:none;align-self:stretch;position:relative;border-radius:0 7px 7px 0">
+                  <div style="position:absolute;right:4px;top:16px;width:2px;height:123px;background:rgba(255,255,255,0.5442);border-radius:9999px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- terminal — Claude Code CLI session -->
+          <div style="flex:none;border-radius:7px;background:rgba(40,40,40,0.75);box-shadow:0 0 0 1px rgba(0,0,0,0.1622);display:flex;flex-direction:column;overflow:hidden">
+
+            <div style="height:28px;flex:none;display:flex;align-items:center;gap:2px;padding:0 8px">
+              <div style="height:24px;display:flex;align-items:center;padding:0 10px;border-radius:4px"><span style="font:400 12px/12px 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);white-space:nowrap">Problems</span></div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 10px;border-radius:4px"><span style="font:400 12px/12px 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);white-space:nowrap">Output</span></div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 10px;border-radius:4px"><span style="font:400 12px/12px 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);white-space:nowrap">Debug Console</span></div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 10px;border-radius:4px;background:rgba(255,255,255,0.0605);border:1px solid rgba(255,255,255,0.0605)"><span style="font:400 12px/12px 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:#FFFFFF;white-space:nowrap">Terminal</span></div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 10px;border-radius:4px"><span style="font:400 12px/12px 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);white-space:nowrap">Ports</span></div>
+            </div>
+
+            <div style="flex:1;min-height:0;padding:6px 14px 4px;display:flex;flex-direction:column;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px;color:rgb(196,196,196)">
+
+
+              <div style="display:flex;align-items:flex-start;gap:12px;padding:2px 0 0 2px">
+                <div style="flex:none;padding-top:2px"><img src="./figma/assets/claude-mascot.png" alt="" style="width:69px;height:46px;display:block;image-rendering:pixelated" /></div>
+                <div style="flex:none;font-family:Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace;font-weight:400;font-size:13px;line-height:18px">
+                  <div style="height:18px;white-space:pre"><span style="color:#FFFFFF;font-weight:700">Claude Code</span><span style="color:rgb(196,196,196)"> v2.1.250</span></div>
+                  <div style="height:18px;white-space:pre"><span style="color:rgb(196,196,196)">Sonnet 5 · Claude Max</span></div>
+                  <div style="height:18px;white-space:pre"><span style="color:rgb(196,196,196)">~\hoviProjects\vscode-blog</span></div>
+                </div>
+              </div>
+
+              <div style="height:18px;margin-top:4px;white-space:pre"><span style="color:#E5A13A">⚠ Your login expires in 3 days</span><span style="color:rgb(196,196,196)"> · run </span><span style="color:#FFFFFF">/login</span><span style="color:rgb(196,196,196)"> to renew</span></div>
+
+              <div style="margin-top:6px;display:flex;flex-direction:column;gap:2px">
+                <div style="height:18px;white-space:pre"><span style="color:rgb(196,196,196)">❯ </span><span style="color:#FFFFFF">/init</span></div>
+                <div style="height:18px;white-space:pre;padding-left:14px"><span style="color:rgba(249,249,249,0.5)">└ </span><span style="color:rgb(83,214,128)">✓ </span><span style="color:rgb(196,196,196)">Portfolio loaded. Ready to explore hov_i's work.</span></div>
+              </div>
+
+              <div style="height:1px;margin:6px 0 0;background:rgba(249,249,249,0.1)"></div>
+
+              <div style="height:24px;display:flex;align-items:center;gap:8px;white-space:pre">
+                <span style="color:rgb(196,196,196)">❯</span>
+                <span style="color:rgba(249,249,249,0.5)">Start learning about hov_i...</span>
+                <span style="display:inline-block;width:8px;height:16px;background:#FFFFFF"></span>
+              </div>
+
+              <div style="height:1px;background:rgba(249,249,249,0.1)"></div>
+
+              <div style="margin-top:4px;display:flex;align-items:flex-start;gap:16px;padding-left:14px">
+                <div style="height:18px;white-space:pre;flex:1;min-width:0"><span style="color:#E5A13A">▸▸ auto mode on</span><span style="color:rgb(196,196,196)"> (shift+tab to cycle) · ↵ for agents</span></div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;flex:none">
+                  <div style="height:18px;white-space:pre"><span style="color:rgb(83,214,128)">/rc active</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- status bar -->
+          <div style="height:32px;flex:none;border-radius:7px;background:rgba(40,40,40,0.75);box-shadow:0 0 0 1px rgba(0,0,0,0.1622);display:flex;align-items:center;gap:20px;padding:0 14px">
+            <sc-for list="{{ statusLeft }}" as="s" hint-placeholder-count="3">
+              <span style="font:400 12px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:{{ s.fg }};white-space:nowrap">{{ s.label }}</span>
+            </sc-for>
+            <div style="margin-left:auto;display:flex;align-items:center;gap:20px">
+              <sc-for list="{{ statusRight }}" as="s" hint-placeholder-count="5">
+                <span style="font:400 12px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:{{ s.fg }};white-space:nowrap">{{ s.label }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+   </div>
+  </div>
+  <p style="margin:16px 0 0;font:400 12px/1.6 Consolas,'Cascadia Mono',Menlo,monospace;color:rgba(255,255,255,.45)">Shown at the file's true window size, 1737 × 982 — scroll sideways if your view is narrower. File-tree icons are the file's own vectors. Segoe UI Variable and Consolas render natively on Windows; elsewhere the stack falls back to Segoe UI / a system mono.</p>
+</section>
+
+<footer style="padding:38px 64px 0;max-width:1520px;margin:0 auto">
+  <div style="border-top:1px solid rgba(255,255,255,.085);padding-top:30px;display:flex;flex-wrap:wrap;gap:56px">
+    <div style="max-width:440px">
+      <h3 style="margin:0 0 12px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">Still open</h3>
+      <ul style="margin:0;padding:0 0 0 20px;display:flex;flex-direction:column;gap:8px;font:400 14px/1.6 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196)">
+        <li>Exact per-state fills from the Button / Checkbox / Toggle variant sets</li>
+        <li>Light mode — every family in the file has a Mode=Light twin</li>
+        <li>More icon families (Badge, Tree View chevrons, Title Bar parts)</li>
+      </ul>
+    </div>
+    <div style="max-width:440px">
+      <h3 style="margin:0 0 12px;font:600 14px/1 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196);letter-spacing:.06em;text-transform:uppercase">Blog-ready pieces</h3>
+      <ul style="margin:0;padding:0 0 0 20px;display:flex;flex-direction:column;gap:8px;font:400 14px/1.6 'Segoe UI Variable','Segoe UI',system-ui,sans-serif;color:rgb(196,196,196)">
+        <li>The Markdown screen above, croppable at any width</li>
+        <li>A split-preview variant, and a distraction-free writing mode</li>
+        <li>Same shell with the file's Extensions Gallery content</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1520}}">
+class Component extends DCLogic {
+  renderVals() {
+    const UI = "'Segoe UI Variable','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif";
+    const MONO = "Consolas,'Cascadia Mono','Segoe UI Mono',Menlo,monospace";
+    const W = 'rgb(255,255,255)', S = 'rgb(249,249,249)', T = 'rgb(196,196,196)', A = 'rgb(96,205,255)';
+    const md = [];
+    let ln = 0;
+    const L = (text, color, weight, italic, bg) => { ln++; md.push({ n: ln, text, color: color || S, weight: weight || 400, italic: italic || 'normal', bg: bg || 'transparent' }); };
+    L('---', T);
+    L('title: "Reading tokens out of a .fig"', 'rgb(83,214,128)');
+    L('date: 2026-08-28', 'rgb(83,214,128)');
+    L('tags: [design, fluent, figma]', 'rgb(83,214,128)');
+    L('---', T);
+    L('');
+    L('# Reading tokens out of a .fig', A, 600);
+    L('');
+    L('A short note on building a **design system**', S);
+    L('straight from the file instead of from memory', S);
+    L('of the brand.', S);
+    L('');
+    L('## Why tokens first', A, 600);
+    L('');
+    L('- Colour and type come from the file', T);
+    L('- Odd values stay odd — 7px radius, 50px rail', T);
+    L('');
+    L('> Read the file, not your memory of the brand.', T, 400, 'italic');
+    L('');
+    L('```ts', T);
+    L('const accent = "#60CDFF";', 'rgb(119,243,255)', 400, 'normal', 'rgba(255,255,255,.03)');
+    L('```', T);
+    L('');
+    L('See the [full write-up](/posts/tokens) for the', 'rgb(11,152,249)');
+    L('extraction steps.', 'rgb(11,152,249)');
+    L('', S, 400, 'normal', 'rgba(96,205,255,.08)');
+
+    return {
+      colorGroups: [
+        { title: 'Surface', items: [
+          { name: 'App surface (Mica)', hex: 'rgba(40,40,40,0.75)', use: 'Nav rail, editor panel, terminal — 68 uses' },
+          { name: 'Window base', hex: 'rgb(32,32,32)', use: 'Behind the mica panels — 40 uses' },
+          { name: 'Solid 40', hex: 'rgb(40,40,40)', use: 'Opaque fallback for the same panels' },
+          { name: 'Control fill', hex: 'rgb(49,51,55)', use: 'Terminal command row, code block — radius 4' },
+          { name: 'Control alt', hex: 'rgb(93,93,93)', use: 'Scrollbar track, inactive thumb' },
+          { name: 'Tab shadow mask', hex: 'rgb(196,196,196)', use: 'Tab shadow base — 150 uses' }
+        ] },
+        { title: 'Stroke & divider', items: [
+          { name: 'Surface stroke', hex: 'rgba(0,0,0,0.1622)', use: 'Outline on every mica panel' },
+          { name: 'Tab stroke', hex: 'rgba(0,0,0,0.1)', use: 'Tab and tab-row hairline' },
+          { name: 'Card stroke', hex: 'rgba(255,255,255,0.13)', use: 'Control outline top — 60 uses' },
+          { name: 'Control stroke', hex: 'rgba(255,255,255,0.085)', use: 'Control outline rest — 60 uses' },
+          { name: 'Subtle stroke', hex: 'rgba(255,255,255,0.093)', use: 'Secondary outline — 22 uses' },
+          { name: 'Divider', hex: 'rgba(249,249,249,0.1)', use: 'Terminal / panel dividers' }
+        ] },
+        { title: 'Text', items: [
+          { name: 'Text primary', hex: 'rgb(255,255,255)', use: 'Titles, active tab, menu bar — 1280 uses' },
+          { name: 'Text secondary', hex: 'rgb(249,249,249)', use: 'Body copy — 331 uses' },
+          { name: 'Text tertiary', hex: 'rgb(196,196,196)', use: 'Rest-state icons, metadata — 150 uses' },
+          { name: 'Text muted', hex: 'rgba(255,255,255,0.75)', use: 'De-emphasised inline labels' },
+          { name: 'Code base', hex: '#E1E4E8', use: 'Editor code body — Consolas 13/18' },
+          { name: 'Gutter / dim', hex: 'rgba(249,249,249,0.5)', use: 'Line numbers, breadcrumb chevrons' }
+        ] },
+        { title: 'Accent', items: [
+          { name: 'Accent', hex: 'rgb(96,205,255)', use: 'Selection, focus, active icon — 77 uses' },
+          { name: 'Accent bright', hex: 'rgb(119,243,255)', use: 'Strings in code, hover on accent' },
+          { name: 'Link', hex: 'rgb(11,152,249)', use: 'Hyperlinks in rendered content' },
+          { name: 'Link pressed', hex: 'rgb(1,119,212)', use: 'Pressed state for links' }
+        ] },
+        { title: 'Semantic & file type', items: [
+          { name: 'Success', hex: 'rgb(83,214,128)', use: 'Passing task, front-matter keys' },
+          { name: 'Git added', hex: 'rgb(15,123,15)', use: 'Gutter change marker' },
+          { name: 'Warning', hex: 'rgb(157,93,0)', use: 'Warning badge — 26 uses' },
+          { name: 'Vue leaf', hex: 'rgb(65,184,131)', use: '.vue file icon, light half' },
+          { name: 'Vue shade', hex: 'rgb(53,73,94)', use: '.vue file icon, dark half' },
+          { name: 'TypeScript', hex: 'rgb(49,120,198)', use: '.ts file icon — 21 uses' }
+        ] }
+      ],
+
+      typeScale: [
+        { face: 'Segoe UI Variable Bold Display', spec: '128 / 700', px: 128, weight: 700, family: UI, sample: 'Aa' },
+        { face: 'Segoe UI Variable Semibold Display', spec: '28 / 600', px: 28, weight: 600, family: UI, sample: 'Accounts, Settings, Extensions' },
+        { face: 'Segoe UI Variable Semibold Display', spec: '20 / 600', px: 20, weight: 600, family: UI, sample: 'Why tokens first' },
+        { face: 'Segoe UI Variable Semibold Text', spec: '14 / 600', px: 14, weight: 600, family: UI, sample: 'Manage Trusted Extensions' },
+        { face: 'Segoe UI Variable Regular', spec: '18 / 400', px: 18, weight: 400, family: UI, sample: 'Extensions that have access to your account' },
+        { face: 'Segoe UI Variable Regular', spec: '14 / 400 — 220×', px: 14, weight: 400, family: UI, sample: 'Settings Sync · Saves your settings to your account' },
+        { face: 'Segoe UI Variable Regular Small', spec: '12 / 400 — 123×', px: 12, weight: 400, family: UI, sample: 'Ln 9, Col 42 · Spaces: 2 · UTF-8 · Markdown' },
+        { face: 'Consolas Regular', spec: '13 / 400 — 223×', px: 13, weight: 400, family: MONO, sample: 'const accent = "#60CDFF";' },
+        { face: 'Consolas Regular', spec: '12 / 400', px: 12, weight: 400, family: MONO, sample: '$ npm run blog:dev' }
+      ],
+
+      radii: [
+        { px: 4, use: 'Buttons, checkboxes, text boxes, code blocks' },
+        { px: 7, use: 'App surfaces — nav, editor, terminal, status' },
+        { px: 8, use: 'Tab outer corner (7px inner)' },
+        { px: 9999, use: 'Toggle switch, scrollbar thumb' }
+      ],
+
+      metrics: [
+        { name: 'Frame', val: '1920 × 1080' },
+        { name: 'Window', val: '1737 × 982 @ 92, 27' },
+        { name: 'Title bar', val: '48px' },
+        { name: 'Tab row / tab', val: '48px / 160 × 32' },
+        { name: 'Nav rail width', val: '50px' },
+        { name: 'Nav rail padding', val: '16px 12px' },
+        { name: 'Nav icon / gap', val: '24px / 32px' },
+        { name: 'Content gap / padding', val: '12px / 0 16 16' },
+        { name: 'Side nav list item', val: '40px' },
+        { name: 'Terminal panel', val: '220px' },
+        { name: 'Scrollbar / thumb', val: '14px / 2px' }
+      ],
+
+      elevations: [
+        { value: '0 0 0 1px rgba(0,0,0,0.1622)', shadow: '0 0 0 1px rgba(0,0,0,0.1622)', use: 'Every app surface, flush' },
+        { value: '0 2px 4px rgba(0,0,0,0.14)', shadow: '0 2px 4px rgba(0,0,0,0.14)', use: 'Resting control lift' },
+        { value: '0 8px 16px rgba(0,0,0,0.55)', shadow: '0 8px 16px rgba(0,0,0,0.55)', use: 'Flyout surface' },
+        { value: '0 32px 64px rgba(0,0,0,0.56)', shadow: '0 32px 64px rgba(0,0,0,0.56)', use: 'Window against desktop' }
+      ],
+
+      railIcons: [
+        { name: 'ArrowSplitSize24ThemeRegular', label: 'Arrow Split 24 R', color: T },
+        { name: 'ArrowSplitSize24ThemeFilled', label: 'Arrow Split 24 F', color: A },
+        { name: 'BugSize24ThemeRegular', label: 'Bug 24 R', color: T },
+        { name: 'BugSize24ThemeFilled', label: 'Bug 24 F', color: A },
+        { name: 'ChatSize24ThemeRegular', label: 'Chat 24 R', color: T },
+        { name: 'ChatSize24ThemeFilled', label: 'Chat 24 F', color: A },
+        { name: 'GlobeSize24ThemeRegular', label: 'Globe 24 R', color: T },
+        { name: 'GlobeSize24ThemeFilled', label: 'Globe 24 F', color: A },
+        { name: 'DesktopSignalSize24ThemeRegular', label: 'Desktop Signal 24 R', color: T },
+        { name: 'DesktopSignalSize24ThemeFilled', label: 'Desktop Signal 24 F', color: A },
+        { name: 'AppsSize24ThemeRegular', label: 'Apps 24 R', color: T },
+        { name: 'AppsSize24ThemeFilled', label: 'Apps 24 F', color: A },
+        { name: 'SearchSize24ThemeRegular', label: 'Search 24 R', color: T },
+        { name: 'SearchSize24ThemeFilled', label: 'Search 24 F', color: A },
+        { name: 'PersonSize24ThemeRegular', label: 'Person 24 R', color: T },
+        { name: 'PersonSize24ThemeFilled', label: 'Person 24 F', color: A },
+        { name: 'SettingsSize24ThemeRegular', label: 'Settings 24 R', color: T },
+        { name: 'SettingsSize24ThemeFilled', label: 'Settings 24 F', color: A }
+      ],
+
+      sideNav: [
+        { label: 'Commonly Used', state: 'Selected', bg: 'rgba(255,255,255,.0605)', fg: W, mark: 'inset 2px 0 0 0 rgb(96,205,255)' },
+        { label: 'Text Editor', state: 'Hover', bg: 'rgba(255,255,255,.0373)', fg: W, mark: 'none' },
+        { label: 'Workbench', state: 'Rest', bg: 'transparent', fg: S, mark: 'none' },
+        { label: 'Extensions', state: 'Disabled', bg: 'transparent', fg: 'rgba(255,255,255,.36)', mark: 'none' }
+      ],
+
+      stateLabels: ['Rest', 'Hover', 'Pressed', 'Disabled'],
+      buttonRows: [
+        { name: 'Accent', label: 'Install', states: [
+          { bg: A, fg: 'rgb(0,0,0)', bd: 'inset 0 0 0 1px rgba(255,255,255,.085)' },
+          { bg: 'rgb(119,243,255)', fg: 'rgb(0,0,0)', bd: 'inset 0 0 0 1px rgba(255,255,255,.085)' },
+          { bg: 'rgb(1,119,212)', fg: 'rgba(0,0,0,.6)', bd: 'none' },
+          { bg: 'rgba(255,255,255,.1581)', fg: 'rgba(255,255,255,.36)', bd: 'none' }
+        ] },
+        { name: 'Standard', label: 'View Account', states: [
+          { bg: 'rgba(255,255,255,.0605)', fg: W, bd: 'inset 0 0 0 1px rgba(255,255,255,.085),inset 0 -1px 0 0 rgba(255,255,255,.13)' },
+          { bg: 'rgba(255,255,255,.0837)', fg: W, bd: 'inset 0 0 0 1px rgba(255,255,255,.085)' },
+          { bg: 'rgba(255,255,255,.0326)', fg: T, bd: 'inset 0 0 0 1px rgba(255,255,255,.0698)' },
+          { bg: 'rgba(255,255,255,.0419)', fg: 'rgba(255,255,255,.36)', bd: 'inset 0 0 0 1px rgba(255,255,255,.0698)' }
+        ] },
+        { name: 'Subtle', label: 'Reload', states: [
+          { bg: 'transparent', fg: W, bd: 'none' },
+          { bg: 'rgba(255,255,255,.0605)', fg: W, bd: 'none' },
+          { bg: 'rgba(255,255,255,.0419)', fg: T, bd: 'none' },
+          { bg: 'transparent', fg: 'rgba(255,255,255,.36)', bd: 'none' }
+        ] }
+      ],
+
+      treeUnusedReference: [
+        { name: 'content', chev: '⌄', pad: 10, bg: 'transparent', fg: W, badge: '', badgeFg: T, mark: 'none', icon: './figma/assets/file-folder.svg' },
+        { name: 'posts', chev: '⌄', pad: 24, bg: 'transparent', fg: W, badge: '3', badgeFg: A, mark: 'none', icon: './figma/assets/file-folder.svg' },
+        { name: 'fluent-tokens.md', chev: '', pad: 40, bg: 'rgba(255,255,255,.0605)', fg: W, badge: 'M', badgeFg: A, mark: 'inset 2px 0 0 0 rgb(96,205,255)', icon: './figma/assets/file-doc-accent.svg' },
+        { name: 'index.md', chev: '', pad: 40, bg: 'transparent', fg: S, badge: 'M', badgeFg: A, mark: 'none', icon: './figma/assets/file-doc.svg' },
+        { name: 'about.md', chev: '', pad: 40, bg: 'transparent', fg: S, badge: '', badgeFg: T, mark: 'none', icon: './figma/assets/file-doc.svg' },
+        { name: 'drafts', chev: '›', pad: 24, bg: 'transparent', fg: S, badge: '2', badgeFg: T, mark: 'none', icon: './figma/assets/file-folder.svg' },
+        { name: 'components', chev: '›', pad: 10, bg: 'transparent', fg: S, badge: '', badgeFg: T, mark: 'none', icon: './figma/assets/file-folder.svg' },
+        { name: 'index.vue', chev: '', pad: 24, bg: 'transparent', fg: S, badge: '', badgeFg: T, mark: 'none', icon: './figma/assets/file-vue.svg' },
+        { name: 'nuxt.config.ts', chev: '', pad: 24, bg: 'transparent', fg: S, badge: 'M', badgeFg: A, mark: 'none', icon: './figma/assets/file-ts.svg' },
+        { name: 'package.json', chev: '', pad: 24, bg: 'transparent', fg: S, badge: '', badgeFg: T, mark: 'none', icon: './figma/assets/file-json.svg' },
+        { name: '.eslintrc.js', chev: '', pad: 24, bg: 'transparent', fg: S, badge: '', badgeFg: T, mark: 'none', icon: './figma/assets/file-eslint.svg' },
+        { name: '.gitignore', chev: '', pad: 24, bg: 'transparent', fg: 'rgba(255,255,255,.4)', badge: 'U', badgeFg: 'rgb(83,214,128)', mark: 'none', icon: './figma/assets/file-git.svg' }
+      ],
+
+      mdLines: md,
+
+      statusLeft: [
+        { label: 'main*', fg: W },
+        { label: '⊗ 0   ⚠ 0', fg: T },
+        { label: 'content/posts/fluent-tokens.md', fg: T }
+      ],
+      statusRight: [
+        { label: '1,204 words', fg: A },
+        { label: 'Ln 9, Col 42', fg: T },
+        { label: 'Spaces: 2', fg: T },
+        { label: 'UTF-8', fg: T },
+        { label: 'Markdown', fg: W }
+      ],
+
+      menuBarUnused: ['File', 'Edit', 'Selection', 'View', 'Run', 'Terminal']
+    };
+  }
+}
+</script>
+</body>
+</html>

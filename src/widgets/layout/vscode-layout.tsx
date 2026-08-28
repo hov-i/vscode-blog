@@ -4,123 +4,128 @@ import { ActivityBar } from "@/widgets/layout/activity-bar";
 import { Sidebar } from "@/widgets/layout/sidebar";
 import { StatusBar } from "@/widgets/layout/status-bar";
 import { TabsBar } from "@/widgets/layout/tabs-bar";
-import { BreadcrumbBar } from "@/widgets/layout/breadcrumb-bar";
-import { ReactNode, useState, useEffect, useRef } from "react";
+import { TitleBar } from "@/widgets/layout/title-bar";
+import { TerminalDock } from "@/widgets/layout/terminal-dock";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Icon } from "@/shared/ui/icon";
 import { cn } from "@/shared/lib/utils";
-import { usePathname } from "next/navigation";
-import dynamic from "next/dynamic";
+import { useOpenTabs } from "@/widgets/layout/use-open-tabs";
+import { buildAllFiles, GUESTBOOK_FILE, type PostSummary, type ProjectSummary, type TagSummary } from "@/widgets/layout/file-tree-data";
+import { PostMetaProvider } from "@/widgets/layout/post-meta-context";
+import { EmptyEditorState } from "@/widgets/layout/empty-editor-state";
 
-// 챗 위젯은 초기 렌더에 필요 없으므로 지연 로딩 (framer-motion 등 무거운 의존성 포함)
-const ChatWidget = dynamic(
-  () => import("@/widgets/chat-widget/chat-widget").then((m) => m.ChatWidget),
-  { ssr: false }
-);
+export const VSCodeLayout = ({
+  children,
+  posts,
+  projects,
+  tags,
+}: {
+  children: ReactNode;
+  posts: PostSummary[];
+  projects: ProjectSummary[];
+  tags: TagSummary[];
+}) => {
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isTerminalOpen, setTerminalOpen] = useState(true);
+  const [sidebarView, setSidebarView] = useState<"explorer" | "search">("explorer");
+  const files = useMemo(() => buildAllFiles({ posts, projects, tags }), [posts, projects, tags]);
+  const { openTabs, activeFileId, openFile, selectTab, closeTab, reorderTabs } = useOpenTabs(files);
 
-const LINE_HEIGHT_PX = 24;
+  function handleToggleSearch() {
+    setSidebarView((v) => (v === "search" ? "explorer" : "search"));
+  }
 
-export const VSCodeLayout = ({ children, postCount, projectCount }: { children: ReactNode; postCount: number; projectCount: number }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [lineCount, setLineCount] = useState(30);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
+  function handleOpenGuestbook() {
+    setSidebarView("explorer");
+    openFile(GUESTBOOK_FILE);
+  }
 
-  // Close sidebar when navigating on mobile
+  // Mobile starts with the sidebar collapsed (it renders as a full overlay there);
+  // desktop keeps the default-open state set above.
   useEffect(() => {
-    setSidebarOpen(false);
-  }, [pathname]);
-
-  // Dynamically size the line-number gutter based on content height
-  useEffect(() => {
-    const content = contentRef.current;
-    const scroller = scrollRef.current;
-    if (!content || !scroller) return;
-
-    const update = () => {
-      const contentHeight = content.getBoundingClientRect().height;
-      const viewportHeight = scroller.clientHeight;
-      const height = Math.max(contentHeight, viewportHeight);
-      const lines = Math.max(30, Math.ceil(height / LINE_HEIGHT_PX) + 2);
-      setLineCount(lines);
-    };
-
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(content);
-    ro.observe(scroller);
-    return () => ro.disconnect();
-  }, [pathname]);
+    if (window.innerWidth < 1024) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSidebarOpen(false);
+    }
+  }, []);
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      {/* Main Flex Area */}
-      <div className="flex flex-1 overflow-hidden relative">
-        {/* Mobile Toggle Button — 열려 있을 땐 사이드바 자체 닫기 버튼 사용 */}
-        {!isSidebarOpen && (
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden fixed bottom-10 left-6 z-30 w-12 h-12 rounded-full bg-[var(--accent)] text-white shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
-            aria-label="메뉴 열기"
-          >
-            <Icon name="menu" className="w-6 h-6" />
-          </button>
-        )}
+    <PostMetaProvider>
+      <div className="flex h-[111.112vh] w-[111.112vw] origin-top-left scale-90 flex-col overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
+        <TitleBar
+          terminalOpen={isTerminalOpen}
+          onToggleTerminal={() => setTerminalOpen((v) => !v)}
+          sidebarOpen={isSidebarOpen}
+          onToggleSidebar={() => setSidebarOpen((v) => !v)}
+        />
+        {/* Main Flex Area — window base (Mica panels float on top with gaps) */}
+        <div className="flex flex-1 overflow-hidden relative bg-[var(--bg-secondary)]">
+          {/* Mobile Toggle Button — 열려 있을 땐 사이드바 자체 닫기 버튼 사용 */}
+          {!isSidebarOpen && (
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden fixed bottom-10 left-6 z-30 w-12 h-12 rounded-full bg-[var(--accent)] text-white shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+              aria-label="메뉴 열기"
+            >
+              <Icon name="menu" className="w-6 h-6" />
+            </button>
+          )}
 
-        {/* Navigation Sidebar Area - Hidden on Mobile, shown via sidebar state if needed */}
-        <div className={cn(
-          "fixed inset-y-0 left-0 z-40 flex h-full lg:relative lg:inset-auto lg:flex transition-transform duration-300 transform outline-none",
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        )}>
-          <ActivityBar />
-          <Sidebar
-            postCount={postCount}
-            projectCount={projectCount}
-            onClose={() => setSidebarOpen(false)}
-          />
+          {/* Navigation Sidebar Area — slides in/out on mobile, collapses to 0 width on desktop */}
+          <div className={cn(
+            "fixed inset-y-0 left-0 z-40 flex lg:relative lg:inset-auto lg:my-2 transition-all duration-300 outline-none overflow-hidden",
+            isSidebarOpen
+              ? "translate-x-0 lg:w-auto lg:ml-2 lg:gap-2"
+              : "-translate-x-full lg:translate-x-0 lg:w-0 lg:ml-0 lg:gap-0"
+          )}>
+            <ActivityBar
+              sidebarView={sidebarView}
+              activeFileId={activeFileId}
+              onToggleSearch={handleToggleSearch}
+              onOpenGuestbook={handleOpenGuestbook}
+            />
+            <Sidebar
+              onClose={() => setSidebarOpen(false)}
+              posts={posts}
+              projects={projects}
+              activeFileId={activeFileId}
+              onOpenFile={openFile}
+              sidebarView={sidebarView}
+            />
+          </div>
+
+          {/* Overlay for Mobile Sidebar */}
+          {isSidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+
+          {/* Editor Area */}
+          <main id="main-content" className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden lg:my-2 lg:mr-2 lg:ml-2">
+            <TabsBar
+              tabs={openTabs}
+              activeFileId={activeFileId}
+              onSelect={selectTab}
+              onClose={closeTab}
+              onReorder={reorderTabs}
+            />
+
+            <div className="flex-1 min-h-0 flex flex-col gap-2 overflow-hidden">
+              {/* page.tsx supplies its own Mica-carded preview/source split;
+                  once every tab is closed we show an empty-editor placeholder instead */}
+              <div className="flex-1 min-w-0 min-h-0 overflow-hidden">
+                {openTabs.length === 0 ? <EmptyEditorState onOpenFile={openFile} /> : children}
+              </div>
+
+              {isTerminalOpen && <TerminalDock />}
+            </div>
+          </main>
         </div>
 
-        {/* Overlay for Mobile Sidebar */}
-        {isSidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
-        {/* Editor Area */}
-        <main id="main-content" className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-          <TabsBar />
-          <BreadcrumbBar />
-
-          <div ref={scrollRef} className="flex flex-1 overflow-y-auto bg-[var(--bg-primary)]">
-            {/* Line Numbers Gutter - scrolls with content */}
-            <div
-              aria-hidden="true"
-              className="hidden sm:block w-12 py-2 text-right px-2 text-xs font-mono text-[var(--text-secondary)] shrink-0 select-none"
-              style={{ lineHeight: `${LINE_HEIGHT_PX}px` }}
-            >
-              {Array.from({ length: lineCount }).map((_, i) => (
-                <div key={i}>{i + 1}</div>
-              ))}
-            </div>
-
-            {/* Content column (natural height; outer flex stretches this to match gutter) */}
-            <div className="flex-1 min-w-0 flex flex-col text-[var(--text-editor)]">
-              <div
-                ref={contentRef}
-                key={pathname}
-                className="p-4 sm:p-6 animate-fade-in"
-              >
-                {children}
-              </div>
-            </div>
-          </div>
-        </main>
+        <StatusBar />
       </div>
-
-      <StatusBar />
-      <ChatWidget />
-    </div>
+    </PostMetaProvider>
   );
 };

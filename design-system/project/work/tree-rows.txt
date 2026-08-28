@@ -1,0 +1,72 @@
+
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <div style="position:absolute;left:18px;top:calc(50% - 6px);width:12px;height:12px"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 2.4 4.4 L 6 8 L 9.6 4.4" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <img src="./figma/assets/file-folder.svg" alt="" style="position:absolute;left:48px;top:calc(50% - 7px);width:16px;height:14px;display:block" />
+              <span style="position:absolute;left:72px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">content</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <div style="position:absolute;left:34px;top:calc(50% - 6px);width:12px;height:12px"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 2.4 4.4 L 6 8 L 9.6 4.4" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <img src="./figma/assets/file-folder.svg" alt="" style="position:absolute;left:64px;top:calc(50% - 7px);width:16px;height:14px;display:block" />
+              <span style="position:absolute;left:88px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">posts</span>
+              <span style="position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">3</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px;background:rgba(255,255,255,0.0605);border:1px solid rgba(255,255,255,0.0605)"></div>
+              <div style="position:absolute;left:0;top:calc(50% - 8px);width:3px;height:16px;background:#60CDFF;border-radius:999px"></div>
+              <img src="./figma/assets/file-doc-accent.svg" alt="" style="position:absolute;left:76px;top:calc(50% - 10px);width:16px;height:20px;display:block" />
+              <span style="position:absolute;left:104px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">fluent-tokens.md</span>
+              <span style="position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">M</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <img src="./figma/assets/file-doc.svg" alt="" style="position:absolute;left:76px;top:calc(50% - 10px);width:16px;height:20px;display:block" />
+              <span style="position:absolute;left:104px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">index.md</span>
+              <span style="position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">M</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <img src="./figma/assets/file-doc.svg" alt="" style="position:absolute;left:76px;top:calc(50% - 10px);width:16px;height:20px;display:block" />
+              <span style="position:absolute;left:104px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">about.md</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <div style="position:absolute;left:34px;top:calc(50% - 6px);width:12px;height:12px"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 4.4 2.4 L 8 6 L 4.4 9.6" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <img src="./figma/assets/file-folder.svg" alt="" style="position:absolute;left:64px;top:calc(50% - 7px);width:16px;height:14px;display:block" />
+              <span style="position:absolute;left:88px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">drafts</span>
+              <span style="position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(196,196,196)">2</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <div style="position:absolute;left:18px;top:calc(50% - 6px);width:12px;height:12px"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:block"><path d="M 4.4 2.4 L 8 6 L 4.4 9.6" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <img src="./figma/assets/file-folder.svg" alt="" style="position:absolute;left:48px;top:calc(50% - 7px);width:16px;height:14px;display:block" />
+              <span style="position:absolute;left:72px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">components</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <img src="./figma/assets/file-vue.svg" alt="" style="position:absolute;left:60px;top:calc(50% - 8px);width:16px;height:16px;display:block" />
+              <span style="position:absolute;left:88px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">index.vue</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <img src="./figma/assets/file-ts.svg" alt="" style="position:absolute;left:44px;top:calc(50% - 8px);width:16px;height:16px;display:block" />
+              <span style="position:absolute;left:72px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">nuxt.config.ts</span>
+              <span style="position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(96,205,255)">M</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <img src="./figma/assets/file-json.svg" alt="" style="position:absolute;left:44px;top:calc(50% - 8px);width:16px;height:16px;display:block" />
+              <span style="position:absolute;left:72px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">package.json</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <img src="./figma/assets/file-eslint.svg" alt="" style="position:absolute;left:44px;top:calc(50% - 7.5px);width:16px;height:15px;display:block" />
+              <span style="position:absolute;left:72px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgb(249,249,249);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">.eslintrc.js</span>
+            </div>
+            <div style="position:relative;height:32px;border-radius:4px;flex:none">
+              <div style="position:absolute;left:5px;right:5px;top:3px;bottom:3px;border-radius:3px"></div>
+              <img src="./figma/assets/file-git.svg" alt="" style="position:absolute;left:44px;top:calc(50% - 8px);width:16px;height:16px;display:block" />
+              <span style="position:absolute;left:72px;right:34px;top:calc(50% - 10px - 1px);height:20px;border-radius:2px;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:20px;font-feature-settings:'rclt' off;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">.gitignore</span>
+              <span style="position:absolute;right:12px;top:calc(50% - 8px);font:400 12px/16px Consolas,'Cascadia Mono',Menlo,monospace;color:rgb(83,214,128)">U</span>
+            </div>

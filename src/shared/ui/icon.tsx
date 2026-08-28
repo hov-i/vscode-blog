@@ -45,6 +45,11 @@ import {
   VscSend,
   VscEdit,
   VscFileMedia,
+  VscSync,
+  VscChromeMinimize,
+  VscChromeRestore,
+  VscChromeMaximize,
+  VscChromeClose,
 } from "react-icons/vsc";
 
 export const Icons = {
@@ -98,6 +103,11 @@ export const Icons = {
   newFolder: VscNewFolder,
   refresh: VscRefresh,
   collapseAll: VscCollapseAll,
+  sync: VscSync,
+  windowMinimize: VscChromeMinimize,
+  windowRestore: VscChromeRestore,
+  windowMaximize: VscChromeMaximize,
+  windowClose: VscChromeClose,
 };
 
 export type IconKey = keyof typeof Icons;

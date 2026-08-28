@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#101216;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#3b9eff;text-decoration:none}
+a:hover{color:#56adff}
+::selection{background:rgba(59,158,255,.3)}
+</style>
+</helmet>
+
+<div style="width:100%;min-height:100%;background:#101216;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;padding-bottom:80px">
+
+<!-- ============ MASTHEAD ============ -->
+<header style="padding:72px 64px 56px;max-width:1440px;margin:0 auto">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 28px">
+    <div style="width:26px;height:26px;border-radius:7px;background:#3b9eff;display:flex;align-items:center;justify-content:center;font:700 13px/1 'JetBrains Mono',monospace;color:#0b1017">F</div>
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#6e7686;letter-spacing:.14em;text-transform:uppercase">Forge &nbsp;/&nbsp; IDE Design System &nbsp;/&nbsp; v0.1</span>
+  </div>
+  <h1 style="margin:0 0 20px;font:600 46px/1.06 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef;letter-spacing:-.028em;max-width:820px;text-wrap:pretty">A dark, layered system for code editors and developer tools.</h1>
+  <p style="margin:0 0 44px;font:400 15px/1.65 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8;max-width:660px;text-wrap:pretty">Derived from the Figma file you attached. Cool blue-black surfaces stacked in four layers, a single blue accent carrying all interactive meaning, and a compact 13px UI scale sitting next to a 13px monospace code scale.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#22262f;border:1px solid #22262f;border-radius:10px;overflow:hidden">
+    <div style="background:#16181d;padding:18px 20px;display:flex;flex-direction:column;gap:7px">
+      <span style="font:500 10px/1 'JetBrains Mono',monospace;color:#6e7686;letter-spacing:.1em;text-transform:uppercase">Source</span>
+      <span style="font:400 13px/1.45 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Attached .fig — 48 embedded assets + one 4096px render</span>
+    </div>
+    <div style="background:#16181d;padding:18px 20px;display:flex;flex-direction:column;gap:7px">
+      <span style="font:500 10px/1 'JetBrains Mono',monospace;color:#6e7686;letter-spacing:.1em;text-transform:uppercase">Method</span>
+      <span style="font:400 13px/1.45 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Colours and metrics read off the render; vector layer data was not decodable</span>
+    </div>
+    <div style="background:#16181d;padding:18px 20px;display:flex;flex-direction:column;gap:7px">
+      <span style="font:500 10px/1 'JetBrains Mono',monospace;color:#6e7686;letter-spacing:.1em;text-transform:uppercase">Naming</span>
+      <span style="font:400 13px/1.45 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Brand-neutral. No third-party marks or logos reproduced</span>
+    </div>
+    <div style="background:#16181d;padding:18px 20px;display:flex;flex-direction:column;gap:7px">
+      <span style="font:500 10px/1 'JetBrains Mono',monospace;color:#6e7686;letter-spacing:.1em;text-transform:uppercase">Type</span>
+      <span style="font:400 13px/1.45 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">System UI for chrome, JetBrains Mono for code and tokens</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 01 COLOR ============ -->
+<section style="padding:56px 64px;border-top:1px solid #22262f;max-width:1440px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 18px;border-bottom:1px solid #22262f;margin:0 0 36px;flex-wrap:wrap">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#3b9eff;letter-spacing:.1em">01</span>
+    <h2 style="margin:0;font:600 24px/1.15 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef;letter-spacing:-.018em">Colour</h2>
+    <p style="margin:0;font:400 13px/1.5 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686;max-width:520px">Four neutral layers, one accent ramp, five semantic hues, seven syntax hues. Nothing else.</p>
+  </div>
+
+  <h3 style="margin:0 0 16px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Surface layers</h3>
+  <div style="display:flex;flex-wrap:wrap;gap:14px;margin:0 0 44px">
+    <sc-for list="{{ surfaces }}" as="c" hint-placeholder-count="7">
+      <div style="display:flex;flex-direction:column;gap:9px;width:172px">
+        <div style="height:76px;border-radius:9px;border:1px solid rgba(255,255,255,.08);background:{{ c.hex }}"></div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <span style="font:500 11.5px/1.3 'JetBrains Mono',monospace;color:#e8eaef">{{ c.token }}</span>
+          <span style="font:400 11px/1.3 'JetBrains Mono',monospace;color:#6e7686">{{ c.hex }}</span>
+          <span style="font:400 11.5px/1.45 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8;margin-top:3px">{{ c.use }}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:44px;margin:0 0 44px">
+    <div>
+      <h3 style="margin:0 0 16px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Accent ramp</h3>
+      <div style="display:flex;flex-direction:column;gap:1px;background:#22262f;border:1px solid #22262f;border-radius:9px;overflow:hidden">
+        <sc-for list="{{ accents }}" as="c" hint-placeholder-count="5">
+          <div style="display:flex;align-items:center;gap:16px;background:#16181d;padding:12px 16px">
+            <div style="width:40px;height:40px;border-radius:7px;flex:none;border:1px solid rgba(255,255,255,.08);background:{{ c.hex }}"></div>
+            <span style="font:500 11.5px/1 'JetBrains Mono',monospace;color:#e8eaef;width:110px;flex:none">{{ c.token }}</span>
+            <span style="font:400 10.5px/1 'JetBrains Mono',monospace;color:#6e7686;width:130px;flex:none">{{ c.hex }}</span>
+            <span style="font:400 12px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">{{ c.use }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin:0 0 16px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Text &amp; semantic</h3>
+      <div style="display:flex;flex-direction:column;gap:1px;background:#22262f;border:1px solid #22262f;border-radius:9px;overflow:hidden">
+        <sc-for list="{{ semantics }}" as="c" hint-placeholder-count="9">
+          <div style="display:flex;align-items:center;gap:16px;background:#16181d;padding:12px 16px">
+            <div style="width:40px;height:40px;border-radius:7px;flex:none;border:1px solid rgba(255,255,255,.08);background:{{ c.hex }}"></div>
+            <span style="font:500 11.5px/1 'JetBrains Mono',monospace;color:#e8eaef;width:120px;flex:none">{{ c.token }}</span>
+            <span style="font:400 11px/1 'JetBrains Mono',monospace;color:#6e7686;width:80px;flex:none">{{ c.hex }}</span>
+            <span style="font:400 12px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">{{ c.use }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin:0 0 16px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Syntax palette</h3>
+  <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:24px;align-items:start">
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <sc-for list="{{ syntax }}" as="c" hint-placeholder-count="7">
+        <div style="display:flex;align-items:center;gap:10px;background:#16181d;border:1px solid #22262f;border-radius:7px;padding:9px 13px 9px 10px;width:214px">
+          <div style="width:22px;height:22px;border-radius:5px;flex:none;background:{{ c.hex }}"></div>
+          <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+            <span style="font:500 11.5px/1.2 'JetBrains Mono',monospace;color:#e8eaef">{{ c.token }}</span>
+            <span style="font:400 10.5px/1.2 'JetBrains Mono',monospace;color:#6e7686">{{ c.hex }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="background:#16181d;border:1px solid #22262f;border-radius:10px;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid #22262f;background:#1c1f26">
+        <div style="width:14px;height:14px;border-radius:3px;background:#3fbf7f;flex:none"></div>
+        <span style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">workspace.ts</span>
+      </div>
+      <div style="padding:16px 18px;font:400 12.5px/1.75 'JetBrains Mono',monospace;color:#a2a9b8;display:flex;flex-direction:column"><div style="white-space:pre"><span style="color:#6e7686">// resolve the active editor group</span></div><div style="white-space:pre"><span style="color:#cf8ef4">export function</span> <span style="color:#6cb6ff">activeGroup</span>(<span style="color:#e8eaef">ws</span>: <span style="color:#6ee0c8">Workspace</span>) {</div><div style="white-space:pre">  <span style="color:#cf8ef4">const</span> <span style="color:#e8eaef">id</span> = <span style="color:#e8eaef">ws</span>.<span style="color:#6cb6ff">get</span>(<span style="color:#8fd58f">"activeGroup"</span>);</div><div style="white-space:pre">  <span style="color:#cf8ef4">if</span> (<span style="color:#e8eaef">id</span> === <span style="color:#f2b36b">-1</span>) <span style="color:#cf8ef4">return null</span>;</div><div style="white-space:pre">  <span style="color:#cf8ef4">return</span> <span style="color:#e8eaef">ws</span>.<span style="color:#e8eaef">groups</span>[<span style="color:#e8eaef">id</span>] ?? <span style="color:#cf8ef4">null</span>;</div><div style="white-space:pre">}</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 TYPOGRAPHY ============ -->
+<section style="padding:56px 64px;border-top:1px solid #22262f;max-width:1440px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 18px;border-bottom:1px solid #22262f;margin:0 0 36px;flex-wrap:wrap">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#3b9eff;letter-spacing:.1em">02</span>
+    <h2 style="margin:0;font:600 24px/1.15 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef;letter-spacing:-.018em">Typography</h2>
+    <p style="margin:0;font:400 13px/1.5 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686;max-width:520px">Eight steps. Chrome lives at 13px; anything larger belongs to editor content, not to the shell.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:1px;background:#22262f;border:1px solid #22262f;border-radius:10px;overflow:hidden">
+    <sc-for list="{{ typeScale }}" as="t" hint-placeholder-count="8">
+      <div style="display:grid;grid-template-columns:150px 200px 1fr;gap:24px;align-items:baseline;background:#16181d;padding:20px 22px">
+        <span style="font:500 11.5px/1.3 'JetBrains Mono',monospace;color:#e8eaef">{{ t.token }}</span>
+        <span style="font:400 11px/1.3 'JetBrains Mono',monospace;color:#6e7686">{{ t.spec }}</span>
+        <span style="color:#e8eaef;font-family:{{ t.family }};font-size:{{ t.px }}px;font-weight:{{ t.weight }};line-height:1.3;letter-spacing:{{ t.ls }}">{{ t.sample }}</span>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ============ 03 SPACE / RADIUS / ELEVATION ============ -->
+<section style="padding:56px 64px;border-top:1px solid #22262f;max-width:1440px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 18px;border-bottom:1px solid #22262f;margin:0 0 36px;flex-wrap:wrap">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#3b9eff;letter-spacing:.1em">03</span>
+    <h2 style="margin:0;font:600 24px/1.15 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef;letter-spacing:-.018em">Space, radius, elevation</h2>
+    <p style="margin:0;font:400 13px/1.5 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686;max-width:520px">A 2px base with a doubling ramp. Radius grows with the size of the thing it wraps.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1.3fr 1fr 1.1fr;gap:40px;align-items:start">
+
+    <div>
+      <h3 style="margin:0 0 16px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Space</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ spacing }}" as="s" hint-placeholder-count="9">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#e8eaef;width:56px;flex:none">{{ s.token }}</span>
+            <span style="font:400 11px/1 'JetBrains Mono',monospace;color:#6e7686;width:40px;flex:none">{{ s.px }}</span>
+            <div style="height:12px;border-radius:3px;background:rgba(59,158,255,.42);width:{{ s.px }}px"></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin:0 0 16px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Radius</h3>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ radii }}" as="r" hint-placeholder-count="5">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:52px;height:52px;flex:none;background:#1c1f26;border:1px solid #3d4450;border-radius:{{ r.px }}px"></div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <span style="font:500 11.5px/1 'JetBrains Mono',monospace;color:#e8eaef">{{ r.token }}</span>
+              <span style="font:400 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686">{{ r.use }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin:0 0 16px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Elevation</h3>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <sc-for list="{{ elevations }}" as="e" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:76px;height:48px;flex:none;background:#2a2f3a;border:1px solid #3d4450;border-radius:8px;box-shadow:{{ e.shadow }}"></div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <span style="font:500 11.5px/1 'JetBrains Mono',monospace;color:#e8eaef">{{ e.token }}</span>
+              <span style="font:400 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686">{{ e.use }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 CONTROLS ============ -->
+<section style="padding:56px 64px;border-top:1px solid #22262f;max-width:1440px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 18px;border-bottom:1px solid #22262f;margin:0 0 36px;flex-wrap:wrap">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#3b9eff;letter-spacing:.1em">04</span>
+    <h2 style="margin:0;font:600 24px/1.15 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef;letter-spacing:-.018em">Controls</h2>
+    <p style="margin:0;font:400 13px/1.5 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686;max-width:520px">32px is the standard control height. Focus is always a 2px accent ring offset 2px from the shape.</p>
+  </div>
+
+  <h3 style="margin:0 0 18px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Buttons</h3>
+  <div style="display:grid;grid-template-columns:130px repeat(5,150px);gap:16px;align-items:center;margin:0 0 44px">
+    <sc-if value="{{ showStateLabels }}" hint-placeholder-val="{{ true }}">
+      <span></span>
+      <sc-for list="{{ stateLabels }}" as="l" hint-placeholder-count="5">
+        <span style="font:500 10px/1 'JetBrains Mono',monospace;color:#6e7686;letter-spacing:.1em;text-transform:uppercase">{{ l }}</span>
+      </sc-for>
+    </sc-if>
+    <sc-for list="{{ buttonRows }}" as="row" hint-placeholder-count="5">
+      <span style="font:400 12.5px/1.3 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">{{ row.name }}</span>
+      <sc-for list="{{ row.states }}" as="s" hint-placeholder-count="5">
+        <div style="display:flex;align-items:center;justify-content:center;height:32px;padding:0 16px;border-radius:6px;font:500 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;white-space:nowrap;background:{{ s.bg }};color:{{ s.fg }};border:1px solid {{ s.bd }};opacity:{{ s.op }};box-shadow:{{ s.ring }}">{{ row.label }}</div>
+      </sc-for>
+    </sc-for>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:44px;align-items:start">
+    <div>
+      <h3 style="margin:0 0 18px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Text fields</h3>
+      <div style="display:flex;flex-direction:column;gap:20px;max-width:420px">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <label style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">Rest</label>
+          <div style="height:32px;border-radius:5px;background:#1c1f26;border:1px solid #3d4450;border-bottom:1px solid #4d5563;display:flex;align-items:center;padding:0 11px;font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686">Search files by name</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <label style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">Focused</label>
+          <div style="height:32px;border-radius:5px;background:#16181d;border:1px solid #3d4450;border-bottom:2px solid #3b9eff;display:flex;align-items:center;padding:0 11px;font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">activeGroup<span style="display:inline-block;width:1px;height:15px;background:#3b9eff;margin-left:1px"></span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <label style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">Error</label>
+          <div style="height:32px;border-radius:5px;background:#16181d;border:1px solid rgba(242,85,77,.5);border-bottom:2px solid #f2554d;display:flex;align-items:center;padding:0 11px;font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">./src/**/*.{ts</div>
+          <span style="font:400 11.5px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;color:#f2554d">Unterminated glob pattern.</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <label style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686">Disabled</label>
+          <div style="height:32px;border-radius:5px;background:#1c1f26;border:1px solid #2e333d;display:flex;align-items:center;padding:0 11px;font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#4c5361">Inherited from workspace</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <label style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">Select</label>
+          <div style="height:32px;border-radius:5px;background:#1c1f26;border:1px solid #3d4450;display:flex;align-items:center;justify-content:space-between;padding:0 11px;font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Auto-save: after delay<span style="color:#a2a9b8;font-size:10px">▾</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin:0 0 18px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Selection &amp; toggles</h3>
+      <div style="display:flex;flex-direction:column;gap:22px">
+
+        <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="width:17px;height:17px;border-radius:4px;background:#3b9eff;display:flex;align-items:center;justify-content:center;font:700 11px/1 -apple-system,system-ui,sans-serif;color:#0b1017">✓</div>
+            <span style="font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Format on save</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="width:17px;height:17px;border-radius:4px;background:#3b9eff;display:flex;align-items:center;justify-content:center"><div style="width:8px;height:2px;background:#0b1017;border-radius:1px"></div></div>
+            <span style="font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Mixed</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="width:17px;height:17px;border-radius:4px;background:#1c1f26;border:1px solid #4d5563"></div>
+            <span style="font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Off</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="width:17px;height:17px;border-radius:4px;background:#1c1f26;border:1px solid #2e333d"></div>
+            <span style="font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#4c5361">Disabled</span>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="width:17px;height:17px;border-radius:999px;border:5px solid #3b9eff;background:#0b1017"></div>
+            <span style="font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Tabs</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="width:17px;height:17px;border-radius:999px;background:#1c1f26;border:1px solid #4d5563"></div>
+            <span style="font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Spaces</span>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:38px;height:20px;border-radius:999px;background:#3b9eff;padding:3px;display:flex;justify-content:flex-end"><div style="width:14px;height:14px;border-radius:999px;background:#0b1017"></div></div>
+            <span style="font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">On</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:38px;height:20px;border-radius:999px;background:#2a2f3a;border:1px solid #4d5563;padding:3px;display:flex;justify-content:flex-start"><div style="width:12px;height:12px;border-radius:999px;background:#a2a9b8"></div></div>
+            <span style="font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Off</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px;max-width:300px">
+          <div style="display:flex;justify-content:space-between"><span style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">Font size</span><span style="font:400 11.5px/1 'JetBrains Mono',monospace;color:#e8eaef">13</span></div>
+          <div style="height:4px;border-radius:999px;background:#2a2f3a;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:42%;background:#3b9eff;border-radius:999px"></div><div style="position:absolute;left:42%;top:-6px;width:16px;height:16px;margin-left:-8px;border-radius:999px;background:#e8eaef;box-shadow:0 1px 3px rgba(0,0,0,.5)"></div></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ badges }}" as="b" hint-placeholder-count="5">
+            <span style="display:inline-flex;align-items:center;height:20px;padding:0 9px;border-radius:999px;font:500 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;background:{{ b.bg }};color:{{ b.fg }};border:1px solid {{ b.bd }}">{{ b.label }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 NAVIGATION ============ -->
+<section style="padding:56px 64px;border-top:1px solid #22262f;max-width:1440px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 18px;border-bottom:1px solid #22262f;margin:0 0 36px;flex-wrap:wrap">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#3b9eff;letter-spacing:.1em">05</span>
+    <h2 style="margin:0;font:600 24px/1.15 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef;letter-spacing:-.018em">Navigation</h2>
+    <p style="margin:0;font:400 13px/1.5 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686;max-width:520px">Icons are geometric placeholders — swap in the real set on handoff.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:36px;align-items:start">
+
+    <div>
+      <h3 style="margin:0 0 16px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Editor tabs</h3>
+      <div style="background:#1c1f26;border:1px solid #22262f;border-radius:9px 9px 0 0;overflow:hidden;display:flex">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:9px;padding:0 13px;height:38px;border-right:1px solid #22262f;background:{{ t.bg }};box-shadow:{{ t.under }};min-width:0">
+            <div style="width:13px;height:13px;border-radius:3px;flex:none;background:{{ t.dot }}"></div>
+            <span style="font:400 12.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:{{ t.fg }};white-space:nowrap;font-style:{{ t.italic }}">{{ t.name }}</span>
+            <span style="font:400 12px/1 -apple-system,system-ui,sans-serif;color:#6e7686;margin-left:3px">{{ t.close }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="background:#16181d;border:1px solid #22262f;border-top:none;border-radius:0 0 9px 9px;padding:9px 14px;display:flex;align-items:center;gap:7px">
+        <span style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686">src</span>
+        <span style="color:#4c5361;font-size:10px">›</span>
+        <span style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686">components</span>
+        <span style="color:#4c5361;font-size:10px">›</span>
+        <span style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">index.vue</span>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin:0 0 16px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">File tree</h3>
+      <div style="background:#16181d;border:1px solid #22262f;border-radius:9px;padding:8px 0;overflow:hidden">
+        <sc-for list="{{ tree }}" as="n" hint-placeholder-count="8">
+          <div style="display:flex;align-items:center;gap:8px;height:26px;padding-right:12px;background:{{ n.bg }};padding-left:{{ n.pad }}px;box-shadow:{{ n.rail }}">
+            <div style="width:12px;height:12px;border-radius:3px;flex:none;background:{{ n.dot }}"></div>
+            <span style="font:400 12.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:{{ n.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.name }}</span>
+            <span style="margin-left:auto;font:500 11px/1 'JetBrains Mono',monospace;color:{{ n.badgeFg }}">{{ n.badge }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin:0 0 16px;font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Activity rail</h3>
+      <div style="display:flex;gap:24px;align-items:flex-start">
+        <div style="width:48px;background:#1c1f26;border:1px solid #22262f;border-radius:9px;padding:8px 0;display:flex;flex-direction:column;gap:4px;align-items:center">
+          <sc-for list="{{ rail }}" as="r" hint-placeholder-count="7">
+            <div style="width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:{{ r.bg }};box-shadow:{{ r.mark }}">
+              <div style="width:16px;height:16px;border-radius:4px;background:{{ r.fg }}"></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding-top:6px">
+          <sc-for list="{{ rail }}" as="r" hint-placeholder-count="7">
+            <span style="font:400 12px/1.9 -apple-system,'Segoe UI',system-ui,sans-serif;color:{{ r.labelFg }}">{{ r.label }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 SURFACES ============ -->
+<section style="padding:56px 64px;border-top:1px solid #22262f;max-width:1440px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 18px;border-bottom:1px solid #22262f;margin:0 0 36px;flex-wrap:wrap">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#3b9eff;letter-spacing:.1em">06</span>
+    <h2 style="margin:0;font:600 24px/1.15 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef;letter-spacing:-.018em">Surfaces</h2>
+    <p style="margin:0;font:400 13px/1.5 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686;max-width:520px">Cards carry a 1px hairline and no shadow inside the shell; shadows are reserved for things that float.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ cards }}" as="c" hint-placeholder-count="3">
+      <div style="width:236px;background:#1c1f26;border:1px solid #2e333d;border-radius:8px;padding:20px 18px;display:flex;flex-direction:column;align-items:center;gap:14px">
+        <div style="width:56px;height:56px;border-radius:12px;background:{{ c.dot }};display:flex;align-items:center;justify-content:center;font:700 20px/1 'JetBrains Mono',monospace;color:#0b1017">{{ c.initial }}</div>
+        <span style="font:600 15px/1.3 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef;text-align:center">{{ c.name }}</span>
+        <div style="display:flex;justify-content:space-between;width:100%;align-items:baseline">
+          <span style="font:400 12px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">{{ c.author }}</span>
+          <span style="font:400 12px/1 'JetBrains Mono',monospace;color:#6e7686">{{ c.installs }}</span>
+        </div>
+        <div style="width:100%;height:1px;background:#2e333d"></div>
+        <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+          <div style="display:flex;gap:3px">
+            <sc-for list="{{ c.stars }}" as="s" hint-placeholder-count="5"><div style="width:9px;height:9px;border-radius:2px;background:{{ s }}"></div></sc-for>
+          </div>
+          <span style="font:500 12px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#3b9eff">{{ c.price }}</span>
+        </div>
+      </div>
+    </sc-for>
+
+    <div style="flex:1;min-width:380px;background:#16181d;border:1px solid #22262f;border-radius:9px;overflow:hidden">
+      <div style="padding:12px 16px;border-bottom:1px solid #22262f;background:#1c1f26;display:flex;justify-content:space-between;align-items:center">
+        <span style="font:600 12px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.08em;text-transform:uppercase">Problems</span>
+        <span style="font:400 11.5px/1 'JetBrains Mono',monospace;color:#6e7686">3 in 2 files</span>
+      </div>
+      <sc-for list="{{ problems }}" as="p" hint-placeholder-count="4">
+        <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 16px;border-bottom:1px solid #1c1f26;background:{{ p.bg }}">
+          <div style="width:12px;height:12px;border-radius:3px;flex:none;margin-top:3px;background:{{ p.dot }}"></div>
+          <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+            <span style="font:400 12.5px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">{{ p.msg }}</span>
+            <span style="font:400 11px/1 'JetBrains Mono',monospace;color:#6e7686">{{ p.at }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 OVERLAYS ============ -->
+<section style="padding:56px 64px;border-top:1px solid #22262f;max-width:1440px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 18px;border-bottom:1px solid #22262f;margin:0 0 36px;flex-wrap:wrap">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#3b9eff;letter-spacing:.1em">07</span>
+    <h2 style="margin:0;font:600 24px/1.15 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef;letter-spacing:-.018em">Overlays</h2>
+    <p style="margin:0;font:400 13px/1.5 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686;max-width:520px">Floating surfaces move to layer 4, gain a stronger hairline and an elevation token.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+
+    <div style="width:420px;background:#2a2f3a;border:1px solid #454d5c;border-radius:12px;box-shadow:0 24px 64px rgba(0,0,0,.6);overflow:hidden">
+      <div style="padding:12px 14px;border-bottom:1px solid #383f4c">
+        <div style="height:32px;border-radius:6px;background:#16181d;border:1px solid #4d5563;display:flex;align-items:center;padding:0 11px;gap:9px">
+          <span style="font:400 12.5px/1 'JetBrains Mono',monospace;color:#3b9eff">&gt;</span>
+          <span style="font:400 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">format doc</span>
+        </div>
+      </div>
+      <sc-for list="{{ palette }}" as="p" hint-placeholder-count="5">
+        <div style="display:flex;align-items:center;gap:11px;padding:0 15px;height:34px;background:{{ p.bg }}">
+          <div style="width:12px;height:12px;border-radius:3px;flex:none;background:{{ p.dot }}"></div>
+          <span style="font:400 12.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:{{ p.fg }}">{{ p.cmd }}</span>
+          <span style="margin-left:auto;font:400 11px/1 'JetBrains Mono',monospace;color:#8b93a3">{{ p.key }}</span>
+        </div>
+      </sc-for>
+      <div style="padding:8px 15px;border-top:1px solid #383f4c;font:400 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#8b93a3">Command palette · elev-4 · radius-12</div>
+    </div>
+
+    <div style="width:250px;background:#2a2f3a;border:1px solid #454d5c;border-radius:8px;box-shadow:0 12px 32px rgba(0,0,0,.55);padding:5px">
+      <sc-for list="{{ menu }}" as="m" hint-placeholder-count="7">
+        <div style="display:flex;align-items:center;gap:10px;height:{{ m.h }}px;padding:0 10px;border-radius:5px;background:{{ m.bg }};border-top:{{ m.sep }}">
+          <span style="font:400 12.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:{{ m.fg }}">{{ m.label }}</span>
+          <span style="margin-left:auto;font:400 11px/1 'JetBrains Mono',monospace;color:#8b93a3">{{ m.key }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px;flex:1;min-width:340px">
+      <div style="background:#2a2f3a;border:1px solid #454d5c;border-radius:12px;box-shadow:0 24px 64px rgba(0,0,0,.6);padding:24px">
+        <h4 style="margin:0 0 10px;font:600 17px/1.3 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Discard 3 unsaved files?</h4>
+        <p style="margin:0 0 22px;font:400 13px/1.6 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8;text-wrap:pretty">index.vue, settings.vue and background.ts have changes that are not written to disk. This cannot be undone.</p>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <div style="display:flex;align-items:center;height:32px;padding:0 16px;border-radius:6px;background:transparent;border:1px solid #5a6272;font:500 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Cancel</div>
+          <div style="display:flex;align-items:center;height:32px;padding:0 16px;border-radius:6px;background:#f2554d;border:1px solid #f2554d;font:500 13px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#1a0a09">Discard</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:12px;background:#2a2f3a;border:1px solid #454d5c;border-left:3px solid #3fbf7f;border-radius:8px;box-shadow:0 12px 32px rgba(0,0,0,.5);padding:14px 16px">
+        <div style="width:14px;height:14px;border-radius:4px;background:#3fbf7f;flex:none;margin-top:2px"></div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font:600 12.5px/1.3 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">Extension installed</span>
+          <span style="font:400 12px/1.5 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">Reload the window to activate it.</span>
+        </div>
+        <span style="margin-left:auto;font:500 12px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#3b9eff">Reload</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 APPLIED ============ -->
+<sc-if value="{{ showApplied }}" hint-placeholder-val="{{ true }}">
+<section style="padding:56px 64px 0;border-top:1px solid #22262f;max-width:1440px;margin:0 auto">
+  <div style="display:flex;align-items:baseline;gap:16px;padding:0 0 18px;border-bottom:1px solid #22262f;margin:0 0 36px;flex-wrap:wrap">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;color:#3b9eff;letter-spacing:.1em">08</span>
+    <h2 style="margin:0;font:600 24px/1.15 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef;letter-spacing:-.018em">Applied — editor shell</h2>
+    <p style="margin:0;font:400 13px/1.5 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686;max-width:520px">Every value below comes from the tokens above. Nothing new was introduced.</p>
+  </div>
+
+  <div style="border:1px solid #2e333d;border-radius:12px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.5);background:#16181d">
+
+    <div style="height:42px;background:#1c1f26;border-bottom:1px solid #22262f;display:flex;align-items:center;padding:0 14px;gap:14px">
+      <div style="width:18px;height:18px;border-radius:5px;background:#3b9eff;flex:none"></div>
+      <span style="font:400 12.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#e8eaef">workspace</span>
+      <span style="font:400 12.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686">Forge Editor</span>
+      <div style="flex:1;display:flex;justify-content:center">
+        <div style="width:420px;height:26px;border-radius:5px;background:#16181d;border:1px solid #3d4450;display:flex;align-items:center;padding:0 10px;gap:8px">
+          <div style="width:11px;height:11px;border-radius:999px;border:1.5px solid #6e7686"></div>
+          <span style="font:400 12px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686">Search or run a command</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:center;color:#a2a9b8;font:400 12px/1 -apple-system,system-ui,sans-serif">
+        <span>—</span><span>▢</span><span>✕</span>
+      </div>
+    </div>
+
+    <div style="height:34px;background:#1c1f26;border-bottom:1px solid #22262f;display:flex;align-items:stretch">
+      <div style="display:flex;align-items:center;gap:20px;padding:0 16px;font:400 12.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">
+        <span>File</span><span>Edit</span><span>View</span><span>Run</span><span>Terminal</span>
+      </div>
+      <div style="width:1px;background:#2e333d;margin:8px 4px"></div>
+      <div style="display:flex;align-items:stretch">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:8px;padding:0 12px;border-right:1px solid #22262f;background:{{ t.bg }};box-shadow:{{ t.under }}">
+            <div style="width:12px;height:12px;border-radius:3px;flex:none;background:{{ t.dot }}"></div>
+            <span style="font:400 12px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:{{ t.fg }};white-space:nowrap;font-style:{{ t.italic }}">{{ t.name }}</span>
+            <span style="font:400 11px/1 -apple-system,system-ui,sans-serif;color:#6e7686">{{ t.close }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;height:430px">
+      <div style="width:48px;background:#1c1f26;border-right:1px solid #22262f;padding:8px 0;display:flex;flex-direction:column;gap:4px;align-items:center">
+        <sc-for list="{{ rail }}" as="r" hint-placeholder-count="7">
+          <div style="width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:{{ r.bg }};box-shadow:{{ r.mark }}">
+            <div style="width:15px;height:15px;border-radius:4px;background:{{ r.fg }}"></div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="width:236px;background:#16181d;border-right:1px solid #22262f;display:flex;flex-direction:column">
+        <div style="padding:12px 14px 8px;font:600 11px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.1em;text-transform:uppercase">Explorer</div>
+        <sc-for list="{{ tree }}" as="n" hint-placeholder-count="8">
+          <div style="display:flex;align-items:center;gap:8px;height:26px;padding-right:12px;background:{{ n.bg }};padding-left:{{ n.pad }}px;box-shadow:{{ n.rail }}">
+            <div style="width:12px;height:12px;border-radius:3px;flex:none;background:{{ n.dot }}"></div>
+            <span style="font:400 12.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:{{ n.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.name }}</span>
+            <span style="margin-left:auto;font:500 11px/1 'JetBrains Mono',monospace;color:{{ n.badgeFg }}">{{ n.badge }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="flex:1;background:#16181d;display:flex;flex-direction:column;min-width:0">
+        <div style="padding:8px 18px;border-bottom:1px solid #1c1f26;display:flex;align-items:center;gap:7px">
+          <span style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686">src</span>
+          <span style="color:#4c5361;font-size:10px">›</span>
+          <span style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#6e7686">components</span>
+          <span style="color:#4c5361;font-size:10px">›</span>
+          <span style="font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">index.vue</span>
+        </div>
+        <div style="flex:1;overflow:hidden;padding:12px 0 0;font:400 12px/1.7 'JetBrains Mono',monospace;white-space:pre">
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">1</span><span style="color:#cf8ef4">import</span><span style="color:#a2a9b8"> { <span style="color:#e8eaef">defineComponent</span>, <span style="color:#e8eaef">ref</span> } </span><span style="color:#cf8ef4">from</span><span> </span><span style="color:#8fd58f">"vue"</span><span style="color:#a2a9b8">;</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">2</span><span style="color:#cf8ef4">import</span><span> </span><span style="color:#6ee0c8">EditorGroup</span><span> </span><span style="color:#cf8ef4">from</span><span> </span><span style="color:#8fd58f">"./group"</span><span style="color:#a2a9b8">;</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">3</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">4</span><span style="color:#6e7686">/** Root shell. Owns layout. */</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">5</span><span style="color:#cf8ef4">export default</span><span> </span><span style="color:#6cb6ff">defineComponent</span><span style="color:#a2a9b8">({</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">6</span><span style="color:#e8eaef">  name</span><span style="color:#a2a9b8">: </span><span style="color:#8fd58f">"WorkspaceShell"</span><span style="color:#a2a9b8">,</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">7</span><span style="color:#e8eaef">  components</span><span style="color:#a2a9b8">: { </span><span style="color:#6ee0c8">EditorGroup</span><span style="color:#a2a9b8"> },</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">8</span><span style="color:#6cb6ff">  setup</span><span style="color:#a2a9b8">() {</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">9</span><span style="color:#cf8ef4">    const</span><span style="color:#e8eaef"> sidebar</span><span style="color:#a2a9b8"> = </span><span style="color:#6cb6ff">ref</span><span style="color:#a2a9b8">(</span><span style="color:#f2b36b">236</span><span style="color:#a2a9b8">);</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">10</span><span style="color:#cf8ef4">    return</span><span style="color:#a2a9b8"> { </span><span style="color:#e8eaef">sidebar</span><span style="color:#a2a9b8"> };</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">11</span><span style="color:#a2a9b8">  },</span></div>
+          <div style="display:flex;gap:14px"><span style="width:32px;flex:none;text-align:right;color:#4c5361">12</span><span style="color:#a2a9b8">});</span></div>
+        </div>
+        <div style="height:132px;border-top:1px solid #22262f;background:#16181d;display:flex;flex-direction:column">
+          <div style="height:32px;display:flex;align-items:stretch;gap:0;padding:0 14px;border-bottom:1px solid #1c1f26">
+            <sc-for list="{{ panelTabs }}" as="p" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;padding:0 12px;font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:{{ p.fg }};box-shadow:{{ p.under }}">{{ p.label }}</div>
+            </sc-for>
+          </div>
+          <div style="padding:10px 16px;font:400 12px/1.7 'JetBrains Mono',monospace;color:#a2a9b8;white-space:pre">
+            <div>$ forge build --watch</div>
+            <div><span style="color:#3fbf7f">✓</span> 214 modules transformed in <span style="color:#f2b36b">1.42s</span></div>
+            <div><span style="color:#6e7686">watching for changes…</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:28px;background:#3b9eff;display:flex;align-items:center;padding:0 12px;gap:18px;font:400 11.5px/1 -apple-system,'Segoe UI',system-ui,sans-serif;color:#08131f">
+      <span>main*</span><span>⚠ 0 &nbsp; ⊗ 2</span>
+      <span style="margin-left:auto">Ln 12, Col 34</span><span>Spaces: 2</span><span>UTF-8</span><span>TypeScript</span>
+    </div>
+  </div>
+  <p style="margin:14px 0 0;font:400 11.5px/1.6 'JetBrains Mono',monospace;color:#4c5361">Icon glyphs are placeholders. Wallpapers, product logos and marks from the source file are intentionally not reproduced.</p>
+</section>
+</sc-if>
+
+<footer style="padding:64px;max-width:1440px;margin:0 auto">
+  <div style="border-top:1px solid #22262f;padding-top:32px;display:flex;flex-wrap:wrap;gap:48px">
+    <div style="max-width:420px">
+      <h3 style="margin:0 0 12px;font:600 13px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.08em;text-transform:uppercase">Open questions</h3>
+      <ul style="margin:0;padding:0 0 0 18px;font:400 13px/1.75 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">
+        <li>Light theme — needed, or dark-only product?</li>
+        <li>Real icon set, or keep geometric placeholders?</li>
+        <li>Do you want the Extensions gallery screen built out too?</li>
+      </ul>
+    </div>
+    <div style="max-width:420px">
+      <h3 style="margin:0 0 12px;font:600 13px/1 'JetBrains Mono',monospace;color:#a2a9b8;letter-spacing:.08em;text-transform:uppercase">Next steps</h3>
+      <ul style="margin:0;padding:0 0 0 18px;font:400 13px/1.75 -apple-system,'Segoe UI',system-ui,sans-serif;color:#a2a9b8">
+        <li>Send more frames from the Figma file and I'll align token names to yours.</li>
+        <li>Add high-contrast variant of the accent ramp.</li>
+        <li>Split into per-component pages once names are locked.</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showStateLabels&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Display&quot;},&quot;showApplied&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Display&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const A = '#3b9eff', star = ['#e8eaef','#e8eaef','#e8eaef','#e8eaef','#4c5361'];
+    const btn = (bg, fg, bd, op, ring) => ({ bg, fg, bd, op: op ?? 1, ring: ring ?? 'none' });
+    return {
+      showStateLabels: this.props.showStateLabels ?? true,
+      showApplied: this.props.showApplied ?? true,
+      stateLabels: ['Rest', 'Hover', 'Pressed', 'Focused', 'Disabled'],
+
+      surfaces: [
+        { token: 'surface-0', hex: '#101216', use: 'Desktop behind the window' },
+        { token: 'surface-1', hex: '#16181d', use: 'Editor canvas, sidebar body' },
+        { token: 'surface-2', hex: '#1c1f26', use: 'Title bar, tab strip, status rail' },
+        { token: 'surface-3', hex: '#22262f', use: 'Cards, inputs, dividers' },
+        { token: 'surface-4', hex: '#2a2f3a', use: 'Floating: menus, dialogs, palette' },
+        { token: 'border-subtle', hex: '#2e333d', use: 'Hairlines inside the shell' },
+        { token: 'border-strong', hex: '#3d4450', use: 'Control outlines, focus bases' }
+      ],
+      accents: [
+        { token: 'accent', hex: '#3b9eff', use: 'Primary action, selection, status bar' },
+        { token: 'accent-hover', hex: '#56adff', use: 'Pointer over a primary surface' },
+        { token: 'accent-press', hex: '#2b83db', use: 'Active press' },
+        { token: 'accent-wash', hex: 'rgba(59,158,255,.14)', use: 'Selected rows, subtle fills' },
+        { token: 'focus-ring', hex: '#7cc0ff', use: '2px ring, 2px offset' }
+      ],
+      semantics: [
+        { token: 'text-1', hex: '#e8eaef', use: 'Primary label' },
+        { token: 'text-2', hex: '#a2a9b8', use: 'Secondary, menu items' },
+        { token: 'text-3', hex: '#6e7686', use: 'Metadata, placeholder' },
+        { token: 'text-4', hex: '#4c5361', use: 'Disabled, gutter numbers' },
+        { token: 'success', hex: '#3fbf7f', use: 'Passing build, untracked file' },
+        { token: 'warning', hex: '#e5a13a', use: 'Lint warning' },
+        { token: 'danger', hex: '#f2554d', use: 'Error, destructive action' },
+        { token: 'git-modified', hex: '#6cb6ff', use: 'Changed file marker' },
+        { token: 'git-conflict', hex: '#cf8ef4', use: 'Merge conflict marker' }
+      ],
+      syntax: [
+        { token: 'syn-keyword', hex: '#cf8ef4' },
+        { token: 'syn-string', hex: '#8fd58f' },
+        { token: 'syn-number', hex: '#f2b36b' },
+        { token: 'syn-function', hex: '#6cb6ff' },
+        { token: 'syn-type', hex: '#6ee0c8' },
+        { token: 'syn-comment', hex: '#6e7686' },
+        { token: 'syn-plain', hex: '#e8eaef' }
+      ],
+
+      typeScale: [
+        { token: 'display', spec: '46 / 600 / -2.8%', px: 46, weight: 600, ls: '-.028em', family: "-apple-system,'Segoe UI',system-ui,sans-serif", sample: 'Workspace' },
+        { token: 'title-1', spec: '24 / 600 / -1.8%', px: 24, weight: 600, ls: '-.018em', family: "-apple-system,'Segoe UI',system-ui,sans-serif", sample: 'Extensions' },
+        { token: 'title-2', spec: '17 / 600 / 0', px: 17, weight: 600, ls: '0', family: "-apple-system,'Segoe UI',system-ui,sans-serif", sample: 'Discard unsaved files?' },
+        { token: 'body-strong', spec: '13 / 600 / 0', px: 13, weight: 600, ls: '0', family: "-apple-system,'Segoe UI',system-ui,sans-serif", sample: 'Format on save' },
+        { token: 'body', spec: '13 / 400 / 0', px: 13, weight: 400, ls: '0', family: "-apple-system,'Segoe UI',system-ui,sans-serif", sample: 'Reload the window to activate it.' },
+        { token: 'caption', spec: '11.5 / 400 / 0', px: 11.5, weight: 400, ls: '0', family: "-apple-system,'Segoe UI',system-ui,sans-serif", sample: 'Ln 12, Col 34 · UTF-8 · TypeScript' },
+        { token: 'code', spec: "13 / 400 / mono", px: 13, weight: 400, ls: '0', family: "'JetBrains Mono',monospace", sample: 'const group = ws.groups[id];' },
+        { token: 'label-mono', spec: '11 / 500 / +10%', px: 11, weight: 500, ls: '.1em', family: "'JetBrains Mono',monospace", sample: 'PROBLEMS  OUTPUT  TERMINAL' }
+      ],
+
+      spacing: [2, 4, 6, 8, 12, 16, 24, 32, 48, 64].map(px => ({ token: 'space-' + px, px })),
+      radii: [
+        { token: 'radius-4', px: 4, use: 'Checkbox, chip' },
+        { token: 'radius-6', px: 6, use: 'Button, input' },
+        { token: 'radius-8', px: 8, use: 'Card, toast' },
+        { token: 'radius-12', px: 12, use: 'Window, dialog, palette' },
+        { token: 'radius-full', px: 999, use: 'Badge, switch, slider' }
+      ],
+      elevations: [
+        { token: 'elev-1', shadow: '0 1px 2px rgba(0,0,0,.4)', use: 'Resting card lift' },
+        { token: 'elev-2', shadow: '0 4px 12px rgba(0,0,0,.45)', use: 'Hovered card, tooltip' },
+        { token: 'elev-3', shadow: '0 12px 32px rgba(0,0,0,.55)', use: 'Menu, toast' },
+        { token: 'elev-4', shadow: '0 24px 64px rgba(0,0,0,.6)', use: 'Dialog, command palette' }
+      ],
+
+      buttonRows: [
+        { name: 'Primary', label: 'Install', states: [
+          btn(A, '#08131f', A), btn('#56adff', '#08131f', '#56adff'), btn('#2b83db', '#08131f', '#2b83db'),
+          btn(A, '#08131f', A, 1, '0 0 0 2px #101216, 0 0 0 4px #7cc0ff'), btn('#243040', '#5b6474', '#243040')
+        ] },
+        { name: 'Secondary', label: 'Open folder', states: [
+          btn('#22262f', '#e8eaef', '#3d4450'), btn('#2a2f3a', '#e8eaef', '#4d5563'), btn('#1c1f26', '#a2a9b8', '#4d5563'),
+          btn('#22262f', '#e8eaef', '#3d4450', 1, '0 0 0 2px #101216, 0 0 0 4px #7cc0ff'), btn('#1a1d23', '#4c5361', '#262b34')
+        ] },
+        { name: 'Subtle', label: 'Reload', states: [
+          btn('transparent', '#3b9eff', 'transparent'), btn('rgba(59,158,255,.14)', '#56adff', 'transparent'), btn('rgba(59,158,255,.22)', '#3b9eff', 'transparent'),
+          btn('transparent', '#3b9eff', 'transparent', 1, '0 0 0 2px #101216, 0 0 0 4px #7cc0ff'), btn('transparent', '#4c5361', 'transparent')
+        ] },
+        { name: 'Ghost', label: 'Cancel', states: [
+          btn('transparent', '#a2a9b8', 'transparent'), btn('#22262f', '#e8eaef', 'transparent'), btn('#1c1f26', '#a2a9b8', 'transparent'),
+          btn('transparent', '#a2a9b8', 'transparent', 1, '0 0 0 2px #101216, 0 0 0 4px #7cc0ff'), btn('transparent', '#4c5361', 'transparent')
+        ] },
+        { name: 'Danger', label: 'Discard', states: [
+          btn('#f2554d', '#1a0a09', '#f2554d'), btn('#f56b64', '#1a0a09', '#f56b64'), btn('#d3453e', '#1a0a09', '#d3453e'),
+          btn('#f2554d', '#1a0a09', '#f2554d', 1, '0 0 0 2px #101216, 0 0 0 4px #7cc0ff'), btn('#3a2422', '#7a5450', '#3a2422')
+        ] }
+      ],
+
+      badges: [
+        { label: 'Free', bg: 'rgba(59,158,255,.14)', fg: '#3b9eff', bd: 'rgba(59,158,255,.3)' },
+        { label: 'Verified', bg: 'rgba(63,191,127,.14)', fg: '#3fbf7f', bd: 'rgba(63,191,127,.3)' },
+        { label: 'Pre-release', bg: 'rgba(229,161,58,.14)', fg: '#e5a13a', bd: 'rgba(229,161,58,.3)' },
+        { label: 'Deprecated', bg: 'rgba(242,85,77,.14)', fg: '#f2554d', bd: 'rgba(242,85,77,.3)' },
+        { label: '12', bg: '#2a2f3a', fg: '#a2a9b8', bd: '#3d4450' }
+      ],
+
+      tabs: [
+        { name: 'index.vue', bg: '#16181d', fg: '#e8eaef', dot: '#3fbf7f', close: '✕', italic: 'normal', under: 'inset 0 2px 0 0 #3b9eff' },
+        { name: 'Extensions', bg: 'transparent', fg: '#a2a9b8', dot: '#3b9eff', close: '✕', italic: 'normal', under: 'none' },
+        { name: 'background.ts', bg: 'transparent', fg: '#a2a9b8', dot: '#6cb6ff', close: '●', italic: 'normal', under: 'none' },
+        { name: 'settings.vue', bg: 'transparent', fg: '#8b93a3', dot: '#3fbf7f', close: '✕', italic: 'italic', under: 'none' }
+      ],
+
+      tree: [
+        { name: 'src', pad: 14, bg: 'transparent', fg: '#e8eaef', dot: '#e5a13a', badge: '', badgeFg: '#6e7686', rail: 'none' },
+        { name: 'components', pad: 30, bg: 'transparent', fg: '#e8eaef', dot: '#e5a13a', badge: '3', badgeFg: '#6cb6ff', rail: 'inset 1px 0 0 0 #22262f' },
+        { name: 'index.vue', pad: 46, bg: 'rgba(59,158,255,.14)', fg: '#e8eaef', dot: '#3fbf7f', badge: 'M', badgeFg: '#6cb6ff', rail: 'inset 2px 0 0 0 #3b9eff' },
+        { name: 'EditorGroup.vue', pad: 46, bg: 'transparent', fg: '#a2a9b8', dot: '#3fbf7f', badge: '', badgeFg: '#6e7686', rail: 'inset 1px 0 0 0 #22262f' },
+        { name: 'settings.vue', pad: 46, bg: 'transparent', fg: '#a2a9b8', dot: '#3fbf7f', badge: 'U', badgeFg: '#3fbf7f', rail: 'inset 1px 0 0 0 #22262f' },
+        { name: 'background.ts', pad: 30, bg: 'transparent', fg: '#a2a9b8', dot: '#6cb6ff', badge: 'M', badgeFg: '#6cb6ff', rail: 'inset 1px 0 0 0 #22262f' },
+        { name: 'tsconfig.json', pad: 14, bg: 'transparent', fg: '#a2a9b8', dot: '#e5a13a', badge: '', badgeFg: '#6e7686', rail: 'none' },
+        { name: 'README.md', pad: 14, bg: 'transparent', fg: '#4c5361', dot: '#3d4450', badge: '', badgeFg: '#6e7686', rail: 'none' }
+      ],
+
+      rail: [
+        { label: 'Explorer', bg: 'rgba(59,158,255,.14)', fg: '#3b9eff', mark: 'inset 2px 0 0 0 #3b9eff', labelFg: '#e8eaef' },
+        { label: 'Source control', bg: 'transparent', fg: '#a2a9b8', mark: 'none', labelFg: '#a2a9b8' },
+        { label: 'Run & debug', bg: 'transparent', fg: '#a2a9b8', mark: 'none', labelFg: '#a2a9b8' },
+        { label: 'Comments', bg: 'transparent', fg: '#a2a9b8', mark: 'none', labelFg: '#a2a9b8' },
+        { label: 'Remote', bg: 'transparent', fg: '#a2a9b8', mark: 'none', labelFg: '#a2a9b8' },
+        { label: 'Extensions', bg: 'transparent', fg: '#a2a9b8', mark: 'none', labelFg: '#a2a9b8' },
+        { label: 'Settings', bg: 'transparent', fg: '#6e7686', mark: 'none', labelFg: '#6e7686' }
+      ],
+
+      cards: [
+        { name: 'Theme Pack', initial: 'T', author: 'forge.dev', installs: '6M', price: 'Free', dot: '#cf8ef4', stars: star },
+        { name: 'Pipeline Runner', initial: 'P', author: 'labs.forge.dev', installs: '212K', price: 'Free', dot: '#3fbf7f', stars: star }
+      ],
+
+      problems: [
+        { msg: "Type 'string' is not assignable to type 'number'.", at: 'index.vue:12:18', dot: '#f2554d', bg: 'transparent' },
+        { msg: "'collapsed' is declared but never read.", at: 'index.vue:31:11', dot: '#e5a13a', bg: 'rgba(59,158,255,.14)' },
+        { msg: 'Missing return type on exported function.', at: 'background.ts:4:1', dot: '#e5a13a', bg: 'transparent' }
+      ],
+
+      palette: [
+        { cmd: 'Format Document', key: '⇧⌥F', dot: '#3b9eff', fg: '#e8eaef', bg: 'rgba(59,158,255,.2)' },
+        { cmd: 'Format Selection', key: '⌘K ⌘F', dot: '#3b9eff', fg: '#e8eaef', bg: 'transparent' },
+        { cmd: 'Format Document With…', key: '', dot: '#3b9eff', fg: '#e8eaef', bg: 'transparent' },
+        { cmd: 'Organize Imports', key: '⇧⌥O', dot: '#6ee0c8', fg: '#e8eaef', bg: 'transparent' },
+        { cmd: 'Toggle Format On Save', key: '', dot: '#a2a9b8', fg: '#c8cdd8', bg: 'transparent' }
+      ],
+
+      menu: [
+        { label: 'Go to Definition', key: 'F12', h: 30, bg: 'transparent', fg: '#e8eaef', sep: 'none' },
+        { label: 'Go to References', key: '⇧F12', h: 30, bg: 'rgba(59,158,255,.2)', fg: '#e8eaef', sep: 'none' },
+        { label: 'Peek', key: '', h: 30, bg: 'transparent', fg: '#e8eaef', sep: 'none' },
+        { label: 'Rename Symbol', key: 'F2', h: 34, bg: 'transparent', fg: '#e8eaef', sep: '1px solid #383f4c' },
+        { label: 'Refactor…', key: '⌃⇧R', h: 30, bg: 'transparent', fg: '#e8eaef', sep: 'none' },
+        { label: 'Source Action…', key: '', h: 30, bg: 'transparent', fg: '#4c5361', sep: 'none' },
+        { label: 'Cut', key: '⌘X', h: 34, bg: 'transparent', fg: '#e8eaef', sep: '1px solid #383f4c' }
+      ],
+
+      panelTabs: [
+        { label: 'Problems', fg: '#a2a9b8', under: 'none' },
+        { label: 'Output', fg: '#a2a9b8', under: 'none' },
+        { label: 'Terminal', fg: '#e8eaef', under: 'inset 0 -2px 0 0 #3b9eff' },
+        { label: 'Ports', fg: '#a2a9b8', under: 'none' }
+      ],
+
+    };
+  }
+}
+</script>
+</body>
+</html>

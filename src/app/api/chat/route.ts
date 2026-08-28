@@ -1,140 +1,161 @@
-import { NextRequest } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import type Anthropic from "@anthropic-ai/sdk";
 import { anthropic, CHAT_MODEL } from "@/shared/lib/ai/anthropic";
-import { SYSTEM_PROMPT } from "@/shared/lib/ai/system-prompt";
 import { CHAT_TOOLS, executeTool } from "@/shared/lib/ai/tools";
 import { checkRateLimit } from "@/shared/lib/ai/rate-limit";
 
 export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-export const maxDuration = 60;
 
-const MAX_HISTORY_TURNS = 20;
-const MAX_USER_CONTENT_LEN = 2000;
-const MAX_TOOL_ITERATIONS = 3;
+const RATE_LIMIT = 15;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const MAX_MESSAGE_LENGTH = 2000;
+const MAX_HISTORY = 20;
+const MAX_TOOL_ROUNDS = 3;
 
-type IncomingMessage = { role: "user" | "assistant"; content: string };
+const SYSTEM_PROMPT = `너는 hov_i의 개인 포트폴리오 블로그에 내장된 터미널 챗봇이야. 방문자가 hov_i의 프로젝트, 기술 경험, 블로그 글에 대해 물어보면 도와줘.
 
-function getClientKey(req: NextRequest): string {
-  const xff = req.headers.get("x-forwarded-for");
-  if (xff) return xff.split(",")[0]!.trim();
+규칙:
+- 블로그 글/프로젝트/기술 경험에 대한 질문이면 답하기 전에 반드시 search_posts 툴을 먼저 호출해서 근거를 확인해.
+- 검색 결과가 없으면 없다고 솔직히 말해. 지어내지 마.
+- 답변은 터미널 출력처럼 간결하게. 불필요한 마크다운 제목이나 장황한 서론 없이 핵심만.
+- 존댓말 대신 친근한 반말 톤을 유지해 (hov_i 블로그의 말투).
+- 코드/기술 질문이 아니면 대화하듯 짧게 응답해.`;
+
+type ChatMessage = { role: "user" | "assistant"; content: string };
+
+function getClientIp(req: Request): string {
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0].trim();
   return req.headers.get("x-real-ip") ?? "unknown";
 }
 
-function isValidHistory(body: unknown): body is { messages: IncomingMessage[] } {
-  if (!body || typeof body !== "object") return false;
-  const { messages } = body as { messages?: unknown };
-  if (!Array.isArray(messages) || messages.length === 0) return false;
-  for (const m of messages) {
-    if (!m || typeof m !== "object") return false;
-    const { role, content } = m as { role?: unknown; content?: unknown };
-    if (role !== "user" && role !== "assistant") return false;
-    if (typeof content !== "string") return false;
+function parseHistory(body: unknown): ChatMessage[] {
+  if (!body || typeof body !== "object" || !Array.isArray((body as { messages?: unknown }).messages)) {
+    throw new Error("messages 배열이 필요해요");
   }
-  const last = messages[messages.length - 1] as IncomingMessage;
-  if (last.role !== "user") return false;
-  if (last.content.trim().length === 0) return false;
-  if (last.content.length > MAX_USER_CONTENT_LEN) return false;
-  return true;
+  const raw = (body as { messages: unknown[] }).messages;
+
+  const messages: ChatMessage[] = raw
+    .filter(
+      (m): m is ChatMessage =>
+        !!m &&
+        typeof m === "object" &&
+        (m as ChatMessage).role !== undefined &&
+        ((m as ChatMessage).role === "user" || (m as ChatMessage).role === "assistant") &&
+        typeof (m as ChatMessage).content === "string",
+    )
+    .slice(-MAX_HISTORY);
+
+  if (messages.length === 0) throw new Error("메시지가 비어있어요");
+
+  const last = messages[messages.length - 1];
+  if (last.role !== "user") throw new Error("마지막 메시지는 user여야 해요");
+  if (!last.content.trim()) throw new Error("빈 메시지는 보낼 수 없어요");
+  if (last.content.length > MAX_MESSAGE_LENGTH) throw new Error("메시지가 너무 길어요");
+
+  return messages;
 }
 
-export async function POST(req: NextRequest) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return new Response("ANTHROPIC_API_KEY is not set", { status: 500 });
-  }
+type BlockAcc =
+  | { type: "text"; text: string }
+  | { type: "tool_use"; id: string; name: string; inputJson: string };
 
-  const key = getClientKey(req);
-  const minute = checkRateLimit(`chat:min:${key}`, 10, 60_000);
-  if (!minute.ok) {
-    return new Response("잠시 후 다시 시도해 주세요.", {
+export async function POST(req: Request) {
+  const ip = getClientIp(req);
+  const rl = checkRateLimit(ip, RATE_LIMIT, RATE_LIMIT_WINDOW_MS);
+  if (!rl.ok) {
+    return new Response(JSON.stringify({ error: "rate_limited", retryAfterSec: rl.retryAfterSec }), {
       status: 429,
-      headers: { "Retry-After": String(minute.retryAfterSec) },
-    });
-  }
-  const day = checkRateLimit(`chat:day:${key}`, 100, 24 * 60 * 60_000);
-  if (!day.ok) {
-    return new Response("오늘의 대화 한도에 도달했어요. 내일 다시 만나요!", {
-      status: 429,
+      headers: { "Content-Type": "application/json" },
     });
   }
 
-  let body: unknown;
+  let history: ChatMessage[];
   try {
-    body = await req.json();
-  } catch {
-    return new Response("invalid json", { status: 400 });
+    const body = await req.json();
+    history = parseHistory(body);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "잘못된 요청이에요";
+    return new Response(JSON.stringify({ error: message }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
-  if (!isValidHistory(body)) {
-    return new Response("invalid messages", { status: 400 });
-  }
-
-  const trimmed = body.messages.slice(-MAX_HISTORY_TURNS);
-  const working: Anthropic.MessageParam[] = trimmed.map((m) => ({
-    role: m.role,
-    content: m.content,
-  }));
 
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
-      const enqueue = (s: string) => controller.enqueue(encoder.encode(s));
+      const send = (event: Record<string, unknown>) => {
+        controller.enqueue(encoder.encode(JSON.stringify(event) + "\n"));
+      };
+
       try {
-        for (let iter = 0; iter < MAX_TOOL_ITERATIONS; iter++) {
-          const apiStream = anthropic.messages.stream({
+        const messages: Anthropic.MessageParam[] = history.map((m) => ({
+          role: m.role,
+          content: m.content,
+        }));
+
+        for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
+          const apiStream = await anthropic.messages.create({
             model: CHAT_MODEL,
-            max_tokens: 2048,
+            max_tokens: 1024,
             system: SYSTEM_PROMPT,
             tools: CHAT_TOOLS,
-            messages: working,
+            tool_choice: { type: "auto" },
+            messages,
+            stream: true,
           });
 
-          apiStream.on("text", (delta) => {
-            enqueue(delta);
-          });
+          const blocks: BlockAcc[] = [];
+          let stopReason: string | null = null;
 
-          const final = await apiStream.finalMessage();
-
-          if (final.stop_reason === "tool_use") {
-            const toolUses = final.content.filter(
-              (b): b is Anthropic.ToolUseBlock => b.type === "tool_use",
-            );
-            working.push({ role: "assistant", content: final.content });
-            const results: Anthropic.ToolResultBlockParam[] = [];
-            for (const tu of toolUses) {
-              try {
-                const out = await executeTool(tu.name, tu.input);
-                results.push({
-                  type: "tool_result",
-                  tool_use_id: tu.id,
-                  content: out,
-                });
-              } catch (err) {
-                results.push({
-                  type: "tool_result",
-                  tool_use_id: tu.id,
-                  content: `도구 실행 실패: ${
-                    err instanceof Error ? err.message : String(err)
-                  }`,
-                  is_error: true,
-                });
+          for await (const event of apiStream) {
+            if (event.type === "content_block_start") {
+              const block = event.content_block;
+              if (block.type === "text") {
+                blocks[event.index] = { type: "text", text: "" };
+              } else if (block.type === "tool_use") {
+                blocks[event.index] = { type: "tool_use", id: block.id, name: block.name, inputJson: "" };
+                send({ type: "tool", name: block.name });
               }
+            } else if (event.type === "content_block_delta") {
+              const acc = blocks[event.index];
+              if (event.delta.type === "text_delta" && acc?.type === "text") {
+                acc.text += event.delta.text;
+                send({ type: "text", text: event.delta.text });
+              } else if (event.delta.type === "input_json_delta" && acc?.type === "tool_use") {
+                acc.inputJson += event.delta.partial_json;
+              }
+            } else if (event.type === "message_delta") {
+              stopReason = event.delta.stop_reason ?? stopReason;
             }
-            working.push({ role: "user", content: results });
-            continue;
           }
 
-          break;
+          const assistantContent: Anthropic.ContentBlockParam[] = blocks
+            .filter((b): b is BlockAcc => !!b)
+            .map((b) =>
+              b.type === "text"
+                ? { type: "text", text: b.text }
+                : { type: "tool_use", id: b.id, name: b.name, input: JSON.parse(b.inputJson || "{}") },
+            );
+          messages.push({ role: "assistant", content: assistantContent });
+
+          if (stopReason !== "tool_use") break;
+
+          const toolResults: Anthropic.ToolResultBlockParam[] = [];
+          for (const b of blocks) {
+            if (b?.type === "tool_use") {
+              const result = await executeTool(b.name, JSON.parse(b.inputJson || "{}"));
+              toolResults.push({ type: "tool_result", tool_use_id: b.id, content: result });
+            }
+          }
+          messages.push({ role: "user", content: toolResults });
         }
-        controller.close();
+
+        send({ type: "done" });
       } catch (err) {
-        const msg =
-          err instanceof Anthropic.RateLimitError
-            ? "\n\n[Claude API 사용량 한도에 도달했어요. 잠시 뒤 다시 시도해 주세요.]"
-            : err instanceof Anthropic.APIError
-              ? `\n\n[응답을 받지 못했어요. (${err.status})]`
-              : "\n\n[연결이 원활하지 않아요. 잠시 뒤 다시 시도해 주세요.]";
-        enqueue(msg);
+        send({ type: "error", message: err instanceof Error ? err.message : "알 수 없는 오류가 발생했어요" });
+      } finally {
         controller.close();
       }
     },
@@ -142,8 +163,8 @@ export async function POST(req: NextRequest) {
 
   return new Response(stream, {
     headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "no-store, no-transform",
+      "Content-Type": "application/x-ndjson; charset=utf-8",
+      "Cache-Control": "no-store",
     },
   });
 }

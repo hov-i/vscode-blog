@@ -1,127 +1,183 @@
 "use client";
 
-import { Icon, IconKey } from "@/shared/ui/icon";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { cn } from "@/shared/lib/utils";
-import { UserProfile } from "./user-profile";
+import { Icon } from "@/shared/ui/icon";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "next-themes";
+import { ZOOM_SCALE } from "@/shared/lib/ui/zoom-scale";
+import { SidebarAccount } from "@/widgets/layout/sidebar-account";
+import {
+  buildFileTreeRows,
+  buildPostFile,
+  buildProjectFile,
+  buildSearchResultRow,
+  DEFAULT_COLLAPSED_FOLDER_IDS,
+  iconForFile,
+  isRowVisible,
+  type FileMeta,
+  type PostSummary,
+  type ProjectSummary,
+  type Row,
+} from "@/widgets/layout/file-tree-data";
 
 interface SidebarProps {
-  postCount?: number;
-  projectCount?: number;
   onClose?: () => void;
+  posts: PostSummary[];
+  projects: ProjectSummary[];
+  activeFileId: string;
+  onOpenFile: (file: FileMeta) => void;
+  sidebarView: "explorer" | "search";
 }
 
-const ROW = "flex items-center h-[22px] text-[13px] cursor-pointer whitespace-nowrap";
-const ICON_MD_COLOR = "text-[#519aba]";
+const UI_FONT = "'Segoe UI Variable','Segoe UI',system-ui,sans-serif";
+const MONO_FONT = "Consolas,'Cascadia Mono',Menlo,monospace";
 
-type FileRowProps = {
-  href: string;
-  name: string;
-  icon: IconKey;
-  iconColor?: string;
-  depth: number;
+const DEFAULT_SIDEBAR_WIDTH = 240;
+const MIN_SIDEBAR_WIDTH = 180;
+const MAX_SIDEBAR_WIDTH = 420;
+
+function Chevron({ down }: { down: boolean }) {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ display: "block" }}>
+      <path
+        d={down ? "M 2.4 4.4 L 6 8 L 9.6 4.4" : "M 4.4 2.4 L 8 6 L 4.4 9.6"}
+        stroke="#FFFFFF"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+const ExplorerRow = ({
+  row,
+  active,
+  expanded,
+  onClick,
+}: {
+  row: Row;
   active: boolean;
-};
-
-const FileRow = ({ href, name, icon, iconColor, depth, active }: FileRowProps) => (
-  <Link href={href}>
-    <div
-      className={cn(
-        ROW,
-        "hover:bg-[var(--vscode-hover-bg)]",
-        active
-          ? "bg-[var(--vscode-list-active-bg)] text-[var(--vscode-list-active-fg)]"
-          : "text-[var(--text-primary)]"
-      )}
-      style={{ paddingLeft: `${8 + depth * 8}px`, paddingRight: 8 }}
-    >
-      <span className="w-3 mr-1" />
-      <Icon name={icon} className={cn("w-4 h-4 mr-1.5 shrink-0", iconColor)} />
-      <span className="truncate">{name}</span>
-    </div>
-  </Link>
-);
-
-type FolderRowProps = {
-  href: string;
-  label: string;
-  depth: number;
   expanded: boolean;
-  onToggle?: () => void;
-  active: boolean;
-  count?: number;
-  iconColor?: string;
+  onClick?: () => void;
+}) => {
+  const icon = iconForFile(row.icon, active);
+
+  return (
+  <div
+    style={{ position: "relative", height: 32, borderRadius: 4, flex: "none", cursor: row.kind === "folder" || row.kind === "file" ? "pointer" : "default" }}
+    className="group"
+    onClick={onClick}
+  >
+    <div
+      className="absolute inset-x-[5px] top-[3px] bottom-[3px] rounded-[3px] group-hover:bg-[rgba(255,255,255,.0605)]"
+      style={active ? { background: "rgba(255,255,255,.0605)" } : undefined}
+    />
+    {row.chevronLeft !== undefined && (
+      <div style={{ pointerEvents: "none", position: "absolute", left: row.chevronLeft, top: 0, bottom: 0, display: "flex", alignItems: "center" }}>
+        <Chevron down={expanded} />
+      </div>
+    )}
+    <div style={{ pointerEvents: "none", position: "absolute", left: row.iconLeft, top: 0, bottom: 0, display: "flex", alignItems: "center" }}>
+      <img src={icon} alt="" width={row.iconW} height={row.iconH} style={{ display: "block" }} />
+    </div>
+    <span
+      style={{
+        pointerEvents: "none",
+        position: "absolute",
+        left: row.labelLeft,
+        right: 34,
+        top: 0,
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        fontFamily: UI_FONT,
+        fontSize: 14,
+        color: row.labelColor ?? "#FFFFFF",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+      }}
+    >
+      {row.label}
+    </span>
+    {row.badge && (
+      <span style={{ pointerEvents: "none", position: "absolute", right: 12, top: 0, bottom: 0, display: "flex", alignItems: "center", font: `400 12px/16px ${MONO_FONT}`, color: row.badge.color }}>
+        {row.badge.text}
+      </span>
+    )}
+  </div>
+  );
 };
 
-const FolderRow = ({ href, label, depth, expanded, onToggle, active, count, iconColor }: FolderRowProps) => (
-  <div
-    className={cn(
-      ROW,
-      "group hover:bg-[var(--vscode-hover-bg)]",
-      active
-        ? "bg-[var(--vscode-list-active-bg)] text-[var(--vscode-list-active-fg)]"
-        : "text-[var(--text-primary)]"
-    )}
-    style={{ paddingLeft: `${8 + depth * 8}px`, paddingRight: 8 }}
-  >
-    <button
-      type="button"
-      aria-label={expanded ? "Collapse" : "Expand"}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        onToggle?.();
-      }}
-      className="shrink-0 flex items-center justify-center w-3 h-4 mr-1"
-    >
-      <Icon
-        name={expanded ? "chevronDown" : "chevronRight"}
-        className="w-3 h-3 text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]"
-      />
-    </button>
-    <Link href={href} className="flex items-center flex-1 min-w-0">
-      <Icon
-        name={expanded ? "folderOpen" : "folder"}
-        className={cn("w-4 h-4 mr-1.5 shrink-0", iconColor ?? "text-[#dcb67a]")}
-      />
-      <span className="truncate">{label}</span>
-      {typeof count === "number" && count > 0 && (
-        <span className="ml-auto pl-2 text-[11px] text-[var(--text-secondary)]">{count}</span>
-      )}
-    </Link>
-  </div>
-);
-
-export const Sidebar = ({ postCount, projectCount, onClose }: SidebarProps) => {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [search, setSearch] = useState("");
+export const Sidebar = ({ onClose, posts, projects, activeFileId, onOpenFile, sidebarView }: SidebarProps) => {
   const { theme, setTheme } = useTheme();
+  const rows = buildFileTreeRows({ posts, projects });
   const [mounted, setMounted] = useState(false);
-  const [homeOpen, setHomeOpen] = useState(true);
+  const [width, setWidth] = useState(DEFAULT_SIDEBAR_WIDTH);
+  const [isResizing, setIsResizing] = useState(false);
+  const [collapsedFolderIds, setCollapsedFolderIds] = useState<Set<string>>(() => new Set(DEFAULT_COLLAPSED_FOLDER_IDS));
+  const [searchQuery, setSearchQuery] = useState("");
+  const dragRef = useRef<{ startX: number; startWidth: number } | null>(null);
+
+  function toggleFolder(id: string) {
+    setCollapsedFolderIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  const searchResults = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return [];
+    const postMatches = posts.filter((p) => p.title.toLowerCase().includes(q)).map(buildPostFile);
+    const projectMatches = projects.filter((p) => p.title.toLowerCase().includes(q)).map(buildProjectFile);
+    return [...postMatches, ...projectMatches];
+  }, [searchQuery, posts, projects]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (pathname === "/" || pathname === "/about") setHomeOpen(true);
-  }, [pathname]);
+    function handleMouseMove(e: MouseEvent) {
+      if (!dragRef.current) return;
+      const { startX, startWidth } = dragRef.current;
+      const deltaX = (e.clientX - startX) / ZOOM_SCALE;
+      const next = Math.min(MAX_SIDEBAR_WIDTH, Math.max(MIN_SIDEBAR_WIDTH, startWidth + deltaX));
+      setWidth(next);
+    }
+    function handleMouseUp() {
+      dragRef.current = null;
+      setIsResizing(false);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    }
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+  function handleResizeStart(e: React.MouseEvent) {
+    e.preventDefault();
+    dragRef.current = { startX: e.clientX, startWidth: width };
+    setIsResizing(true);
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+  }
 
-  const startsWith = (p: string) => pathname === p || pathname.startsWith(p + "/");
-  const isHomeActive = pathname === "/" || pathname === "/about";
+  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
   return (
     <aside
       id="sidebar"
-      className="w-[calc(100vw-3rem)] max-w-xs lg:w-64 h-full flex flex-col bg-[var(--bg-secondary)] border-r border-[var(--border-color)] shrink-0"
+      className="relative w-[calc(100vw-3rem)] max-w-xs lg:max-w-none lg:w-[var(--sidebar-width)] h-full flex flex-col bg-[var(--bg-tertiary)] border-r border-[var(--border-color)] lg:border lg:border-[var(--vscode-panel-border)] shrink-0 lg:rounded-[7px] lg:overflow-hidden lg:p-1.5 lg:gap-2"
+      style={{ "--sidebar-width": `${width}px` } as React.CSSProperties}
     >
       {/* Mobile-only Top Bar */}
       <div className="lg:hidden flex items-center justify-between px-4 h-12 border-b border-[var(--border-color)] bg-[var(--bg-tertiary)] shrink-0">
@@ -149,128 +205,96 @@ export const Sidebar = ({ postCount, projectCount, onClose }: SidebarProps) => {
         </div>
       </div>
 
-      {/* EXPLORER title bar */}
-      <div className="h-9 px-4 flex items-center justify-between shrink-0">
-        <span className="text-[11px] font-semibold tracking-wider uppercase text-[var(--text-secondary)]">
-          Explorer
+      {/* EXPLORER / SEARCH header */}
+      <div style={{ height: 26, flex: "none", display: "flex", alignItems: "center", padding: "0 4px 0 10px", gap: 8 }}>
+        <span style={{ flex: 1, minWidth: 0, fontFamily: UI_FONT, fontSize: 11, letterSpacing: ".06em", textTransform: "uppercase", color: "rgba(255,255,255,.786)", whiteSpace: "nowrap" }}>
+          {sidebarView === "search" ? "Search" : "Explorer"}
         </span>
-        <button className="p-1 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]">
-          <Icon name="more" className="w-4 h-4" />
+        <button type="button" className="w-[22px] h-[22px] flex items-center justify-center rounded hover:bg-[rgba(255,255,255,.0605)] text-[rgba(255,255,255,.786)]">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style={{ display: "block" }}>
+            <circle cx="4" cy="8" r="1.3" />
+            <circle cx="8" cy="8" r="1.3" />
+            <circle cx="12" cy="8" r="1.3" />
+          </svg>
         </button>
       </div>
 
-      {/* Search */}
-      <div className="px-2 pb-2 shrink-0">
-        <div className="flex items-center px-2 py-1 rounded-sm bg-[var(--vscode-input-bg)] border border-[var(--vscode-input-border)] focus-within:border-[var(--vscode-focus-border)] transition-colors">
-          <Icon name="search" className="w-3 h-3 mr-2 text-[var(--text-secondary)]" />
-          <input
-            type="text"
-            placeholder="Search posts..."
-            className="bg-transparent outline-none text-xs flex-1 text-[var(--vscode-input-fg)] placeholder-[var(--text-secondary)]"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && search.trim()) {
-                router.push(`/posts?q=${encodeURIComponent(search.trim())}`);
-              } else if (e.key === "Enter" && !search.trim()) {
-                router.push("/posts");
-              }
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Workspace folder header */}
-      <div className="flex items-center h-[22px] px-2 group select-none">
-        <Icon name="chevronDown" className="w-3 h-3 mr-1 text-[var(--text-secondary)] shrink-0" />
-        <span className="text-[11px] font-semibold tracking-wide uppercase text-[var(--text-primary)] flex-1 truncate">
-          hovi-log
-        </span>
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button title="New File" className="p-0.5 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]">
-            <Icon name="newFile" className="w-4 h-4" />
-          </button>
-          <button title="New Folder" className="p-0.5 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]">
-            <Icon name="newFolder" className="w-4 h-4" />
-          </button>
-          <button title="Refresh" className="p-0.5 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]">
-            <Icon name="refresh" className="w-4 h-4" />
-          </button>
-          <button title="Collapse All" className="p-0.5 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]">
-            <Icon name="collapseAll" className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* File tree */}
-      <div className="flex-1 overflow-y-auto select-none">
-        {/* home/ folder with nested md files */}
-        <FolderRow
-          href="/"
-          label="home"
-          depth={1}
-          expanded={homeOpen}
-          onToggle={() => setHomeOpen((v) => !v)}
-          active={isHomeActive && !homeOpen}
-        />
-        {homeOpen && (
-          <>
-            <FileRow
-              href="/"
-              name="welcome.md"
-              icon="markdown"
-              iconColor={ICON_MD_COLOR}
-              depth={2}
-              active={pathname === "/"}
+      {sidebarView === "search" ? (
+        <div className="flex-1 overflow-y-auto select-none flex flex-col">
+          <div style={{ padding: "0 10px 8px" }}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="게시물, 프로젝트 검색..."
+              autoFocus
+              style={{
+                width: "100%",
+                height: 26,
+                borderRadius: 3,
+                background: "rgb(51,51,51)",
+                border: "1px solid rgba(255,255,255,.14)",
+                outline: "none",
+                padding: "0 8px",
+                fontFamily: UI_FONT,
+                fontSize: 13,
+                color: "#FFFFFF",
+              }}
             />
-            <FileRow
-              href="/about"
-              name="about.md"
-              icon="markdown"
-              iconColor={ICON_MD_COLOR}
-              depth={2}
-              active={pathname === "/about"}
-            />
-          </>
-        )}
+          </div>
+          {searchQuery.trim() === "" ? (
+            <div style={{ padding: "4px 14px", font: `400 12px/18px ${UI_FONT}`, color: "rgba(255,255,255,.5)" }}>
+              게시물, 프로젝트 제목으로 검색하세요.
+            </div>
+          ) : searchResults.length === 0 ? (
+            <div style={{ padding: "4px 14px", font: `400 12px/18px ${UI_FONT}`, color: "rgba(255,255,255,.5)" }}>
+              검색 결과가 없습니다.
+            </div>
+          ) : (
+            searchResults.map((file) => (
+              <ExplorerRow
+                key={file.id}
+                row={buildSearchResultRow(file)}
+                active={file.id === activeFileId}
+                expanded={false}
+                onClick={() => onOpenFile(file)}
+              />
+            ))
+          )}
+        </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto select-none flex flex-col">
+          {rows
+            .filter((row) => isRowVisible(row, rows, collapsedFolderIds))
+            .map((row) => (
+              <ExplorerRow
+                key={row.id}
+                row={row}
+                active={row.file?.id === activeFileId}
+                expanded={row.kind === "folder" ? !collapsedFolderIds.has(row.id) : false}
+                onClick={
+                  row.kind === "file" && row.file
+                    ? () => onOpenFile(row.file!)
+                    : row.kind === "folder"
+                      ? () => toggleFolder(row.id)
+                      : undefined
+                }
+              />
+            ))}
+        </div>
+      )}
 
-        <FolderRow
-          href="/posts"
-          label="posts"
-          depth={1}
-          expanded={false}
-          active={startsWith("/posts")}
-          count={postCount}
-        />
-        <FolderRow
-          href="/projects"
-          label="projects"
-          depth={1}
-          expanded={false}
-          active={startsWith("/projects")}
-          count={projectCount}
-        />
-        <FolderRow
-          href="/tags"
-          label="tags"
-          depth={1}
-          expanded={false}
-          active={startsWith("/tags")}
-        />
-
-        <FileRow
-          href="/guestbook"
-          name="guestbook.md"
-          icon="markdown"
-          iconColor={ICON_MD_COLOR}
-          depth={1}
-          active={startsWith("/guestbook")}
-        />
+      {/* Account row — real GitHub sign-in via Supabase Auth */}
+      <div style={{ marginTop: "auto", padding: "6px 0 0", boxShadow: "inset 0 1px 0 0 rgba(249,249,249,.1)" }}>
+        <SidebarAccount />
       </div>
 
-      <div className="p-3 border-t border-[var(--border-color)] shrink-0">
-        <UserProfile />
-      </div>
+      {/* Resize handle — desktop only, mirrors the terminal panel's drag splitter */}
+      <div
+        className={`hidden lg:block vertical-resize-handle${isResizing ? " dragging" : ""}`}
+        onMouseDown={handleResizeStart}
+        style={{ position: "absolute", top: 0, bottom: 0, right: -5, width: 9, cursor: "col-resize", zIndex: 10 }}
+      />
     </aside>
   );
 };
