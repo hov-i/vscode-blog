@@ -20,6 +20,12 @@ export function useOpenTabs(files: FileMeta[]) {
   const initialFile = fileForPathname(pathname, files);
   const [openTabs, setOpenTabs] = useState<OpenTab[]>(initialFile ? [initialFile] : []);
   const [activeFileId, setActiveFileId] = useState(initialFile?.id ?? "");
+  // Tracks whether the user explicitly closed the last tab — kept separate
+  // from openTabs.length so a route that just hasn't matched `files` yet
+  // (e.g. the sidebar's file list is still loading client-side) doesn't get
+  // mistaken for "user closed everything" and hide the page's real content
+  // behind the empty-editor placeholder.
+  const [showEmptyState, setShowEmptyState] = useState(false);
 
   // Derives tab state from the route on every navigation (direct link, back/
   // forward, sidebar/tab clicks) — the URL is the source of truth here.
@@ -30,6 +36,7 @@ export function useOpenTabs(files: FileMeta[]) {
       setActiveFileId("");
       return;
     }
+    setShowEmptyState(false);
     setOpenTabs((tabs) => (tabs.some((t) => t.id === file.id) ? tabs : [...tabs, file]));
     setActiveFileId(file.id);
   }, [pathname, files]);
@@ -63,6 +70,7 @@ export function useOpenTabs(files: FileMeta[]) {
         router.push(neighbor.route);
       } else {
         setActiveFileId("");
+        setShowEmptyState(true);
       }
     }
   }
@@ -79,5 +87,5 @@ export function useOpenTabs(files: FileMeta[]) {
     });
   }
 
-  return { openTabs, activeFileId, openFile, selectTab, closeTab, reorderTabs };
+  return { openTabs, activeFileId, openFile, selectTab, closeTab, reorderTabs, showEmptyState };
 }

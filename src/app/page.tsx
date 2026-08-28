@@ -3,6 +3,11 @@ import { getProjectCount, getRecentProjects } from "@/shared/lib/services/projec
 import { getTags } from "@/shared/lib/services/tag.service";
 import { WelcomeDashboard } from "@/widgets/welcome/welcome-dashboard";
 
+// Reads the DB directly on every render — force dynamic so Next never
+// attempts to prerender this at build time (Vercel's build machine can't
+// reach the DB; only the deployed runtime can).
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [postCount, projectCount, tags, totalViews, recentPosts, featuredProjects] = await Promise.all([
     getPostCount(),
