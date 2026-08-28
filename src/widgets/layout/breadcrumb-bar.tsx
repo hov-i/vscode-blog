@@ -40,7 +40,7 @@ export const BreadcrumbBar = () => {
   return (
     <div
       id="breadcrumb-bar"
-      className="flex items-center h-7 px-4 text-xs bg-[var(--bg-primary)] border-b border-[var(--border-color)] text-[var(--text-secondary)] overflow-x-auto"
+      className="flex items-center h-7 px-4 text-xs border-b border-[var(--vscode-panel-border)] text-[var(--text-secondary)] overflow-x-auto shrink-0"
     >
       {segments.map((segment, index) => {
         const isLast = index === segments.length - 1;

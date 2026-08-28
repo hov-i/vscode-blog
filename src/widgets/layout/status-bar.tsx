@@ -1,35 +1,39 @@
-import { Icon } from "@/shared/ui/icon";
+const UI_FONT = "'Segoe UI Variable','Segoe UI',system-ui,sans-serif";
+const W = "#FFFFFF";
+const T = "rgb(196,196,196)";
+const A = "rgb(96,205,255)";
 
-export const StatusBar = () => {
-  return (
-    <footer
-      id="status-bar"
-      className="h-6 flex items-center justify-between px-3 text-xs bg-[var(--vscode-status-bar-bg)] text-[var(--vscode-status-bar-fg)] border-t border-[var(--border-color)] shrink-0"
-    >
-      <div className="flex items-center gap-3">
-        <div className="flex items-center cursor-pointer hover:bg-[var(--vscode-status-bar-hover)] px-1 rounded">
-          <Icon name="gitBranch" className="w-3 h-3 mr-1" />
-          <span>main</span>
-        </div>
-        <div className="flex items-center cursor-pointer hover:bg-[var(--vscode-status-bar-hover)] px-1 rounded">
-          <Icon name="check" className="w-3 h-3 mr-1" />
-          <span>No Issues</span>
-        </div>
-        <div className="flex items-center cursor-pointer hover:bg-[var(--vscode-status-bar-hover)] px-1 rounded">
-          <Icon name="wifi" className="w-3 h-3 mr-1" />
-          <span>Connected</span>
-        </div>
-      </div>
+// Literal statusLeft/statusRight from design.html section 06's data block.
+const STATUS_LEFT = [
+  { label: "main*", fg: W },
+  { label: "⊗ 0   ⚠ 0", fg: T },
+  { label: "content/posts/fluent-tokens.md", fg: T },
+];
+const STATUS_RIGHT = [
+  { label: "1,204 words", fg: A },
+  { label: "Ln 9, Col 42", fg: T },
+  { label: "Spaces: 2", fg: T },
+  { label: "UTF-8", fg: T },
+  { label: "Markdown", fg: W },
+];
 
-      <div className="hidden sm:flex items-center gap-3">
-        <span className="cursor-pointer hover:bg-[var(--vscode-status-bar-hover)] px-1 rounded">Ln 1, Col 1</span>
-        <span className="cursor-pointer hover:bg-[var(--vscode-status-bar-hover)] px-1 rounded">UTF-8</span>
-        <span className="cursor-pointer hover:bg-[var(--vscode-status-bar-hover)] px-1 rounded">JSX</span>
-        <div className="flex items-center cursor-pointer hover:bg-[var(--vscode-status-bar-hover)] px-1 rounded">
-          <Icon name="bell" className="w-3 h-3 mr-1" />
-          <span>3</span>
-        </div>
-      </div>
-    </footer>
-  );
-};
+export const StatusBar = () => (
+  <footer
+    id="status-bar"
+    className="h-8 mx-2 mb-2 flex items-center rounded-[7px] ring-1 ring-[var(--vscode-panel-border)] bg-[var(--bg-tertiary)] shrink-0"
+    style={{ gap: 20, padding: "0 14px" }}
+  >
+    {STATUS_LEFT.map((s) => (
+      <span key={s.label} style={{ font: `400 12px/1 ${UI_FONT}`, color: s.fg, whiteSpace: "nowrap" }}>
+        {s.label}
+      </span>
+    ))}
+    <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 20 }}>
+      {STATUS_RIGHT.map((s) => (
+        <span key={s.label} style={{ font: `400 12px/1 ${UI_FONT}`, color: s.fg, whiteSpace: "nowrap" }}>
+          {s.label}
+        </span>
+      ))}
+    </div>
+  </footer>
+);

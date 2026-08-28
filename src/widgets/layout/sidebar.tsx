@@ -1,127 +1,120 @@
 "use client";
 
-import { Icon, IconKey } from "@/shared/ui/icon";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Icon } from "@/shared/ui/icon";
 import { useEffect, useState } from "react";
-import { cn } from "@/shared/lib/utils";
-import { UserProfile } from "./user-profile";
 import { useTheme } from "next-themes";
 
 interface SidebarProps {
-  postCount?: number;
-  projectCount?: number;
   onClose?: () => void;
 }
 
-const ROW = "flex items-center h-[22px] text-[13px] cursor-pointer whitespace-nowrap";
-const ICON_MD_COLOR = "text-[#519aba]";
+const UI_FONT = "'Segoe UI Variable','Segoe UI',system-ui,sans-serif";
+const MONO_FONT = "Consolas,'Cascadia Mono',Menlo,monospace";
 
-type FileRowProps = {
-  href: string;
-  name: string;
-  icon: IconKey;
-  iconColor?: string;
-  depth: number;
-  active: boolean;
-};
+function Chevron({ down }: { down: boolean }) {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ display: "block" }}>
+      <path
+        d={down ? "M 2.4 4.4 L 6 8 L 9.6 4.4" : "M 4.4 2.4 L 8 6 L 4.4 9.6"}
+        stroke="#FFFFFF"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
-const FileRow = ({ href, name, icon, iconColor, depth, active }: FileRowProps) => (
-  <Link href={href}>
-    <div
-      className={cn(
-        ROW,
-        "hover:bg-[var(--vscode-hover-bg)]",
-        active
-          ? "bg-[var(--vscode-list-active-bg)] text-[var(--vscode-list-active-fg)]"
-          : "text-[var(--text-primary)]"
-      )}
-      style={{ paddingLeft: `${8 + depth * 8}px`, paddingRight: 8 }}
-    >
-      <span className="w-3 mr-1" />
-      <Icon name={icon} className={cn("w-4 h-4 mr-1.5 shrink-0", iconColor)} />
-      <span className="truncate">{name}</span>
-    </div>
-  </Link>
-);
-
-type FolderRowProps = {
-  href: string;
+type Row = {
+  kind: "folder" | "file";
   label: string;
-  depth: number;
-  expanded: boolean;
-  onToggle?: () => void;
-  active: boolean;
-  count?: number;
-  iconColor?: string;
+  chevronLeft?: number;
+  chevronDown?: boolean;
+  iconLeft: number;
+  labelLeft: number;
+  icon: string;
+  iconW: number;
+  iconH: number;
+  badge?: { text: string; color: string };
+  active?: boolean;
+  labelColor?: string;
 };
 
-const FolderRow = ({ href, label, depth, expanded, onToggle, active, count, iconColor }: FolderRowProps) => (
-  <div
-    className={cn(
-      ROW,
-      "group hover:bg-[var(--vscode-hover-bg)]",
-      active
-        ? "bg-[var(--vscode-list-active-bg)] text-[var(--vscode-list-active-fg)]"
-        : "text-[var(--text-primary)]"
+// Literal explorer tree from design.html section 06 — pixel offsets copied
+// as-is (the mockup isn't a consistent recursive-depth tree, so this mirrors
+// its exact per-row left offsets rather than deriving them from a formula).
+const ROWS: Row[] = [
+  { kind: "folder", label: "content", chevronLeft: 18, chevronDown: true, iconLeft: 48, labelLeft: 72, icon: "/icons/file-folder.svg", iconW: 16, iconH: 14 },
+  { kind: "folder", label: "posts", chevronLeft: 34, chevronDown: true, iconLeft: 64, labelLeft: 88, icon: "/icons/file-folder.svg", iconW: 16, iconH: 14, badge: { text: "3", color: "rgb(96,205,255)" } },
+  { kind: "file", label: "fluent-tokens.md", iconLeft: 76, labelLeft: 104, icon: "/icons/file-doc-accent.svg", iconW: 16, iconH: 20, badge: { text: "M", color: "rgb(96,205,255)" }, active: true },
+  { kind: "file", label: "index.md", iconLeft: 76, labelLeft: 104, icon: "/icons/file-doc.svg", iconW: 16, iconH: 20, badge: { text: "M", color: "rgb(96,205,255)" }, labelColor: "rgb(249,249,249)" },
+  { kind: "file", label: "about.md", iconLeft: 76, labelLeft: 104, icon: "/icons/file-doc.svg", iconW: 16, iconH: 20, labelColor: "rgb(249,249,249)" },
+  { kind: "folder", label: "drafts", chevronLeft: 34, chevronDown: false, iconLeft: 64, labelLeft: 88, icon: "/icons/file-folder.svg", iconW: 16, iconH: 14, badge: { text: "2", color: "rgb(196,196,196)" }, labelColor: "rgb(249,249,249)" },
+  { kind: "folder", label: "components", chevronLeft: 18, chevronDown: false, iconLeft: 48, labelLeft: 72, icon: "/icons/file-folder.svg", iconW: 16, iconH: 14, labelColor: "rgb(249,249,249)" },
+  { kind: "file", label: "index.vue", iconLeft: 60, labelLeft: 88, icon: "/icons/file-vue.svg", iconW: 16, iconH: 16, labelColor: "rgb(249,249,249)" },
+  { kind: "file", label: "nuxt.config.ts", iconLeft: 44, labelLeft: 72, icon: "/icons/file-ts.svg", iconW: 16, iconH: 16, badge: { text: "M", color: "rgb(96,205,255)" }, labelColor: "rgb(249,249,249)" },
+  { kind: "file", label: "package.json", iconLeft: 44, labelLeft: 72, icon: "/icons/file-json.svg", iconW: 16, iconH: 16, labelColor: "rgb(249,249,249)" },
+  { kind: "file", label: ".eslintrc.js", iconLeft: 44, labelLeft: 72, icon: "/icons/file-eslint.svg", iconW: 16, iconH: 15, labelColor: "rgb(249,249,249)" },
+  { kind: "file", label: ".gitignore", iconLeft: 44, labelLeft: 72, icon: "/icons/file-git.svg", iconW: 16, iconH: 16, badge: { text: "U", color: "rgb(83,214,128)" }, labelColor: "rgba(255,255,255,.4)" },
+];
+
+const ExplorerRow = ({ row }: { row: Row }) => (
+  <div style={{ position: "relative", height: 32, borderRadius: 4, flex: "none" }} className="group">
+    <div
+      className="absolute inset-x-[5px] top-[3px] bottom-[3px] rounded-[3px] group-hover:bg-[rgba(255,255,255,.0605)]"
+      style={row.active ? { background: "rgba(255,255,255,.0605)" } : undefined}
+    />
+    {row.chevronLeft !== undefined && (
+      <div style={{ pointerEvents: "none", position: "absolute", left: row.chevronLeft, top: 0, bottom: 0, display: "flex", alignItems: "center" }}>
+        <Chevron down={!!row.chevronDown} />
+      </div>
     )}
-    style={{ paddingLeft: `${8 + depth * 8}px`, paddingRight: 8 }}
-  >
-    <button
-      type="button"
-      aria-label={expanded ? "Collapse" : "Expand"}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        onToggle?.();
+    <div style={{ pointerEvents: "none", position: "absolute", left: row.iconLeft, top: 0, bottom: 0, display: "flex", alignItems: "center" }}>
+      <img src={row.icon} alt="" width={row.iconW} height={row.iconH} style={{ display: "block" }} />
+    </div>
+    <span
+      style={{
+        pointerEvents: "none",
+        position: "absolute",
+        left: row.labelLeft,
+        right: 34,
+        top: 0,
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        fontFamily: UI_FONT,
+        fontSize: 14,
+        color: row.labelColor ?? "#FFFFFF",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
       }}
-      className="shrink-0 flex items-center justify-center w-3 h-4 mr-1"
     >
-      <Icon
-        name={expanded ? "chevronDown" : "chevronRight"}
-        className="w-3 h-3 text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]"
-      />
-    </button>
-    <Link href={href} className="flex items-center flex-1 min-w-0">
-      <Icon
-        name={expanded ? "folderOpen" : "folder"}
-        className={cn("w-4 h-4 mr-1.5 shrink-0", iconColor ?? "text-[#dcb67a]")}
-      />
-      <span className="truncate">{label}</span>
-      {typeof count === "number" && count > 0 && (
-        <span className="ml-auto pl-2 text-[11px] text-[var(--text-secondary)]">{count}</span>
-      )}
-    </Link>
+      {row.label}
+    </span>
+    {row.badge && (
+      <span style={{ pointerEvents: "none", position: "absolute", right: 12, top: 0, bottom: 0, display: "flex", alignItems: "center", font: `400 12px/16px ${MONO_FONT}`, color: row.badge.color }}>
+        {row.badge.text}
+      </span>
+    )}
   </div>
 );
 
-export const Sidebar = ({ postCount, projectCount, onClose }: SidebarProps) => {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [search, setSearch] = useState("");
+export const Sidebar = ({ onClose }: SidebarProps) => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [homeOpen, setHomeOpen] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (pathname === "/" || pathname === "/about") setHomeOpen(true);
-  }, [pathname]);
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
-  const startsWith = (p: string) => pathname === p || pathname.startsWith(p + "/");
-  const isHomeActive = pathname === "/" || pathname === "/about";
+  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
   return (
     <aside
       id="sidebar"
-      className="w-[calc(100vw-3rem)] max-w-xs lg:w-64 h-full flex flex-col bg-[var(--bg-secondary)] border-r border-[var(--border-color)] shrink-0"
+      className="w-[calc(100vw-3rem)] max-w-xs lg:w-60 h-full flex flex-col bg-[var(--bg-tertiary)] border-r border-[var(--border-color)] lg:border-none shrink-0 lg:rounded-[7px] lg:ring-1 lg:ring-[var(--vscode-panel-border)] lg:overflow-hidden lg:p-1.5 lg:gap-2"
     >
       {/* Mobile-only Top Bar */}
       <div className="lg:hidden flex items-center justify-between px-4 h-12 border-b border-[var(--border-color)] bg-[var(--bg-tertiary)] shrink-0">
@@ -149,127 +142,50 @@ export const Sidebar = ({ postCount, projectCount, onClose }: SidebarProps) => {
         </div>
       </div>
 
-      {/* EXPLORER title bar */}
-      <div className="h-9 px-4 flex items-center justify-between shrink-0">
-        <span className="text-[11px] font-semibold tracking-wider uppercase text-[var(--text-secondary)]">
+      {/* EXPLORER header */}
+      <div style={{ height: 26, flex: "none", display: "flex", alignItems: "center", padding: "0 4px 0 10px", gap: 8 }}>
+        <span style={{ flex: 1, minWidth: 0, fontFamily: UI_FONT, fontSize: 11, letterSpacing: ".06em", textTransform: "uppercase", color: "rgba(255,255,255,.786)", whiteSpace: "nowrap" }}>
           Explorer
         </span>
-        <button className="p-1 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]">
-          <Icon name="more" className="w-4 h-4" />
+        <button type="button" className="w-[22px] h-[22px] flex items-center justify-center rounded hover:bg-[rgba(255,255,255,.0605)] text-[rgba(255,255,255,.786)]">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style={{ display: "block" }}>
+            <circle cx="4" cy="8" r="1.3" />
+            <circle cx="8" cy="8" r="1.3" />
+            <circle cx="12" cy="8" r="1.3" />
+          </svg>
         </button>
       </div>
 
-      {/* Search */}
-      <div className="px-2 pb-2 shrink-0">
-        <div className="flex items-center px-2 py-1 rounded-sm bg-[var(--vscode-input-bg)] border border-[var(--vscode-input-border)] focus-within:border-[var(--vscode-focus-border)] transition-colors">
-          <Icon name="search" className="w-3 h-3 mr-2 text-[var(--text-secondary)]" />
-          <input
-            type="text"
-            placeholder="Search posts..."
-            className="bg-transparent outline-none text-xs flex-1 text-[var(--vscode-input-fg)] placeholder-[var(--text-secondary)]"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && search.trim()) {
-                router.push(`/posts?q=${encodeURIComponent(search.trim())}`);
-              } else if (e.key === "Enter" && !search.trim()) {
-                router.push("/posts");
-              }
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Workspace folder header */}
-      <div className="flex items-center h-[22px] px-2 group select-none">
-        <Icon name="chevronDown" className="w-3 h-3 mr-1 text-[var(--text-secondary)] shrink-0" />
-        <span className="text-[11px] font-semibold tracking-wide uppercase text-[var(--text-primary)] flex-1 truncate">
-          hovi-log
-        </span>
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button title="New File" className="p-0.5 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]">
-            <Icon name="newFile" className="w-4 h-4" />
-          </button>
-          <button title="New Folder" className="p-0.5 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]">
-            <Icon name="newFolder" className="w-4 h-4" />
-          </button>
-          <button title="Refresh" className="p-0.5 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]">
-            <Icon name="refresh" className="w-4 h-4" />
-          </button>
-          <button title="Collapse All" className="p-0.5 hover:bg-[var(--vscode-hover-bg)] rounded text-[var(--text-secondary)]">
-            <Icon name="collapseAll" className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
       {/* File tree */}
-      <div className="flex-1 overflow-y-auto select-none">
-        {/* home/ folder with nested md files */}
-        <FolderRow
-          href="/"
-          label="home"
-          depth={1}
-          expanded={homeOpen}
-          onToggle={() => setHomeOpen((v) => !v)}
-          active={isHomeActive && !homeOpen}
-        />
-        {homeOpen && (
-          <>
-            <FileRow
-              href="/"
-              name="welcome.md"
-              icon="markdown"
-              iconColor={ICON_MD_COLOR}
-              depth={2}
-              active={pathname === "/"}
-            />
-            <FileRow
-              href="/about"
-              name="about.md"
-              icon="markdown"
-              iconColor={ICON_MD_COLOR}
-              depth={2}
-              active={pathname === "/about"}
-            />
-          </>
-        )}
-
-        <FolderRow
-          href="/posts"
-          label="posts"
-          depth={1}
-          expanded={false}
-          active={startsWith("/posts")}
-          count={postCount}
-        />
-        <FolderRow
-          href="/projects"
-          label="projects"
-          depth={1}
-          expanded={false}
-          active={startsWith("/projects")}
-          count={projectCount}
-        />
-        <FolderRow
-          href="/tags"
-          label="tags"
-          depth={1}
-          expanded={false}
-          active={startsWith("/tags")}
-        />
-
-        <FileRow
-          href="/guestbook"
-          name="guestbook.md"
-          icon="markdown"
-          iconColor={ICON_MD_COLOR}
-          depth={1}
-          active={startsWith("/guestbook")}
-        />
+      <div className="flex-1 overflow-y-auto select-none flex flex-col">
+        {ROWS.map((row) => (
+          <ExplorerRow key={row.label} row={row} />
+        ))}
       </div>
 
-      <div className="p-3 border-t border-[var(--border-color)] shrink-0">
-        <UserProfile />
+      {/* Account row */}
+      <div style={{ marginTop: "auto", padding: "6px 0 0", boxShadow: "inset 0 1px 0 0 rgba(249,249,249,.1)" }}>
+        <div className="group" style={{ position: "relative", height: 44, borderRadius: 4 }}>
+          <div className="absolute inset-x-[5px] top-[3px] bottom-[3px] rounded-[3px] group-hover:bg-[rgba(255,255,255,.0605)]" />
+          <img
+            src="/icons/figma-avatar.png"
+            alt=""
+            style={{ pointerEvents: "none", position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", width: 28, height: 28, borderRadius: 9999, display: "block" }}
+          />
+          <span
+            style={{ pointerEvents: "none", position: "absolute", left: 52, right: 34, top: "50%", transform: "translateY(calc(-50% - 9px))", height: 18, fontFamily: UI_FONT, fontSize: 14, color: "#FFFFFF", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+          >
+            hov_i
+          </span>
+          <span
+            style={{ pointerEvents: "none", position: "absolute", left: 52, right: 34, top: "50%", transform: "translateY(1px)", height: 16, fontFamily: UI_FONT, fontSize: 12, color: "rgba(255,255,255,.786)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+          >
+            Connected via GitHub
+          </span>
+          <div style={{ pointerEvents: "none", position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", width: 16, height: 16, color: "rgba(255,255,255,.786)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Chevron down />
+          </div>
+        </div>
       </div>
     </aside>
   );
