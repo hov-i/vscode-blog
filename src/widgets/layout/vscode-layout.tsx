@@ -10,7 +10,7 @@ import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Icon } from "@/shared/ui/icon";
 import { cn } from "@/shared/lib/utils";
 import { useOpenTabs } from "@/widgets/layout/use-open-tabs";
-import { buildAllFiles, type PostSummary, type ProjectSummary } from "@/widgets/layout/file-tree-data";
+import { buildAllFiles, GUESTBOOK_FILE, type PostSummary, type ProjectSummary, type TagSummary } from "@/widgets/layout/file-tree-data";
 import { PostMetaProvider } from "@/widgets/layout/post-meta-context";
 import { EmptyEditorState } from "@/widgets/layout/empty-editor-state";
 
@@ -18,19 +18,26 @@ export const VSCodeLayout = ({
   children,
   posts,
   projects,
+  tags,
 }: {
   children: ReactNode;
   posts: PostSummary[];
   projects: ProjectSummary[];
+  tags: TagSummary[];
 }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isTerminalOpen, setTerminalOpen] = useState(true);
   const [sidebarView, setSidebarView] = useState<"explorer" | "search">("explorer");
-  const files = useMemo(() => buildAllFiles({ posts, projects }), [posts, projects]);
+  const files = useMemo(() => buildAllFiles({ posts, projects, tags }), [posts, projects, tags]);
   const { openTabs, activeFileId, openFile, selectTab, closeTab, reorderTabs } = useOpenTabs(files);
 
   function handleToggleSearch() {
     setSidebarView((v) => (v === "search" ? "explorer" : "search"));
+  }
+
+  function handleOpenGuestbook() {
+    setSidebarView("explorer");
+    openFile(GUESTBOOK_FILE);
   }
 
   // Mobile starts with the sidebar collapsed (it renders as a full overlay there);
@@ -71,7 +78,12 @@ export const VSCodeLayout = ({
               ? "translate-x-0 lg:w-auto lg:ml-2 lg:gap-2"
               : "-translate-x-full lg:translate-x-0 lg:w-0 lg:ml-0 lg:gap-0"
           )}>
-            <ActivityBar sidebarView={sidebarView} onToggleSearch={handleToggleSearch} />
+            <ActivityBar
+              sidebarView={sidebarView}
+              activeFileId={activeFileId}
+              onToggleSearch={handleToggleSearch}
+              onOpenGuestbook={handleOpenGuestbook}
+            />
             <Sidebar
               onClose={() => setSidebarOpen(false)}
               posts={posts}

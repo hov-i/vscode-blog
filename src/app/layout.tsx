@@ -6,6 +6,7 @@ import { VSCodeLayout } from "@/widgets/layout/vscode-layout";
 import { Analytics } from "@vercel/analytics/next";
 import { getRecentPosts } from "@/shared/lib/services/post.service";
 import { getProjects } from "@/shared/lib/services/project.service";
+import { getTags } from "@/shared/lib/services/tag.service";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -27,6 +28,8 @@ export default async function RootLayout({
   const posts = recentPosts.filter((p) => p.published).map((p) => ({ id: p.id, title: p.title }));
   const allProjects = await getProjects();
   const projects = allProjects.map((p) => ({ id: p.id, title: p.title }));
+  const allTags = await getTags();
+  const tags = allTags.map((t) => ({ id: t.id, name: t.name }));
 
   return (
     <html lang="ko" suppressHydrationWarning className={jetbrainsMono.variable}>
@@ -45,7 +48,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <VSCodeLayout posts={posts} projects={projects}>{children}</VSCodeLayout>
+          <VSCodeLayout posts={posts} projects={projects} tags={tags}>{children}</VSCodeLayout>
         </ThemeProvider>
         <Analytics />
       </body>

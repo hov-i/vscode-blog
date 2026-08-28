@@ -25,6 +25,7 @@ export type Row = {
 
 export type PostSummary = { id: number; title: string };
 export type ProjectSummary = { id: number; title: string };
+export type TagSummary = { id: number; name: string };
 
 const DOC_ICON = "/icons/file-doc.svg";
 const DOC_ICON_ACTIVE = "/icons/file-doc-accent.svg";
@@ -52,6 +53,17 @@ export function buildProjectFile(project: ProjectSummary): FileMeta {
   };
 }
 
+export function buildTagFile(tag: TagSummary): FileMeta {
+  return {
+    id: `tag-${tag.id}`,
+    label: `${tag.name}.md`,
+    icon: DOC_ICON,
+    iconSize: 16,
+    path: `tags/${tag.name}.md`,
+    route: `/tags/${encodeURIComponent(tag.name)}`,
+  };
+}
+
 export const WELCOME_FILE: FileMeta = {
   id: "welcome",
   label: "welcome.md",
@@ -70,10 +82,46 @@ export const ABOUT_FILE: FileMeta = {
   route: "/about",
 };
 
+export const GUESTBOOK_FILE: FileMeta = {
+  id: "guestbook",
+  label: "guestbook.md",
+  icon: DOC_ICON,
+  iconSize: 16,
+  path: "home/guestbook.md",
+  route: "/guestbook",
+};
+
+export const TAGS_FILE: FileMeta = {
+  id: "tags",
+  label: "tags.md",
+  icon: DOC_ICON,
+  iconSize: 16,
+  path: "home/tags.md",
+  route: "/tags",
+};
+
 // The full flat list of files the tab/routing system needs to match a
-// pathname against — home's static pages plus every real post and project.
-export function buildAllFiles({ posts, projects }: { posts: PostSummary[]; projects: ProjectSummary[] }): FileMeta[] {
-  return [WELCOME_FILE, ABOUT_FILE, ...posts.map(buildPostFile), ...projects.map(buildProjectFile)];
+// pathname against — home's static pages plus every real post, project, and
+// tag (tag pages aren't shown in the Explorer tree, but still need a route
+// match so a direct load doesn't fall through to the empty-editor state).
+export function buildAllFiles({
+  posts,
+  projects,
+  tags,
+}: {
+  posts: PostSummary[];
+  projects: ProjectSummary[];
+  tags: TagSummary[];
+}): FileMeta[] {
+  return [
+    WELCOME_FILE,
+    ABOUT_FILE,
+    GUESTBOOK_FILE,
+    TAGS_FILE,
+    ...posts.map(buildPostFile),
+    ...projects.map(buildProjectFile),
+    ...tags.map(buildTagFile),
+  ];
 }
 
 const HOME_FOLDER_ID = "folder-home";
@@ -128,6 +176,8 @@ export function buildFileTreeRows({ posts, projects }: { posts: PostSummary[]; p
     homeFolder,
     fileRow(HOME_FOLDER_ID, WELCOME_FILE),
     fileRow(HOME_FOLDER_ID, ABOUT_FILE),
+    fileRow(HOME_FOLDER_ID, GUESTBOOK_FILE),
+    fileRow(HOME_FOLDER_ID, TAGS_FILE),
     postsFolder,
     ...posts.map((post) => fileRow(POSTS_FOLDER_ID, buildPostFile(post))),
     projectsFolder,
