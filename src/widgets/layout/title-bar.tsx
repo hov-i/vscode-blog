@@ -9,9 +9,11 @@ const MENU_ITEMS = ["File", "Edit", "Selection", "View", "Go", "Run", "Terminal"
 interface TitleBarProps {
   terminalOpen: boolean;
   onToggleTerminal: () => void;
+  sidebarOpen: boolean;
+  onToggleSidebar: () => void;
 }
 
-export const TitleBar = ({ terminalOpen, onToggleTerminal }: TitleBarProps) => {
+export const TitleBar = ({ terminalOpen, onToggleTerminal, sidebarOpen, onToggleSidebar }: TitleBarProps) => {
   const router = useRouter();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [minimizing, setMinimizing] = useState(false);
@@ -93,7 +95,16 @@ export const TitleBar = ({ terminalOpen, onToggleTerminal }: TitleBarProps) => {
       {/* Right: layout toggles (Figma file's literal 4-icon group) + window controls */}
       <div className="flex-none flex items-center gap-0.5">
         <div className="flex items-center gap-0.5 px-2">
-          <button type="button" title="Toggle Primary Side Bar" className="w-7 h-6 flex items-center justify-center rounded hover:bg-[var(--vscode-hover-bg)] text-[rgba(255,255,255,0.786)]">
+          <button
+            type="button"
+            title="Toggle Primary Side Bar"
+            onClick={onToggleSidebar}
+            aria-pressed={sidebarOpen}
+            className={cn(
+              "w-7 h-6 flex items-center justify-center rounded hover:bg-[var(--vscode-hover-bg)]",
+              sidebarOpen ? "text-[var(--accent)]" : "text-[rgba(255,255,255,0.786)]"
+            )}
+          >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" /><rect x="1.5" y="2.5" width="4" height="11" fill="currentColor" /></svg>
           </button>
           <button type="button" title="Toggle Status Bar" className="w-7 h-6 flex items-center justify-center rounded hover:bg-[var(--vscode-hover-bg)] text-[rgba(255,255,255,0.786)]">

@@ -166,7 +166,13 @@
     --vscode-code-bg: rgb(24, 24, 24);
 
     /* Floating panel outline — "Surface stroke", doc's colorGroups: outline on every mica panel */
-    --vscode-panel-border: rgba(0, 0, 0, 0.1622);
+    --vscode-panel-border: rgba(255, 255, 255, 0.12);
+  }
+
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
   }
 
   body {
@@ -192,6 +198,51 @@
     outline: 1px solid var(--vscode-focus-border);
     outline-offset: -1px;
   }
+}
+
+/* Terminal-style blinking block cursor — solid block w/ inverted glyph, then transparent, like a real CLI caret */
+.terminal-block-cursor {
+  display: inline-block;
+  animation: terminal-cursor-blink 1s steps(1, start) infinite;
+}
+@keyframes terminal-cursor-blink {
+  0%,
+  49% {
+    background-color: #ffffff;
+    color: rgb(40, 40, 40);
+  }
+  50%,
+  100% {
+    background-color: transparent;
+    color: #ffffff;
+  }
+}
+
+/* Terminal panel resize splitter — invisible until hovered/dragged, matches VSCode's panel border drag */
+.terminal-resize-handle::after {
+  content: "";
+  position: absolute;
+  inset: 3px 0;
+  background: transparent;
+  transition: background-color 0.1s ease;
+}
+.terminal-resize-handle:hover::after,
+.terminal-resize-handle.dragging::after {
+  background: var(--vscode-focus-border, #0090f1);
+}
+
+/* Vertical resize splitter (col-resize) — used by the sidebar edge and the
+   markdown preview/source divider */
+.vertical-resize-handle::after {
+  content: "";
+  position: absolute;
+  inset: 0 3px;
+  background: transparent;
+  transition: background-color 0.1s ease;
+}
+.vertical-resize-handle:hover::after,
+.vertical-resize-handle.dragging::after {
+  background: var(--vscode-focus-border, #0090f1);
 }
 
 /* Thin themed scrollbar — matches VSCode's editor scrollbar */
