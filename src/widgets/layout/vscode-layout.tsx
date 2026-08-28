@@ -14,22 +14,36 @@ import { buildAllFiles, GUESTBOOK_FILE, type PostSummary, type ProjectSummary, t
 import { PostMetaProvider } from "@/widgets/layout/post-meta-context";
 import { EmptyEditorState } from "@/widgets/layout/empty-editor-state";
 
-export const VSCodeLayout = ({
-  children,
-  posts,
-  projects,
-  tags,
-}: {
-  children: ReactNode;
-  posts: PostSummary[];
-  projects: ProjectSummary[];
-  tags: TagSummary[];
-}) => {
+export const VSCodeLayout = ({ children }: { children: ReactNode }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isTerminalOpen, setTerminalOpen] = useState(true);
   const [sidebarView, setSidebarView] = useState<"explorer" | "search">("explorer");
+  const [posts, setPosts] = useState<PostSummary[]>([]);
+  const [projects, setProjects] = useState<ProjectSummary[]>([]);
+  const [tags, setTags] = useState<TagSummary[]>([]);
   const files = useMemo(() => buildAllFiles({ posts, projects, tags }), [posts, projects, tags]);
-  const { openTabs, activeFileId, openFile, selectTab, closeTab, reorderTabs } = useOpenTabs(files);
+  const { openTabs, activeFileId, openFile, selectTab, closeTab, reorderTabs, showEmptyState } = useOpenTabs(files);
+
+  // The Explorer/Search sidebar's data has no bearing on the page content
+  // itself (which is already server-rendered via `children`), so it's fetched
+  // client-side after mount rather than through the root layout — keeping
+  // DB reads out of the shared layout lets routes like /about and
+  // /projects/[id] regain static/cached rendering instead of being forced
+  // dynamic on every request just to feed the file tree.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/sidebar-data")
+      .then((res) => res.json())
+      .then((data: { posts: PostSummary[]; projects: ProjectSummary[]; tags: TagSummary[] }) => {
+        if (cancelled) return;
+        setPosts(data.posts);
+        setProjects(data.projects);
+        setTags(data.tags);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function handleToggleSearch() {
     setSidebarView((v) => (v === "search" ? "explorer" : "search"));
@@ -114,9 +128,12 @@ export const VSCodeLayout = ({
 
             <div className="flex-1 min-h-0 flex flex-col gap-2 overflow-hidden">
               {/* page.tsx supplies its own Mica-carded preview/source split;
-                  once every tab is closed we show an empty-editor placeholder instead */}
+                  once the user explicitly closes every tab we show an
+                  empty-editor placeholder instead — gated on showEmptyState,
+                  not openTabs.length, so children (already server-rendered)
+                  stay visible while the sidebar's file list is still loading */}
               <div className="flex-1 min-w-0 min-h-0 overflow-hidden">
-                {openTabs.length === 0 ? <EmptyEditorState onOpenFile={openFile} /> : children}
+                {showEmptyState ? <EmptyEditorState onOpenFile={openFile} /> : children}
               </div>
 
               {isTerminalOpen && <TerminalDock />}

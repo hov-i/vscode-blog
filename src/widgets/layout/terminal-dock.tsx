@@ -416,8 +416,12 @@ export function TerminalDock() {
               value={input}
               maxLength={MAX_INPUT_LENGTH}
               onChange={(e) => {
+                // Cursor follows the caret on typing — not selectionStart,
+                // which browsers report unreliably mid-IME-composition (한글
+                // 등) and left a stale character behind the block cursor.
+                // Click/select still reposition it via syncCursor below.
                 setInput(e.target.value);
-                syncCursor(e);
+                setCursorPos(e.target.value.length);
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
