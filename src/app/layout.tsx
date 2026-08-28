@@ -19,6 +19,12 @@ export const metadata: Metadata = {
   description: "VSCode 기반 디자인 개발 블로그 입니다.",
 };
 
+// The root layout fetches posts/projects/tags for the sidebar file tree on
+// every render, so every route is already DB-dependent — force dynamic
+// rendering so Next never tries to prerender pages at build time (Vercel's
+// build machine can't reach the DB, only the deployed runtime can).
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({
   children,
 }: Readonly<{

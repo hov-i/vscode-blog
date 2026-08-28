@@ -264,11 +264,13 @@ export function TerminalDock() {
       <div style={{ height: 28, flex: "none", display: "flex", alignItems: "center", gap: 2, padding: "0 8px" }}>
         {TABS.map((t) => {
           const active = t === tab;
+          const disabled = t !== "Terminal";
           return (
             <button
               key={t}
               type="button"
-              onClick={() => setTab(t)}
+              disabled={disabled}
+              onClick={disabled ? undefined : () => setTab(t)}
               style={{
                 height: 24,
                 display: "flex",
@@ -278,8 +280,9 @@ export function TerminalDock() {
                 background: active ? "rgba(255,255,255,.0605)" : "transparent",
                 border: active ? "1px solid rgba(255,255,255,.0605)" : "1px solid transparent",
                 font: `400 12px/12px ${UI_FONT}`,
-                color: active ? "#FFFFFF" : "rgb(196,196,196)",
+                color: disabled ? "rgba(196,196,196,.4)" : active ? "#FFFFFF" : "rgb(196,196,196)",
                 whiteSpace: "nowrap",
+                cursor: disabled ? "default" : "pointer",
               }}
             >
               {t}
